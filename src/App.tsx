@@ -9,6 +9,7 @@ import { Charts } from './pages/Charts'
 import { Entries } from './pages/Entries'
 import { Diagnostico } from './pages/Diagnostico'
 import { Admin } from './pages/Admin'
+import { PontoEquilibrio } from './pages/PontoEquilibrio'
 
 function AppRoutes() {
   const { session, loading, isAdmin } = useAuth()
@@ -56,9 +57,14 @@ function AppRoutes() {
 export default function App() {
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <AppRoutes />
-      </AuthProvider>
+      <Routes>
+        <Route path="/ponto" element={<PontoEquilibrio />} />
+        <Route path="*" element={
+          <AuthProvider>
+            <AppRoutes />
+          </AuthProvider>
+        } />
+      </Routes>
     </BrowserRouter>
   )
 }
