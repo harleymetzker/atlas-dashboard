@@ -24,8 +24,9 @@ export function Login() {
     <div className="min-h-screen bg-black flex items-center justify-center p-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-10">
-          <h1 className="text-4xl font-black tracking-[0.25em] text-white mb-2">ATLAS</h1>
-          <p className="text-xs text-white/20 uppercase tracking-widest">Financial Dashboard</p>
+          <div className="mb-8">
+            <img src="/logo2.png" alt="ATLAS" className="h-32 mx-auto block" />
+          </div>
         </div>
 
         <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl p-8">
