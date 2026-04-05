@@ -1,0 +1,276 @@
+import { useState } from 'react'
+import { format, startOfMonth } from 'date-fns'
+import { Plus, Trash2, Pencil } from 'lucide-react'
+import { useEntries } from '../hooks/useEntries'
+import type { Entry, EntryType } from '../types'
+import { REVENUE_CATEGORIES, EXPENSE_CATEGORY_GROUPS } from '../types'
+import { formatCurrency } from '../lib/calculations'
+import { DateFilter } from '../components/layout/DateFilter'
+import { Button } from '../components/ui/Button'
+import { Input } from '../components/ui/Input'
+import { Select } from '../components/ui/Select'
+import { Modal } from '../components/ui/Modal'
+import { Card } from '../components/ui/Card'
+
+const TYPE_OPTIONS = [
+  { value: 'revenue',    label: 'Receita' },
+  { value: 'expense',    label: 'Despesa' },
+  { value: 'withdrawal', label: 'Retirada de Sócio' },
+]
+
+const TYPE_COLORS: Record<EntryType, string> = {
+  revenue:    'text-emerald-400 bg-emerald-400/10',
+  expense:    'text-white/60 bg-white/5',
+  withdrawal: 'text-yellow-400/70 bg-yellow-400/5',
+}
+
+const TYPE_LABELS: Record<EntryType, string> = {
+  revenue:    'Receita',
+  expense:    'Despesa',
+  withdrawal: 'Retirada',
+}
+
+// Returns grouped options for expense, flat for revenue/withdrawal
+function getCategoryGroups(type: EntryType) {
+  if (type === 'expense') {
+    return EXPENSE_CATEGORY_GROUPS.map(g => ({
+      group: g.group,
+      options: g.categories.map(c => ({ value: c, label: c })),
+    }))
+  }
+  return null
+}
+
+function getCategoryOptions(type: EntryType) {
+  if (type === 'revenue') return REVENUE_CATEGORIES.map(c => ({ value: c, label: c }))
+  if (type === 'withdrawal') return [{ value: 'Retirada de Sócio', label: 'Retirada de Sócio' }]
+  return null
+}
+
+function firstCategory(type: EntryType): string {
+  if (type === 'revenue') return REVENUE_CATEGORIES[0]
+  if (type === 'withdrawal') return 'Retirada de Sócio'
+  return EXPENSE_CATEGORY_GROUPS[0].categories[0]
+}
+
+const todayStr = format(new Date(), 'yyyy-MM-dd')
+
+const defaultForm = {
+  type: 'revenue' as EntryType,
+  category: 'Vendas',
+  description: '',
+  amount: '',
+  competence_date: todayStr,
+  payment_date: todayStr,
+}
+
+export function Entries() {
+  const today = new Date()
+  const [startDate, setStartDate] = useState(format(startOfMonth(today), 'yyyy-MM-dd'))
+  const [endDate, setEndDate] = useState(format(today, 'yyyy-MM-dd'))
+  const [typeFilter, setTypeFilter] = useState<EntryType | ''>('')
+  const [modalOpen, setModalOpen] = useState(false)
+  const [editEntry, setEditEntry] = useState<Entry | null>(null)
+  const [form, setForm] = useState(defaultForm)
+  const [submitting, setSubmitting] = useState(false)
+  const [formError, setFormError] = useState('')
+
+  const { entries, loading, addEntry, deleteEntry, updateEntry } = useEntries({
+    startDate,
+    endDate,
+    type: typeFilter || undefined,
+    dateField: 'competence_date',
+  })
+
+  function openAdd() {
+    setEditEntry(null)
+    setForm(defaultForm)
+    setFormError('')
+    setModalOpen(true)
+  }
+
+  function openEdit(entry: Entry) {
+    setEditEntry(entry)
+    setForm({
+      type: entry.type,
+      category: entry.category,
+      description: entry.description,
+      amount: String(entry.amount),
+      competence_date: entry.competence_date,
+      payment_date: entry.payment_date,
+    })
+    setFormError('')
+    setModalOpen(true)
+  }
+
+  function handleTypeChange(type: EntryType) {
+    setForm(f => ({ ...f, type, category: firstCategory(type) }))
+  }
+
+  async function handleSubmit() {
+    if (!form.amount || isNaN(Number(form.amount)) || Number(form.amount) <= 0) {
+      setFormError('Informe um valor válido maior que zero.')
+      return
+    }
+    if (!form.competence_date) { setFormError('Informe a data de competência.'); return }
+    if (!form.payment_date) { setFormError('Informe a data de pagamento/recebimento.'); return }
+    setSubmitting(true)
+    setFormError('')
+    try {
+      const payload = { ...form, amount: Number(form.amount) }
+      if (editEntry) await updateEntry(editEntry.id, payload)
+      else await addEntry(payload)
+      setModalOpen(false)
+    } catch (e: unknown) {
+      setFormError(e instanceof Error ? e.message : 'Erro ao salvar.')
+    }
+    setSubmitting(false)
+  }
+
+  async function handleDelete(id: string) {
+    if (!confirm('Excluir este lançamento?')) return
+    await deleteEntry(id)
+  }
+
+  const categoryGroups   = getCategoryGroups(form.type)
+  const categoryOptions  = getCategoryOptions(form.type)
+
+  return (
+    <div className="p-8 space-y-8">
+      <div className="flex flex-wrap items-start justify-between gap-6">
+        <div>
+          <h2 className="text-2xl font-bold text-white tracking-tight">Lançamentos</h2>
+          <p className="text-sm text-white/30 mt-1">Filtro por data de competência</p>
+        </div>
+        <Button onClick={openAdd}><Plus size={16} /> Novo Lançamento</Button>
+      </div>
+
+      <div className="flex flex-wrap items-end gap-3">
+        <DateFilter startDate={startDate} endDate={endDate} onChange={(s, e) => { setStartDate(s); setEndDate(e) }} />
+        <Select
+          label="Tipo"
+          value={typeFilter}
+          onChange={e => setTypeFilter(e.target.value as EntryType | '')}
+          options={[{ value: '', label: 'Todos' }, ...TYPE_OPTIONS]}
+          className="w-44"
+        />
+      </div>
+
+      <Card>
+        {loading ? (
+          <div className="text-center py-12 text-white/20">Carregando...</div>
+        ) : entries.length === 0 ? (
+          <div className="text-center py-12 text-white/20">Nenhum lançamento no período.</div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-xs text-white/30 uppercase tracking-widest">
+                  <th className="text-left pb-4">Competência</th>
+                  <th className="text-left pb-4">Pagamento</th>
+                  <th className="text-left pb-4">Tipo</th>
+                  <th className="text-left pb-4">Categoria</th>
+                  <th className="text-left pb-4">Descrição</th>
+                  <th className="text-right pb-4">Valor</th>
+                  <th className="text-right pb-4">Ações</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/5">
+                {entries.map(entry => (
+                  <tr key={entry.id} className="group text-white/70">
+                    <td className="py-3 text-white/40 tabular-nums">{entry.competence_date}</td>
+                    <td className="py-3 text-white/30 tabular-nums">{entry.payment_date}</td>
+                    <td className="py-3">
+                      <span className={`text-xs px-2 py-1 rounded-lg ${TYPE_COLORS[entry.type]}`}>
+                        {TYPE_LABELS[entry.type]}
+                      </span>
+                    </td>
+                    <td className="py-3">{entry.category}</td>
+                    <td className="py-3 max-w-xs truncate text-white/50">{entry.description || '—'}</td>
+                    <td className={`py-3 text-right tabular-nums font-medium ${entry.type === 'revenue' ? 'text-emerald-400' : 'text-white'}`}>
+                      {entry.type !== 'revenue' ? '(' : ''}{formatCurrency(entry.amount)}{entry.type !== 'revenue' ? ')' : ''}
+                    </td>
+                    <td className="py-3 text-right">
+                      <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button onClick={() => openEdit(entry)} className="p-1.5 rounded-lg text-white/30 hover:text-white hover:bg-white/10 transition-all">
+                          <Pencil size={13} />
+                        </button>
+                        <button onClick={() => handleDelete(entry.id)} className="p-1.5 rounded-lg text-white/30 hover:text-red-400 hover:bg-red-500/10 transition-all">
+                          <Trash2 size={13} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </Card>
+
+      <Modal open={modalOpen} onClose={() => setModalOpen(false)} title={editEntry ? 'Editar Lançamento' : 'Novo Lançamento'}>
+        <div className="space-y-4">
+          <Select
+            label="Tipo"
+            value={form.type}
+            onChange={e => handleTypeChange(e.target.value as EntryType)}
+            options={TYPE_OPTIONS}
+          />
+          {categoryGroups ? (
+            <Select
+              label="Categoria"
+              value={form.category}
+              onChange={e => setForm(f => ({ ...f, category: e.target.value }))}
+              groups={categoryGroups}
+            />
+          ) : (
+            <Select
+              label="Categoria"
+              value={form.category}
+              onChange={e => setForm(f => ({ ...f, category: e.target.value }))}
+              options={categoryOptions ?? []}
+            />
+          )}
+          <Input
+            label="Descrição (opcional)"
+            value={form.description}
+            onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
+            placeholder="Ex: Fatura fornecedor X"
+          />
+          <Input
+            label="Valor (R$)"
+            type="number"
+            value={form.amount}
+            onChange={e => setForm(f => ({ ...f, amount: e.target.value }))}
+            placeholder="0,00"
+            min="0"
+            step="0.01"
+          />
+          <div className="grid grid-cols-2 gap-3">
+            <Input
+              label="Data de Competência"
+              type="date"
+              value={form.competence_date}
+              onChange={e => setForm(f => ({ ...f, competence_date: e.target.value }))}
+              required
+            />
+            <Input
+              label="Data de Pagamento/Recebimento"
+              type="date"
+              value={form.payment_date}
+              onChange={e => setForm(f => ({ ...f, payment_date: e.target.value }))}
+              required
+            />
+          </div>
+          {formError && <p className="text-xs text-red-400">{formError}</p>}
+          <div className="flex gap-3 pt-2">
+            <Button variant="secondary" onClick={() => setModalOpen(false)} className="flex-1">Cancelar</Button>
+            <Button onClick={handleSubmit} loading={submitting} className="flex-1">
+              {editEntry ? 'Salvar' : 'Lançar'}
+            </Button>
+          </div>
+        </div>
+      </Modal>
+    </div>
+  )
+}
