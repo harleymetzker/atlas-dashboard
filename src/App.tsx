@@ -56,7 +56,7 @@ function AppRoutes() {
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/app">
       <Routes>
         <Route path="/ponto" element={<PontoEquilibrio />} />
         <Route path="*" element={
