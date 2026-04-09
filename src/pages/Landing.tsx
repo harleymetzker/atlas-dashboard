@@ -73,7 +73,7 @@ const s = {
     paddingRight: 48,
   },
   heroTitle: {
-    fontSize: 'clamp(28px, 2.8vw, 40px)' as unknown as number,
+    fontSize: 'clamp(32px, 3.8vw, 52px)' as unknown as number,
     fontWeight: 900,
     lineHeight: 1.1,
     color: '#fff',
@@ -415,16 +415,16 @@ export function Landing() {
       </nav>
 
       {/* Hero */}
+      {/* Hero */}
       <div style={s.hero} className="lp-hero">
         <h1 style={s.heroTitle}>
-          Você dobrou o faturamento e passou a ter menos dinheiro.
+          Você dobrou o faturamento<br />e passou a ter menos dinheiro.
         </h1>
         <p style={{ fontSize: 'clamp(20px, 2vw, 28px)', fontWeight: 900, color: '#fff', lineHeight: 1.2, marginBottom: 32, marginTop: 0 }}>
           E nem sabe quanto está perdendo todo mês...
         </p>
         <p style={s.heroSub}>Isso não é azar... É falta de gestão.</p>
         <p style={s.heroBody}>O mercado digital te ensinou a vender mais. Ninguém te ensinou a controlar o que já entra.</p>
-        <hr style={{ border: 'none', borderTop: '1px solid #1e1e1e', marginTop: 64, marginBottom: 0 }} />
       </div>
 
 
