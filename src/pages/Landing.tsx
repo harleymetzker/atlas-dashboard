@@ -67,17 +67,17 @@ const s = {
   hero: {
     maxWidth: 760,
     margin: '0 auto',
-    paddingTop: 140,
-    paddingBottom: 80,
+    paddingTop: 180,
+    paddingBottom: 120,
     paddingLeft: 48,
     paddingRight: 48,
   },
   heroTitle: {
-    fontSize: 'clamp(36px, 4.5vw, 56px)' as unknown as number,
+    fontSize: 'clamp(42px, 5.5vw, 68px)' as unknown as number,
     fontWeight: 900,
     lineHeight: 1.1,
     color: '#fff',
-    marginBottom: 16,
+    marginBottom: 28,
     maxWidth: '100%',
   },
   heroSub: {
@@ -100,7 +100,7 @@ const s = {
     marginRight: 'auto',
   },
   section: {
-    padding: '64px 48px',
+    padding: '88px 48px',
     maxWidth: 760,
     margin: '0 auto',
   },
@@ -110,7 +110,8 @@ const s = {
     letterSpacing: 4,
     textTransform: 'uppercase' as const,
     color: '#555',
-    marginBottom: 14,
+    marginBottom: 20,
+    marginTop: 0,
     display: 'block',
   },
   h2: {
@@ -146,14 +147,14 @@ const s = {
   },
   bq: {
     margin: '48px 0',
-    paddingLeft: 24,
-    borderLeft: '2px solid #fff',
+    paddingLeft: 32,
+    borderLeft: '3px solid #fff',
   },
   bqText: {
-    fontSize: 'clamp(20px, 2.2vw, 28px)' as unknown as number,
+    fontSize: 'clamp(24px, 2.8vw, 36px)' as unknown as number,
     fontWeight: 700,
     color: '#fff',
-    lineHeight: 1.3,
+    lineHeight: 1.2,
   },
   jornadas: {
     marginTop: 48,
@@ -168,8 +169,8 @@ const s = {
   },
   jnum: {
     fontFamily: "'Arial Black', 'Arial Bold', sans-serif",
-    fontSize: 44,
-    color: '#222',
+    fontSize: 64,
+    color: '#1a1a1a',
     lineHeight: 1,
   },
   jtitle: {
@@ -249,7 +250,7 @@ const s = {
     lineHeight: 1.7,
   },
   invest: {
-    padding: '64px 48px',
+    padding: '88px 48px',
     maxWidth: 760,
     margin: '0 auto',
   },
@@ -302,8 +303,8 @@ const s = {
   },
   stepNum: {
     fontFamily: "'Arial Black', 'Arial Bold', sans-serif",
-    fontSize: 40,
-    color: '#222',
+    fontSize: 56,
+    color: '#1a1a1a',
     lineHeight: 1,
   },
   stepTitle: {
@@ -321,15 +322,16 @@ const s = {
     lineHeight: 1.65,
   },
   btn: {
-    display: 'inline-block',
+    display: 'block',
+    width: 'fit-content',
     fontFamily: 'Arial, Helvetica, sans-serif',
-    fontSize: 11,
+    fontSize: 12,
     fontWeight: 600,
-    letterSpacing: 2.5,
+    letterSpacing: 3,
     textTransform: 'uppercase' as const,
     color: '#000',
     background: '#fff',
-    padding: '18px 48px',
+    padding: '22px 56px',
     textDecoration: 'none',
     cursor: 'pointer',
     border: 'none',
@@ -417,6 +419,7 @@ export function Landing() {
         <h1 style={s.heroTitle}>Você dobrou o faturamento.<br />E passou a ter menos dinheiro.<br />E nem sabe quanto está perdendo por mês.</h1>
         <p style={s.heroSub}>Isso não é azar... É falta de gestão.</p>
         <p style={s.heroBody}>O mercado digital te ensinou a vender mais. Ninguém te ensinou a controlar o que já entra.</p>
+        <hr style={{ border: 'none', borderTop: '1px solid #1e1e1e', marginTop: 64, marginBottom: 0 }} />
       </div>
 
 
@@ -424,7 +427,12 @@ export function Landing() {
       {/* Diagnóstico */}
       <div style={s.section} className="lp-section">
         <span style={s.eyebrow}>O Diagnóstico</span>
-        <h2 style={s.h2}>Você não tem um problema de faturamento. Você tem um problema de gestão.</h2>
+        <h2 style={{ ...s.h2, marginBottom: 0 }}>Você não tem um problema de faturamento. Você tem um problema de gestão.</h2>
+        <div style={{ margin: '48px 0', padding: '48px 0', borderTop: '1px solid #1e1e1e', borderBottom: '1px solid #1e1e1e' }}>
+          <p style={{ fontSize: 'clamp(24px, 2.8vw, 36px)', fontWeight: 700, color: '#fff', lineHeight: 1.2, margin: 0 }}>
+            Você não tem um problema de faturamento.<br />Tem um problema de gestão.
+          </p>
+        </div>
         <div style={s.body}>
           <p>A maioria que chega aqui já fatura bem. Já investe em tráfego. Já tem produto validado. Já tem vendas acontecendo.</p>
           <p style={{ marginTop: 16 }}>O problema é outro:</p>
@@ -486,6 +494,14 @@ export function Landing() {
       </div>
 
 
+
+      {/* ATLAS identity */}
+      <div style={{ borderTop: '1px solid #1e1e1e', borderBottom: '1px solid #1e1e1e' }}>
+        <div style={{ maxWidth: 760, margin: '0 auto', padding: '52px 48px', display: 'flex', alignItems: 'baseline', gap: 24 }}>
+          <span style={{ fontFamily: "'Arial Black', 'Arial Bold', sans-serif", fontSize: 'clamp(48px, 6vw, 80px)', color: '#fff', letterSpacing: 8, lineHeight: 1 }}>ATLAS</span>
+          <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: 4, textTransform: 'uppercase' as const, color: '#444' }}>Sistema de Gestão · by Black Sheep</span>
+        </div>
+      </div>
 
       {/* Mecanismo */}
       <div style={s.section} className="lp-section">
@@ -595,7 +611,7 @@ export function Landing() {
             </div>
           ))}
         </div>
-        <div style={{ marginTop: 52 }}>
+        <div style={{ marginTop: 64, paddingTop: 52, borderTop: '1px solid #1e1e1e' }}>
           <a href="#" style={s.btn}>Aplicar para entrar no ATLAS</a>
         </div>
       </div>
