@@ -583,6 +583,7 @@ export function Landing() {
 
       {/* Investimento */}
       <div style={s.invest} className="lp-invest">
+        <div style={{ width: 48, height: 3, background: '#fff', marginBottom: 48 }} />
         <span style={s.priceLabel}>Investimento</span>
         <span style={s.price}>R$14.000</span>
         <p style={s.priceDetail}>6 meses. 4 jornadas. Resultado em até 60 dias.<br /><br />Para quem fatura 60k+, isso pode ser menos do que você perde em 1 mês sem perceber. O que custa mais — o programa ou mais 6 meses perdendo margem?</p>
@@ -634,6 +635,17 @@ export function Landing() {
               {openFaq === i && <div style={s.faqA}>{item.a}</div>}
             </div>
           ))}
+        </div>
+      </div>
+
+      <div style={{ borderTop: '1px solid #1e1e1e', borderBottom: '1px solid #1e1e1e' }}>
+        <div style={{ maxWidth: 760, margin: '0 auto', padding: '80px 48px', textAlign: 'center' as const }} className="lp-section">
+          <p style={{ fontSize: 'clamp(20px, 2.2vw, 28px)' as unknown as number, fontWeight: 700, color: '#fff', lineHeight: 1.25, marginBottom: 40, marginTop: 0 }}>
+            Se você fatura bem e ainda não sabe sua margem real,<br />esse é o programa.
+          </p>
+          <a href="#aplicar" style={{ display: 'inline-block', fontFamily: 'Arial, Helvetica, sans-serif', fontSize: 12, fontWeight: 600, letterSpacing: 3, textTransform: 'uppercase' as const, color: '#000', background: '#fff', padding: '20px 52px', textDecoration: 'none' }}>
+            Aplicar para entrar no ATLAS
+          </a>
         </div>
       </div>
 
