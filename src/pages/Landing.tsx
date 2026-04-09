@@ -67,13 +67,13 @@ const s = {
   hero: {
     maxWidth: 760,
     margin: '0 auto',
-    paddingTop: 180,
-    paddingBottom: 120,
+    paddingTop: 140,
+    paddingBottom: 80,
     paddingLeft: 48,
     paddingRight: 48,
   },
   heroTitle: {
-    fontSize: 'clamp(32px, 3.8vw, 52px)' as unknown as number,
+    fontSize: 'clamp(28px, 3vw, 44px)' as unknown as number,
     fontWeight: 900,
     lineHeight: 1.1,
     color: '#fff',
