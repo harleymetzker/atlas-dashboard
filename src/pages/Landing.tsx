@@ -11,10 +11,20 @@ const FAQ_ITEMS = [
   { q: 'Como funciona o processo de aplicação?', a: 'Você preenche o formulário, a gente analisa e retorna em até 48 horas. Se fizer sentido para os dois lados, avançamos.' },
 ]
 
+const mq = `
+@media(max-width:640px){
+  .lp-wrap{padding:0 24px!important}
+  .lp-section{padding:48px 24px!important}
+  .lp-invest{padding:48px 24px!important}
+  .lp-hero{padding:80px 24px 48px!important}
+  .lp-nav{padding:28px 24px!important}
+  .lp-footer-inner{padding:36px 24px!important}
+}`
+
 const s = {
   root: {
     background: '#0c0c0c',
-    color: '#888',
+    color: '#aaaaaa',
     fontFamily: 'Arial, Helvetica, sans-serif',
     fontSize: 16,
     lineHeight: 1.8,
@@ -22,14 +32,14 @@ const s = {
     WebkitFontSmoothing: 'antialiased' as const,
   },
   inner: {
-    maxWidth: 720,
+    maxWidth: 760,
     margin: '0 auto',
-    padding: '0 40px',
+    padding: '0 48px',
   },
   nav: {
-    maxWidth: 720,
+    maxWidth: 760,
     margin: '0 auto',
-    padding: '36px 40px',
+    padding: '36px 48px',
     display: 'flex',
     alignItems: 'center',
     gap: 20,
@@ -52,15 +62,18 @@ const s = {
     fontWeight: 500,
     letterSpacing: 3,
     textTransform: 'uppercase' as const,
-    color: '#555',
+    color: '#666666',
   },
   hero: {
-    maxWidth: 720,
+    maxWidth: 760,
     margin: '0 auto',
-    padding: '80px 40px 120px',
+    paddingTop: 140,
+    paddingBottom: 80,
+    paddingLeft: 48,
+    paddingRight: 48,
   },
   heroTitle: {
-    fontSize: 'clamp(40px, 5vw, 64px)' as unknown as number,
+    fontSize: 'clamp(36px, 4.5vw, 56px)' as unknown as number,
     fontWeight: 900,
     lineHeight: 1.1,
     color: '#fff',
@@ -70,26 +83,25 @@ const s = {
   heroSub: {
     fontSize: 'clamp(18px, 2vw, 24px)' as unknown as number,
     fontWeight: 400,
-    color: '#888',
+    color: '#aaaaaa',
     marginBottom: 24,
     lineHeight: 1.3,
   },
   heroBody: {
     fontSize: 16,
-    color: '#666',
+    color: '#aaaaaa',
     lineHeight: 1.8,
   },
   hr: {
     border: 'none',
     borderTop: '1px solid #1e1e1e',
-    margin: '0 40px',
-    maxWidth: 'calc(720px - 0px)',
+    maxWidth: 760,
     marginLeft: 'auto',
     marginRight: 'auto',
   },
   section: {
-    padding: '120px 40px',
-    maxWidth: 720,
+    padding: '64px 48px',
+    maxWidth: 760,
     margin: '0 auto',
   },
   eyebrow: {
@@ -97,7 +109,7 @@ const s = {
     fontWeight: 600,
     letterSpacing: 4,
     textTransform: 'uppercase' as const,
-    color: '#555',
+    color: '#666666',
     marginBottom: 28,
     display: 'block',
   },
@@ -111,7 +123,7 @@ const s = {
   },
   body: {
     fontSize: 16,
-    color: '#888',
+    color: '#aaaaaa',
     lineHeight: 1.8,
     maxWidth: 580,
   },
@@ -127,7 +139,7 @@ const s = {
     borderBottom: '1px solid #1e1e1e',
     fontSize: 15,
     fontWeight: 300,
-    color: '#888',
+    color: '#aaaaaa',
     lineHeight: 1.6,
     display: 'flex',
     gap: 14,
@@ -171,7 +183,7 @@ const s = {
   jdesc: {
     fontSize: 15,
     fontWeight: 300,
-    color: '#888',
+    color: '#aaaaaa',
     lineHeight: 1.7,
   },
   llist: {
@@ -216,7 +228,7 @@ const s = {
     fontWeight: 600,
     letterSpacing: 4,
     textTransform: 'uppercase' as const,
-    color: '#555',
+    color: '#666666',
     marginBottom: 20,
   },
   naoItem: {
@@ -224,7 +236,7 @@ const s = {
     gap: 14,
     fontSize: 15,
     fontWeight: 300,
-    color: '#888',
+    color: '#aaaaaa',
     padding: '12px 0',
     borderBottom: '1px solid #1e1e1e',
     lineHeight: 1.55,
@@ -233,12 +245,12 @@ const s = {
     marginTop: 32,
     fontSize: 14,
     fontWeight: 300,
-    color: '#555',
+    color: '#aaaaaa',
     lineHeight: 1.7,
   },
   invest: {
-    padding: '120px 40px',
-    maxWidth: 720,
+    padding: '64px 48px',
+    maxWidth: 760,
     margin: '0 auto',
   },
   priceLabel: {
@@ -246,7 +258,7 @@ const s = {
     fontWeight: 600,
     letterSpacing: 4,
     textTransform: 'uppercase' as const,
-    color: '#555',
+    color: '#666666',
     marginBottom: 16,
     display: 'block',
   },
@@ -262,7 +274,7 @@ const s = {
   priceDetail: {
     fontSize: 16,
     fontWeight: 300,
-    color: '#888',
+    color: '#aaaaaa',
     lineHeight: 1.8,
     maxWidth: 500,
     marginBottom: 0,
@@ -278,7 +290,7 @@ const s = {
     fontWeight: 600,
     letterSpacing: 3,
     textTransform: 'uppercase' as const,
-    color: '#555',
+    color: '#666666',
   },
   step: {
     display: 'grid',
@@ -305,7 +317,7 @@ const s = {
   stepDesc: {
     fontSize: 15,
     fontWeight: 300,
-    color: '#888',
+    color: '#aaaaaa',
     lineHeight: 1.65,
   },
   btn: {
@@ -345,7 +357,7 @@ const s = {
   faqIcon: {
     fontSize: 22,
     fontWeight: 300,
-    color: '#555',
+    color: '#666666',
     flexShrink: 0,
     lineHeight: 1,
   },
@@ -353,14 +365,14 @@ const s = {
     paddingBottom: 24,
     fontSize: 15,
     fontWeight: 300,
-    color: '#888',
+    color: '#aaaaaa',
     lineHeight: 1.75,
     maxWidth: 560,
   },
   footer: {
     borderTop: '1px solid #1e1e1e',
-    padding: '44px 40px',
-    maxWidth: 720,
+    padding: '44px 48px',
+    maxWidth: 760,
     margin: '0 auto',
     display: 'flex',
     alignItems: 'center',
@@ -391,16 +403,17 @@ export function Landing() {
 
   return (
     <div style={s.root}>
+      <style>{mq}</style>
 
       {/* Nav */}
-      <nav style={s.nav}>
+      <nav style={s.nav} className="lp-nav">
         <a href="#" style={s.navLogo}>ATLAS</a>
         <span style={s.navSep} />
         <span style={s.navBy}>by Black Sheep</span>
       </nav>
 
       {/* Hero */}
-      <div style={s.hero}>
+      <div style={s.hero} className="lp-hero">
         <h1 style={s.heroTitle}>Você dobrou o faturamento.<br />E passou a ter menos dinheiro.</h1>
         <p style={s.heroSub}>Isso não é azar... É falta de gestão.</p>
         <p style={s.heroBody}>O mercado digital te ensinou a vender mais. Ninguém te ensinou a controlar o que já entra.</p>
@@ -409,7 +422,7 @@ export function Landing() {
       <hr style={s.hr} />
 
       {/* Diagnóstico */}
-      <div style={s.section}>
+      <div style={s.section} className="lp-section">
         <span style={s.eyebrow}>O Diagnóstico</span>
         <h2 style={s.h2}>Você não tem um problema de faturamento. Você tem um problema de gestão.</h2>
         <div style={s.body}>
@@ -440,7 +453,7 @@ export function Landing() {
       <hr style={s.hr} />
 
       {/* Mentira */}
-      <div style={s.section}>
+      <div style={s.section} className="lp-section">
         <span style={s.eyebrow}>A Mentira do Mercado</span>
         <h2 style={s.h2}>Te venderam a solução errada para o problema certo.</h2>
         <div style={s.body}>
@@ -454,7 +467,7 @@ export function Landing() {
       <hr style={s.hr} />
 
       {/* História */}
-      <div style={s.section}>
+      <div style={s.section} className="lp-section">
         <span style={s.eyebrow}>A História</span>
         <h2 style={s.h2}>14 anos de empresa. E um padrão que já vi centenas de vezes.</h2>
         <div style={s.body}>
@@ -476,7 +489,7 @@ export function Landing() {
       <hr style={s.hr} />
 
       {/* Mecanismo */}
-      <div style={s.section}>
+      <div style={s.section} className="lp-section">
         <span style={s.eyebrow}>O Mecanismo</span>
         <h2 style={s.h2}>ATLAS não é mentoria financeira. É um modelo de gestão focado em lucro.</h2>
         <div style={s.body}>
@@ -519,7 +532,7 @@ export function Landing() {
       <hr style={s.hr} />
 
       {/* Para Quem É */}
-      <div style={s.section}>
+      <div style={s.section} className="lp-section">
         <span style={s.eyebrow}>Para Quem É</span>
         <h2 style={s.h2}>Esse programa foi feito para empresas reais.</h2>
         <div style={s.alist}>
@@ -552,7 +565,7 @@ export function Landing() {
       <hr style={s.hr} />
 
       {/* Investimento */}
-      <div style={s.invest}>
+      <div style={s.invest} className="lp-invest">
         <span style={s.priceLabel}>Investimento</span>
         <span style={s.price}>R$14.000</span>
         <p style={s.priceDetail}>6 meses. 4 jornadas. Resultado em até 60 dias.<br /><br />Para quem fatura bem, isso é menos de uma semana de receita. O que custa mais — o programa ou mais 6 meses perdendo margem?</p>
@@ -561,7 +574,7 @@ export function Landing() {
       <hr style={s.hr} />
 
       {/* Como Entrar */}
-      <div style={s.section} id="aplicar">
+      <div style={s.section} id="aplicar" className="lp-section">
         <span style={s.eyebrow}>Como Entrar</span>
         <div style={s.sem}>
           <span style={s.semItem}>Sem call de vendas</span>
@@ -588,7 +601,7 @@ export function Landing() {
       <hr style={s.hr} />
 
       {/* FAQ */}
-      <div style={s.section}>
+      <div style={s.section} className="lp-section">
         <span style={s.eyebrow}>FAQ</span>
         <h2 style={s.h2}>Perguntas frequentes</h2>
         <div>
@@ -609,7 +622,7 @@ export function Landing() {
 
       {/* Footer */}
       <footer style={{ borderTop: '1px solid #1e1e1e' }}>
-        <div style={s.footer}>
+        <div style={s.footer} className="lp-footer-inner">
           <span style={s.footerLogo}>ATLAS</span>
           <span style={s.footerSep} />
           <span style={s.footerSub}>by Black Sheep · atlasconsultoria.com</span>
