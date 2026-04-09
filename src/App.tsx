@@ -10,6 +10,7 @@ import { Entries } from './pages/Entries'
 import { Diagnostico } from './pages/Diagnostico'
 import { Admin } from './pages/Admin'
 import { PontoEquilibrio } from './pages/PontoEquilibrio'
+import { Landing } from './pages/Landing'
 
 function AppRoutes() {
   const { session, loading, isAdmin } = useAuth()
@@ -59,6 +60,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={<Landing />} />
         <Route path="/ponto" element={<PontoEquilibrio />} />
         <Route path="*" element={
           <AuthProvider>
