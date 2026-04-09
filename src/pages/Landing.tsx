@@ -414,7 +414,7 @@ export function Landing() {
 
       {/* Hero */}
       <div style={s.hero} className="lp-hero">
-        <h1 style={s.heroTitle}>Você dobrou o faturamento.<br />E passou a ter menos dinheiro.</h1>
+        <h1 style={s.heroTitle}>Você dobrou o faturamento.<br />E passou a ter menos dinheiro.<br />E nem sabe quanto está perdendo por mês.</h1>
         <p style={s.heroSub}>Isso não é azar... É falta de gestão.</p>
         <p style={s.heroBody}>O mercado digital te ensinou a vender mais. Ninguém te ensinou a controlar o que já entra.</p>
       </div>
@@ -444,7 +444,8 @@ export function Landing() {
           <div style={s.pcell} />
         </div>
         <div style={{ ...s.body, marginTop: 40 }}>
-          <p>Isso não é falta de esforço. É falta de gestão.</p>
+          <p>Na prática, empresas nesse estágio costumam perder de 10% a 30% do lucro sem perceber — todos os meses.</p>
+          <p style={{ marginTop: 16 }}>Isso não é falta de esforço. É falta de gestão.</p>
           <p style={{ marginTop: 16 }}>E ninguém no digital fala sobre isso — porque gestão não tem palco. Tráfego pago tem palco. Lead tem palco. Funil tem palco.</p>
           <p style={{ marginTop: 16 }}>Gestão é o que acontece depois que o dinheiro entra. E é onde a maioria perde.</p>
         </div>
@@ -458,7 +459,7 @@ export function Landing() {
         <h2 style={s.h2}>Te venderam a solução errada para o problema certo.</h2>
         <div style={s.body}>
           <p>Sem margem? Aumenta o faturamento.<br />Sem dinheiro no final do mês? Vende mais.<br />Empresa no limite? Escala.</p>
-          <p style={{ marginTop: 16 }}>Essa é a lógica que o mercado digital ensina. E é exatamente o que destrói a empresa mais rápido.</p>
+          <p style={{ marginTop: 16 }}>Essa é a lógica que o mercado digital ensina. E é exatamente o que destrói a empresa mais rápido — porque você cresce receita enquanto esmaga a margem até o caixa travar.</p>
           <p style={{ marginTop: 16 }}>Quanto mais você cresce sem estrutura, mais a margem se corrói. Até o dia que você fatura alguns milhões e não tem dinheiro para pagar o time.</p>
           <p style={{ marginTop: 16 }}>Já vi isso acontecer. Mais de uma vez. Com empresários sérios.</p>
         </div>
@@ -473,9 +474,7 @@ export function Landing() {
         <div style={s.body}>
           <p>Sou filho de empresários. Cresci dentro de empresa vendo decisão difícil ser tomada.</p>
           <p style={{ marginTop: 16 }}>Há 14 anos construo e opero negócios. Passei pelo corporativo como executivo. Gestão sempre fez parte do meu dia-a-dia.</p>
-          <p style={{ marginTop: 16 }}>Quando comecei a trabalhar com algumas empresas do digital, o padrão era sempre o mesmo — independente do segmento, do faturamento, do tamanho do time:</p>
-          <p style={{ marginTop: 16 }}>Empresário com produto validado, com vendas, com crescimento absurdo... Mas sem clareza nenhuma sobre o que sobrava. Sem saber se estava lucrando ou apenas movimentando dinheiro.</p>
-          <p style={{ marginTop: 16 }}>Minha conclusão é:</p>
+          <p style={{ marginTop: 16 }}>Depois de ver esse padrão se repetir dezenas de vezes — empresas crescendo, faturando alto e sem dinheiro no caixa — ficou claro que o problema nunca foi venda.</p>
         </div>
         <div style={s.bq}>
           <div style={s.bqText}>O problema nunca foi faturamento.<br />Foi sempre gestão.</div>
@@ -496,12 +495,13 @@ export function Landing() {
           <p>A diferença é simples:</p>
           <p style={{ marginTop: 16 }}>Mentoria financeira te ensina a entender os números. O ATLAS te ensina a usar os números para tomar decisão — e mudar o resultado.</p>
           <p style={{ marginTop: 16 }}>O Sistema ATLAS de Gestão é estruturado em 4 jornadas:</p>
+          <p style={{ marginTop: 16 }}>O ATLAS funciona como um sistema de controle que mostra, com precisão, onde o dinheiro entra, onde trava e o que precisa ser ajustado para liberar margem.</p>
         </div>
         <div style={s.jornadas}>
           {[
             { n: '01', t: 'ABC da Gestão', d: 'Você aprende o essencial e tem acesso ao sistema ATLAS — a ferramenta que organiza sua empresa do zero.' },
             { n: '02', t: 'Financeiro', d: 'DRE real. Fluxo de caixa. Ponto de equilíbrio. Capital de giro. Tudo estruturado para você enxergar o que o extrato não mostra.' },
-            { n: '03', t: 'Eficiência e Margem', d: 'Precificação. Corte de custo. Ajustes que dobram a geração de lucro sem precisar vender mais.' },
+            { n: '03', t: 'Eficiência e Margem', d: 'Precificação. Corte de custo. Ajustes que aumentam a geração de lucro sem precisar aumentar faturamento.' },
             { n: '04', t: 'Modelo de Gestão', d: 'Rotina de gestão. KPIs essenciais. Tomada de decisão. Como escalar com controle — sem o negócio depender de você em tudo.' },
           ].map((j, i) => (
             <div key={j.n} style={{ ...s.jornada, ...(i === 3 ? { borderBottom: '1px solid #1e1e1e' } : {}) }}>
@@ -537,6 +537,7 @@ export function Landing() {
         <h2 style={s.h2}>Esse programa foi feito para empresas reais.</h2>
         <div style={s.alist}>
           {[
+            'Você sente que trabalha mais, fatura mais, mas o dinheiro nunca acompanha.',
             'Você fatura bem mas não sabe sua margem de lucro',
             'Você cresce e o dinheiro some',
             'Você toma decisão no susto porque os números não fecham',
@@ -559,6 +560,7 @@ export function Landing() {
             </div>
           ))}
         </div>
+        <p style={{ fontSize: 15, fontWeight: 300, color: '#666', lineHeight: 1.7, marginTop: 32, fontStyle: 'italic' }}>Já vi empresas faturando múltiplos seis dígitos travarem o caixa por não saberem o próprio ponto de equilíbrio.</p>
         <p style={s.bsNote}>O ATLAS faz parte da Black Sheep. A régua aqui é alta e só aceitamos empresários sérios.</p>
       </div>
 
@@ -568,7 +570,7 @@ export function Landing() {
       <div style={s.invest} className="lp-invest">
         <span style={s.priceLabel}>Investimento</span>
         <span style={s.price}>R$14.000</span>
-        <p style={s.priceDetail}>6 meses. 4 jornadas. Resultado em até 60 dias.<br /><br />Para quem fatura bem, isso é menos de uma semana de receita. O que custa mais — o programa ou mais 6 meses perdendo margem?</p>
+        <p style={s.priceDetail}>6 meses. 4 jornadas. Resultado em até 60 dias.<br /><br />Para quem fatura 60k+, isso pode ser menos do que você perde em 1 mês sem perceber. O que custa mais — o programa ou mais 6 meses perdendo margem?</p>
       </div>
 
 
@@ -594,7 +596,7 @@ export function Landing() {
           ))}
         </div>
         <div style={{ marginTop: 52 }}>
-          <a href="#" style={s.btn}>Aplicar Agora</a>
+          <a href="#" style={s.btn}>Aplicar para entrar no ATLAS</a>
         </div>
       </div>
 
