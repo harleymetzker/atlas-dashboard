@@ -416,7 +416,10 @@ export function Landing() {
 
       {/* Hero */}
       <div style={s.hero} className="lp-hero">
-        <h1 style={s.heroTitle}>Você dobrou o faturamento.<br />E passou a ter menos dinheiro.<br />E nem sabe quanto está perdendo por mês.</h1>
+        <h1 style={s.heroTitle}>Você dobrou o faturamento.<br />E passou a ter menos dinheiro.</h1>
+        <p style={{ ...s.heroSub, fontSize: 'clamp(22px, 2.5vw, 32px)', fontWeight: 400, color: '#888', marginBottom: 32, lineHeight: 1.2 }}>
+          E nem sabe quanto está perdendo por mês.
+        </p>
         <p style={s.heroSub}>Isso não é azar... É falta de gestão.</p>
         <p style={s.heroBody}>O mercado digital te ensinou a vender mais. Ninguém te ensinou a controlar o que já entra.</p>
         <hr style={{ border: 'none', borderTop: '1px solid #1e1e1e', marginTop: 64, marginBottom: 0 }} />
@@ -427,8 +430,7 @@ export function Landing() {
       {/* Diagnóstico */}
       <div style={s.section} className="lp-section">
         <span style={s.eyebrow}>O Diagnóstico</span>
-        <h2 style={{ ...s.h2, marginBottom: 0 }}>Você não tem um problema de faturamento. Você tem um problema de gestão.</h2>
-        <div style={{ margin: '48px 0', padding: '48px 0', borderTop: '1px solid #1e1e1e', borderBottom: '1px solid #1e1e1e' }}>
+        <div style={{ margin: '0 0 48px', padding: '48px 0', borderTop: '1px solid #1e1e1e', borderBottom: '1px solid #1e1e1e' }}>
           <p style={{ fontSize: 'clamp(24px, 2.8vw, 36px)', fontWeight: 700, color: '#fff', lineHeight: 1.2, margin: 0 }}>
             Você não tem um problema de faturamento.<br />Tem um problema de gestão.
           </p>
@@ -495,23 +497,12 @@ export function Landing() {
 
 
 
-      {/* ATLAS identity */}
-      <div style={{ borderTop: '1px solid #1e1e1e', borderBottom: '1px solid #1e1e1e' }}>
-        <div style={{ maxWidth: 760, margin: '0 auto', padding: '52px 48px', display: 'flex', alignItems: 'baseline', gap: 24 }}>
-          <span style={{ fontFamily: "'Arial Black', 'Arial Bold', sans-serif", fontSize: 'clamp(48px, 6vw, 80px)', color: '#fff', letterSpacing: 8, lineHeight: 1 }}>ATLAS</span>
-          <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: 4, textTransform: 'uppercase' as const, color: '#444' }}>Sistema de Gestão · by Black Sheep</span>
-        </div>
-      </div>
-
       {/* Mecanismo */}
       <div style={s.section} className="lp-section">
         <span style={s.eyebrow}>O Mecanismo</span>
         <h2 style={s.h2}>ATLAS não é mentoria financeira. É um modelo de gestão focado em lucro.</h2>
         <div style={s.body}>
-          <p>A diferença é simples:</p>
-          <p style={{ marginTop: 16 }}>Mentoria financeira te ensina a entender os números. O ATLAS te ensina a usar os números para tomar decisão — e mudar o resultado.</p>
-          <p style={{ marginTop: 16 }}>O Sistema ATLAS de Gestão é estruturado em 4 jornadas:</p>
-          <p style={{ marginTop: 16 }}>O ATLAS funciona como um sistema de controle que mostra, com precisão, onde o dinheiro entra, onde trava e o que precisa ser ajustado para liberar margem.</p>
+          <p>O ATLAS funciona como um sistema de controle que mostra, com precisão, onde o dinheiro entra, onde trava e o que precisa ser ajustado para liberar margem.</p>
         </div>
         <div style={s.jornadas}>
           {[
@@ -541,7 +532,13 @@ export function Landing() {
               </div>
             ))}
           </div>
-          <p style={{ marginTop: 28, fontSize: 16, fontWeight: 300, color: '#aaa' }}>Em 6 meses, você sai com clareza total sobre tudo que acontece na sua empresa.</p>
+          <p style={{ marginTop: 28, fontSize: 16, fontWeight: 300, color: '#aaa' }}>
+            Em 6 meses, você sai com clareza total sobre tudo que acontece na sua empresa através do{' '}
+            <span style={{ color: '#fff', fontWeight: 600 }}>SISTEMA ATLAS:</span>
+          </p>
+          <div style={{ marginTop: 32, border: '1px solid #1e1e1e', overflow: 'hidden' }}>
+            <img src="/dashboard-preview.png" alt="Sistema ATLAS" style={{ width: '100%', display: 'block', opacity: 0.85 }} />
+          </div>
         </div>
       </div>
 
