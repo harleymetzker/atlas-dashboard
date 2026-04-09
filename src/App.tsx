@@ -36,16 +36,17 @@ function AppRoutes() {
             <>
               <Route path="/admin" element={<Admin />} />
               <Route path="*" element={<Navigate to="/admin" replace />} />
+
             </>
           ) : (
             <>
-              <Route path="/" element={<Overview />} />
+              <Route path="/dashboard" element={<Overview />} />
               <Route path="/dre" element={<DRE />} />
               <Route path="/cashflow" element={<CashFlow />} />
               <Route path="/charts" element={<Charts />} />
               <Route path="/entries" element={<Entries />} />
               <Route path="/diagnostico" element={<Diagnostico />} />
-              <Route path="*" element={<Navigate to="/" replace />} />
+              <Route path="*" element={<Navigate to="/dashboard" replace />} />
             </>
           )}
         </Routes>
@@ -56,7 +57,7 @@ function AppRoutes() {
 
 export default function App() {
   return (
-    <BrowserRouter basename="/app">
+    <BrowserRouter>
       <Routes>
         <Route path="/ponto" element={<PontoEquilibrio />} />
         <Route path="*" element={

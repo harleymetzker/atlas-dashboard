@@ -3,7 +3,7 @@ import { LayoutDashboard, TrendingUp, ArrowLeftRight, BarChart3, PlusCircle, Bra
 import { useAuth } from '../../context/AuthContext'
 
 const navItems = [
-  { to: '/', icon: LayoutDashboard, label: 'Visão Geral' },
+  { to: '/dashboard', icon: LayoutDashboard, label: 'Visão Geral' },
   { to: '/dre', icon: TrendingUp, label: 'DRE' },
   { to: '/cashflow', icon: ArrowLeftRight, label: 'Fluxo de Caixa' },
   { to: '/charts', icon: BarChart3, label: 'Gráficos' },
@@ -37,7 +37,7 @@ export function Sidebar() {
             <NavLink
               key={to}
               to={to}
-              end={to === '/'}
+              end={to === '/dashboard'}
               className={({ isActive }) =>
                 `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all ${isActive ? 'bg-white text-black font-semibold' : 'text-white/50 hover:text-white hover:bg-white/5'}`
               }
