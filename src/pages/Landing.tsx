@@ -109,16 +109,16 @@ const s = {
     fontWeight: 600,
     letterSpacing: 4,
     textTransform: 'uppercase' as const,
-    color: '#666666',
-    marginBottom: 28,
+    color: '#555',
+    marginBottom: 14,
     display: 'block',
   },
   h2: {
-    fontSize: 'clamp(28px, 3vw, 42px)' as unknown as number,
-    fontWeight: 800,
-    lineHeight: 1.15,
+    fontSize: 'clamp(22px, 2.5vw, 30px)' as unknown as number,
+    fontWeight: 700,
+    lineHeight: 1.25,
     color: '#fff',
-    marginBottom: 36,
+    marginBottom: 28,
     maxWidth: '100%',
   },
   body: {
@@ -150,10 +150,10 @@ const s = {
     borderLeft: '2px solid #fff',
   },
   bqText: {
-    fontSize: 'clamp(24px, 3vw, 36px)' as unknown as number,
+    fontSize: 'clamp(20px, 2.2vw, 28px)' as unknown as number,
     fontWeight: 700,
     color: '#fff',
-    lineHeight: 1.2,
+    lineHeight: 1.3,
   },
   jornadas: {
     marginTop: 48,
@@ -419,7 +419,7 @@ export function Landing() {
         <p style={s.heroBody}>O mercado digital te ensinou a vender mais. Ninguém te ensinou a controlar o que já entra.</p>
       </div>
 
-      <hr style={s.hr} />
+
 
       {/* Diagnóstico */}
       <div style={s.section} className="lp-section">
@@ -450,7 +450,7 @@ export function Landing() {
         </div>
       </div>
 
-      <hr style={s.hr} />
+
 
       {/* Mentira */}
       <div style={s.section} className="lp-section">
@@ -464,7 +464,7 @@ export function Landing() {
         </div>
       </div>
 
-      <hr style={s.hr} />
+
 
       {/* História */}
       <div style={s.section} className="lp-section">
@@ -486,7 +486,7 @@ export function Landing() {
         </div>
       </div>
 
-      <hr style={s.hr} />
+
 
       {/* Mecanismo */}
       <div style={s.section} className="lp-section">
@@ -529,7 +529,7 @@ export function Landing() {
         </div>
       </div>
 
-      <hr style={s.hr} />
+
 
       {/* Para Quem É */}
       <div style={s.section} className="lp-section">
@@ -562,7 +562,7 @@ export function Landing() {
         <p style={s.bsNote}>O ATLAS faz parte da Black Sheep. A régua aqui é alta e só aceitamos empresários sérios.</p>
       </div>
 
-      <hr style={s.hr} />
+
 
       {/* Investimento */}
       <div style={s.invest} className="lp-invest">
@@ -571,7 +571,7 @@ export function Landing() {
         <p style={s.priceDetail}>6 meses. 4 jornadas. Resultado em até 60 dias.<br /><br />Para quem fatura bem, isso é menos de uma semana de receita. O que custa mais — o programa ou mais 6 meses perdendo margem?</p>
       </div>
 
-      <hr style={s.hr} />
+
 
       {/* Como Entrar */}
       <div style={s.section} id="aplicar" className="lp-section">
@@ -598,7 +598,7 @@ export function Landing() {
         </div>
       </div>
 
-      <hr style={s.hr} />
+
 
       {/* FAQ */}
       <div style={s.section} className="lp-section">
