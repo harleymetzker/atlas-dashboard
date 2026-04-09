@@ -416,12 +416,14 @@ export function Landing() {
 
       {/* Hero */}
       <div style={s.hero} className="lp-hero">
-        <h1 style={s.heroTitle}>Você dobrou o faturamento.<br />E passou a ter menos dinheiro.</h1>
-        <p style={{ ...s.heroSub, fontSize: 'clamp(22px, 2.5vw, 32px)', fontWeight: 400, color: '#888', marginBottom: 32, lineHeight: 1.2 }}>
-          E nem sabe quanto está perdendo por mês.
+        <h1 style={s.heroTitle}>
+          Você dobrou o faturamento e passou a ter menos dinheiro.
+        </h1>
+        <p style={{ ...s.heroTitle, fontSize: 'clamp(25px, 2.5vw, 34px)', fontWeight: 900, color: '#fff', marginBottom: 32 }}>
+          E nem sabe quanto está perdendo todo mês...
         </p>
         <p style={s.heroSub}>Isso não é azar... É falta de gestão.</p>
-        <p style={s.heroBody}>O mercado digital te ensinou a vender mais. Ninguém te ensinou a controlar o que já entra.</p>
+        <p style={{ ...s.heroSub, marginBottom: 0 }}>O mercado digital te ensinou a vender mais. Ninguém te ensinou a controlar o que já entra.</p>
         <hr style={{ border: 'none', borderTop: '1px solid #1e1e1e', marginTop: 64, marginBottom: 0 }} />
       </div>
 
