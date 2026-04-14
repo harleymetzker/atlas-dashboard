@@ -31,9 +31,26 @@ export function useEntries(filters: Filters = {}) {
 
   useEffect(() => { fetchEntries() }, [fetchEntries])
 
-  async function addEntry(entry: Omit<Entry, 'id' | 'user_id' | 'created_at'>) {
-    const { error } = await supabase.from('entries').insert(entry)
-    if (error) throw new Error(error.message)
+  async function addEntry(entry: Omit<Entry, 'id' | 'user_id' | 'created_at'>, meses?: number) {
+    if (meses && meses > 1 && entry.recurrence_id) {
+      const rows = Array.from({ length: meses }, (_, i) => {
+        const addMonths = (dateStr: string, n: number) => {
+          const d = new Date(dateStr + 'T12:00:00')
+          d.setMonth(d.getMonth() + n)
+          return d.toISOString().slice(0, 10)
+        }
+        return {
+          ...entry,
+          competence_date: addMonths(entry.competence_date, i),
+          payment_date: addMonths(entry.payment_date, i),
+        }
+      })
+      const { error } = await supabase.from('entries').insert(rows)
+      if (error) throw new Error(error.message)
+    } else {
+      const { error } = await supabase.from('entries').insert(entry)
+      if (error) throw new Error(error.message)
+    }
     await fetchEntries()
   }
 

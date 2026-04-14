@@ -10,6 +10,7 @@ export interface Entry {
   competence_date: string   // Data de Competência → DRE
   payment_date: string      // Data de Pagamento/Recebimento → Fluxo de Caixa
   created_at: string
+  recurrence_id?: string | null
 }
 
 export interface DRE {

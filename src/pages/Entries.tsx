@@ -62,6 +62,8 @@ const defaultForm = {
   amount: '',
   competence_date: todayStr,
   payment_date: todayStr,
+  recorrente: false,
+  mesesRecorrencia: 2,
 }
 
 export function Entries() {
@@ -98,6 +100,8 @@ export function Entries() {
       amount: String(entry.amount),
       competence_date: entry.competence_date,
       payment_date: entry.payment_date,
+      recorrente: false,
+      mesesRecorrencia: 2,
     })
     setFormError('')
     setModalOpen(true)
@@ -117,9 +121,16 @@ export function Entries() {
     setSubmitting(true)
     setFormError('')
     try {
-      const payload = { ...form, amount: Number(form.amount) }
-      if (editEntry) await updateEntry(editEntry.id, payload)
-      else await addEntry(payload)
+      const { recorrente, mesesRecorrencia, ...rest } = form
+      const payload = { ...rest, amount: Number(form.amount) }
+      if (editEntry) {
+        await updateEntry(editEntry.id, payload)
+      } else if (recorrente) {
+        const recurrence_id = crypto.randomUUID()
+        await addEntry({ ...payload, recurrence_id }, mesesRecorrencia)
+      } else {
+        await addEntry(payload)
+      }
       setModalOpen(false)
     } catch (e: unknown) {
       setFormError(e instanceof Error ? e.message : 'Erro ao salvar.')
@@ -186,7 +197,14 @@ export function Entries() {
                       </span>
                     </td>
                     <td className="py-3">{entry.category}</td>
-                    <td className="py-3 max-w-xs truncate text-white/50">{entry.description || '—'}</td>
+                    <td className="py-3 max-w-xs truncate text-white/50">
+                      {entry.description || '—'}
+                      {entry.recurrence_id && (
+                        <span style={{ fontSize: 10, color: '#555', letterSpacing: 1, textTransform: 'uppercase', marginLeft: 8, border: '1px solid #333', padding: '2px 6px', borderRadius: 3 }}>
+                          recorrente
+                        </span>
+                      )}
+                    </td>
                     <td className={`py-3 text-right tabular-nums font-medium ${entry.type === 'revenue' ? 'text-emerald-400' : 'text-white'}`}>
                       {entry.type !== 'revenue' ? '(' : ''}{formatCurrency(entry.amount)}{entry.type !== 'revenue' ? ')' : ''}
                     </td>
@@ -262,6 +280,43 @@ export function Entries() {
               required
             />
           </div>
+          {!editEntry && (
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 4 }}>
+                <button
+                  type="button"
+                  onClick={() => setForm(f => ({ ...f, recorrente: !f.recorrente }))}
+                  style={{
+                    width: 40, height: 22, borderRadius: 11,
+                    background: form.recorrente ? '#fff' : '#333',
+                    border: 'none', cursor: 'pointer', position: 'relative', transition: 'background 0.2s',
+                    flexShrink: 0,
+                  }}
+                >
+                  <span style={{
+                    position: 'absolute', top: 3,
+                    left: form.recorrente ? 20 : 3,
+                    width: 16, height: 16, borderRadius: '50%',
+                    background: form.recorrente ? '#000' : '#888',
+                    transition: 'left 0.2s',
+                  }} />
+                </button>
+                <span style={{ fontSize: 13, color: '#aaa' }}>Lançamento recorrente</span>
+              </div>
+              {form.recorrente && (
+                <div style={{ marginTop: 12, display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <label style={{ fontSize: 13, color: '#aaa' }}>Repetir por</label>
+                  <input
+                    type="number" min={2} max={36}
+                    value={form.mesesRecorrencia}
+                    onChange={e => setForm(f => ({ ...f, mesesRecorrencia: Number(e.target.value) }))}
+                    style={{ width: 64, background: '#111', border: '1px solid #333', color: '#fff', padding: '6px 10px', borderRadius: 4, fontSize: 14 }}
+                  />
+                  <label style={{ fontSize: 13, color: '#aaa' }}>meses</label>
+                </div>
+              )}
+            </div>
+          )}
           {formError && <p className="text-xs text-red-400">{formError}</p>}
           <div className="flex gap-3 pt-2">
             <Button variant="secondary" onClick={() => setModalOpen(false)} className="flex-1">Cancelar</Button>
