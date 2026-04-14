@@ -161,11 +161,55 @@ export function Diagnostico() {
   const [error, setError]           = useState<string | null>(null)
   const [expandedId, setExpandedId] = useState<string | null>(null)
 
+  const [companyProfile, setCompanyProfile] = useState<{
+    setor: string
+    modelo_negocio: string
+    tempo_operacao: string
+    ticket_medio: string
+  } | null>(null)
+  const [loadingProfile, setLoadingProfile] = useState(true)
+  const [showProfileForm, setShowProfileForm] = useState(false)
+  const [profileForm, setProfileForm] = useState({
+    setor: '',
+    modelo_negocio: '',
+    tempo_operacao: '',
+    ticket_medio: '',
+  })
+
   useEffect(() => {
     if (!user) return
     loadHistory()
     loadCredits()
+    loadProfile()
   }, [user])
+
+  async function loadProfile() {
+    if (!user) return
+    setLoadingProfile(true)
+    const { data } = await supabase
+      .from('company_profiles')
+      .select('setor, modelo_negocio, tempo_operacao, ticket_medio')
+      .eq('user_id', user.id)
+      .maybeSingle()
+    setCompanyProfile(data)
+    setLoadingProfile(false)
+  }
+
+  async function handleSaveProfile() {
+    if (!user) return
+    if (!profileForm.setor || !profileForm.modelo_negocio || !profileForm.tempo_operacao || !profileForm.ticket_medio) return
+
+    const { data, error } = await supabase
+      .from('company_profiles')
+      .upsert({ user_id: user.id, ...profileForm, updated_at: new Date().toISOString() }, { onConflict: 'user_id' })
+      .select('setor, modelo_negocio, tempo_operacao, ticket_medio')
+      .single()
+
+    if (!error && data) {
+      setCompanyProfile(data)
+      setShowProfileForm(false)
+    }
+  }
 
   // Returns the most recent analysis per period (deduped by period, latest created_at wins)
   async function loadHistory() {
@@ -241,6 +285,7 @@ export function Diagnostico() {
           dre,
           cashFlow: { totalEntradas, totalSaidas, geracao },
           runway,
+          companyProfile,
         }),
       })
 
@@ -287,6 +332,96 @@ export function Diagnostico() {
 
   const years = Array.from({ length: 5 }, (_, i) => today.getFullYear() - 2 + i)
 
+  if (loadingProfile) return (
+    <div className="p-8 flex items-center justify-center min-h-[400px]">
+      <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+    </div>
+  )
+
+  if (!companyProfile && !showProfileForm) {
+    return (
+      <div className="p-8 flex items-center justify-center min-h-[500px]">
+        <div className="max-w-md w-full">
+          <div className="mb-10">
+            <h2 className="text-2xl font-bold text-white tracking-tight">Antes de começar</h2>
+            <p className="text-sm text-white/40 mt-2">Precisamos entender o seu negócio para que a IA possa comparar seus números com benchmarks reais do seu setor.</p>
+          </div>
+          <button
+            onClick={() => setShowProfileForm(true)}
+            className="w-full bg-white text-black font-semibold text-sm rounded-2xl py-4 hover:bg-white/90 transition-all"
+          >
+            Configurar perfil da empresa
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  if (showProfileForm) {
+    const SETORES = ['Alimentação', 'Indústria', 'Serviços', 'Infoprodutos & Mentoria', 'SaaS & Tecnologia', 'Varejo', 'E-commerce']
+    const MODELOS = ['B2B', 'B2C', 'Ambos']
+    const TEMPOS = ['Menos de 1 ano', '1–3 anos', '3+ anos']
+    const TICKETS = ['Até R$200', 'R$200–2k', 'R$2k–10k', 'Acima de R$10k']
+
+    const selectStyle = "w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-white/30 appearance-none cursor-pointer"
+    const labelStyle = "block text-xs text-white/40 uppercase tracking-widest mb-2"
+
+    const isValid = profileForm.setor && profileForm.modelo_negocio && profileForm.tempo_operacao && profileForm.ticket_medio
+
+    return (
+      <div className="p-8">
+        <div className="max-w-md">
+          <div className="mb-10">
+            <h2 className="text-2xl font-bold text-white tracking-tight">Perfil da empresa</h2>
+            <p className="text-sm text-white/40 mt-2">Essas informações definem os benchmarks usados na análise. Preenchimento único.</p>
+          </div>
+
+          <div className="space-y-6">
+            <div>
+              <label className={labelStyle}>Setor</label>
+              <select className={selectStyle} value={profileForm.setor} onChange={e => setProfileForm(f => ({ ...f, setor: e.target.value }))}>
+                <option value="" className="bg-black">Selecione...</option>
+                {SETORES.map(s => <option key={s} value={s} className="bg-black">{s}</option>)}
+              </select>
+            </div>
+
+            <div>
+              <label className={labelStyle}>Modelo de negócio</label>
+              <select className={selectStyle} value={profileForm.modelo_negocio} onChange={e => setProfileForm(f => ({ ...f, modelo_negocio: e.target.value }))}>
+                <option value="" className="bg-black">Selecione...</option>
+                {MODELOS.map(m => <option key={m} value={m} className="bg-black">{m}</option>)}
+              </select>
+            </div>
+
+            <div>
+              <label className={labelStyle}>Ticket médio</label>
+              <select className={selectStyle} value={profileForm.ticket_medio} onChange={e => setProfileForm(f => ({ ...f, ticket_medio: e.target.value }))}>
+                <option value="" className="bg-black">Selecione...</option>
+                {TICKETS.map(t => <option key={t} value={t} className="bg-black">{t}</option>)}
+              </select>
+            </div>
+
+            <div>
+              <label className={labelStyle}>Tempo de operação</label>
+              <select className={selectStyle} value={profileForm.tempo_operacao} onChange={e => setProfileForm(f => ({ ...f, tempo_operacao: e.target.value }))}>
+                <option value="" className="bg-black">Selecione...</option>
+                {TEMPOS.map(t => <option key={t} value={t} className="bg-black">{t}</option>)}
+              </select>
+            </div>
+
+            <button
+              onClick={handleSaveProfile}
+              disabled={!isValid}
+              className="w-full bg-white text-black font-semibold text-sm rounded-2xl py-4 hover:bg-white/90 disabled:opacity-30 disabled:cursor-not-allowed transition-all mt-4"
+            >
+              Salvar e continuar
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="p-8 space-y-8">
       {/* Header */}
@@ -294,6 +429,12 @@ export function Diagnostico() {
         <div>
           <h2 className="text-2xl font-bold text-white tracking-tight">Diagnóstico IA</h2>
           <p className="text-sm text-white/30 mt-1">Análise financeira gerada por inteligência artificial</p>
+          <button
+            onClick={() => { setProfileForm(companyProfile!); setShowProfileForm(true) }}
+            className="text-xs text-white/20 hover:text-white/50 transition-colors mt-1"
+          >
+            {companyProfile?.setor} · Editar perfil
+          </button>
         </div>
 
         <div className="flex items-center gap-3">

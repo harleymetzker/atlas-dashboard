@@ -5,6 +5,56 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
+const BENCHMARKS: Record<string, string> = {
+  'Alimentação': `
+- Margem líquida saudável: 8–12% | Crítico: abaixo de 5%
+- CMV saudável: até 35% | Crítico: acima de 40%
+- Margem de contribuição esperada: 55–65%
+- Despesas fixas saudáveis: até 45% do faturamento líquido
+- Tolerância: ±2p.p. = aceitável | acima disso = alerta | muito acima = crítico`,
+
+  'Indústria': `
+- Margem líquida saudável: 8–15% | Crítico: abaixo de 5%
+- CMV saudável: até 50% | Crítico: acima de 60%
+- Margem de contribuição esperada: 40–55%
+- Despesas fixas saudáveis: até 35% do faturamento líquido
+- Tolerância: ±2p.p.`,
+
+  'Serviços': `
+- Margem líquida saudável: 15–25% (se intensivo em pessoas: 10–20%) | Crítico: abaixo de 8%
+- CMV saudável: até 20% | Crítico: acima de 30%
+- Margem de contribuição esperada: 60–75%
+- IMPORTANTE: se RH representa mais de 40% das despesas fixas, margem no limite inferior é normal — não classificar como problema
+- Tolerância: ±2p.p.`,
+
+  'Infoprodutos & Mentoria': `
+- Margem líquida saudável: 20–40% (com tráfego pago pesado) ou 40–60% (orgânico/marca forte) | Crítico: abaixo de 15%
+- CMV saudável: até 10% | Crítico: acima de 20%
+- Margem de contribuição esperada: 60–80%
+- Despesas variáveis de venda altas são normais (tráfego, afiliados) — não classificar como problema isolado
+- Tolerância: ±2p.p.`,
+
+  'SaaS & Tecnologia': `
+- Margem bruta esperada: acima de 70% — principal indicador do setor
+- Margem líquida saudável (empresas maduras): 10–25% | Early stage (menos de 3 anos): não usar margem líquida como benchmark
+- Despesas fixas altas de RH e infra com receita crescente podem indicar estratégia de crescimento — não classificar como crítico automaticamente
+- Tolerância: ±2p.p.`,
+
+  'Varejo': `
+- Margem líquida saudável: 5–10% | Crítico: abaixo de 3%
+- CMV saudável: até 60% | Crítico: acima de 70%
+- Margem de contribuição esperada: 30–45%
+- Despesas fixas saudáveis: até 30% do faturamento líquido
+- Tolerância: ±2p.p.`,
+
+  'E-commerce': `
+- Margem líquida saudável: 8–13% (marketplace) ou 10–15% (loja própria) | Crítico: abaixo de 5%
+- CMV saudável: até 55% | Crítico: acima de 65%
+- Margem de contribuição esperada: 35–50%
+- Despesas variáveis de venda altas são normais (frete, marketplace, tráfego)
+- Tolerância: ±2p.p.`,
+}
+
 serve(async (req: Request) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
@@ -12,25 +62,41 @@ serve(async (req: Request) => {
 
   try {
     const body = await req.json()
-    const { period, dre, cashFlow, runway } = body
+    const { period, dre, cashFlow, runway, companyProfile } = body
 
     const ANTHROPIC_API_KEY = Deno.env.get('ANTHROPIC_API_KEY')
-    if (!ANTHROPIC_API_KEY) {
-      throw new Error('ANTHROPIC_API_KEY not set')
-    }
+    if (!ANTHROPIC_API_KEY) throw new Error('ANTHROPIC_API_KEY not set')
 
-    const systemPrompt = `Você é um consultor financeiro especialista em empresas do digital (e-commerce, SaaS, agências, infoprodutos). Analisa DREs e fluxos de caixa com precisão e linguagem direta, sem rodeios. Sempre responde em JSON com a estrutura exata solicitada. Nunca adiciona campos extras. Usa valores reais fornecidos no contexto. Dá diagnóstico honesto mesmo quando os números são ruins. Nunca faça comparações com médias de mercado, benchmarks de setor ou dados externos. Analise apenas os números fornecidos. Não use frases como "acima da média do setor" ou "típico do mercado". O parâmetro de caixa mínimo saudável desta empresa é 2,5 vezes os custos fixos mensais. Use sempre esse multiplicador nas recomendações, nunca 3 meses.`
+    const benchmarks = companyProfile?.setor ? BENCHMARKS[companyProfile.setor] ?? '' : ''
+
+    const profileContext = companyProfile ? `
+PERFIL DA EMPRESA:
+- Setor: ${companyProfile.setor}
+- Modelo de negócio: ${companyProfile.modelo_negocio}
+- Ticket médio: ${companyProfile.ticket_medio}
+- Tempo de operação: ${companyProfile.tempo_operacao}` : ''
+
+    const benchmarkContext = benchmarks ? `
+BENCHMARKS DO SETOR (${companyProfile.setor}):
+${benchmarks}
+Use esses benchmarks para classificar cada indicador como saudável, em alerta ou crítico. Aplique a tolerância de ±2p.p. antes de classificar qualquer indicador como problema.` : ''
+
+    const systemPrompt = `Você é um consultor financeiro especialista em empresas do mercado brasileiro. Analisa DREs e fluxos de caixa com precisão e linguagem direta, sem rodeios. Sempre responde em JSON com a estrutura exata solicitada. Nunca adiciona campos extras. Usa valores reais fornecidos no contexto. Dá diagnóstico honesto mesmo quando os números são ruins. Quando benchmarks de setor forem fornecidos, use-os para comparar e classificar os indicadores — diga explicitamente se o número está dentro, abaixo ou acima do esperado para o setor. O parâmetro de caixa mínimo saudável é 2,5 vezes os custos fixos mensais.`
 
     const userPrompt = `Analise os dados financeiros abaixo referentes ao período ${period} e retorne um JSON com exatamente estes campos:
 
 {
-  "diagnostico_geral": "string (2-3 frases resumindo a saúde financeira do negócio)",
-  "dre_vs_caixa": "string (análise técnica da relação entre o lucro da DRE e a geração de caixa do período — se há divergência, qual a causa provável — competência vs caixa, retiradas, prazo de recebimento — e o que o empresário deve monitorar; tom de CFO, técnico e direto, 2-4 frases)",
-  "pontos_criticos": ["string", "string", "string"] (lista de 2-4 problemas urgentes, ou lista vazia se não houver),
-  "pontos_positivos": ["string", "string"] (lista de 2-4 pontos fortes, ou lista vazia se não houver),
-  "acoes_prioritarias": ["string", "string", "string"] (lista de 3-5 ações concretas e específicas),
-  "tendencia": "string (parágrafo de 2-4 frases descrevendo a tendência do negócio — se está melhorando ou piorando em relação ao mês anterior e por quê, baseado exclusivamente nos números fornecidos)"
+  "diagnostico_geral": "string (2-3 frases resumindo a saúde financeira do negócio, mencionando o setor quando relevante)",
+  "dre_vs_caixa": "string (análise técnica da relação entre lucro da DRE e geração de caixa — divergências, causas prováveis, o que monitorar; tom de CFO, 2-4 frases)",
+  "pontos_criticos": ["string"] (2-4 problemas urgentes com referência aos benchmarks do setor quando aplicável, ou lista vazia),
+  "pontos_positivos": ["string"] (2-4 pontos fortes com referência aos benchmarks do setor quando aplicável, ou lista vazia),
+  "acoes_prioritarias": ["string"] (3-5 ações concretas e específicas),
+  "tendencia": "string (2-4 frases sobre tendência do negócio baseada exclusivamente nos números fornecidos)"
 }
+
+${profileContext}
+
+${benchmarkContext}
 
 DADOS DO PERÍODO ${period}:
 
@@ -58,74 +124,47 @@ FLUXO DE CAIXA:
 
 Retorne APENAS o JSON, sem markdown, sem explicações adicionais.`
 
-    console.log('[diagnose] Calling Anthropic API...')
-    console.log('[diagnose] API key present:', !!ANTHROPIC_API_KEY, '| key prefix:', ANTHROPIC_API_KEY.slice(0, 10))
-
-    let response: Response
-    try {
-      response = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': ANTHROPIC_API_KEY,
-          'anthropic-version': '2023-06-01',
-        },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-6',
-          max_tokens: 2000,
-          system: systemPrompt,
-          messages: [{ role: 'user', content: userPrompt }],
-        }),
-      })
-    } catch (fetchErr) {
-      console.error('[diagnose] fetch() threw:', fetchErr)
-      return new Response(JSON.stringify({
-        error: 'fetch_failed',
-        detail: String(fetchErr),
-      }), { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } })
-    }
-
-    console.log('[diagnose] Anthropic status:', response.status)
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01',
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 2000,
+        system: systemPrompt,
+        messages: [{ role: 'user', content: userPrompt }],
+      }),
+    })
 
     if (!response.ok) {
       const errText = await response.text()
-      console.error('[diagnose] Anthropic error body:', errText)
-      return new Response(JSON.stringify({
-        error: 'anthropic_api_error',
-        status: response.status,
-        detail: errText,
-      }), { status: 502, headers: { ...corsHeaders, 'Content-Type': 'application/json' } })
+      return new Response(JSON.stringify({ error: 'anthropic_api_error', status: response.status, detail: errText }), {
+        status: 502, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
     }
 
     const data = await response.json()
-    console.log('[diagnose] Anthropic response keys:', Object.keys(data))
     const content = data.content?.[0]?.text ?? ''
-    console.log('[diagnose] Raw AI text (first 200):', content.slice(0, 200))
 
     let parsed
     try {
       parsed = JSON.parse(content)
-    } catch (parseErr) {
-      console.error('[diagnose] JSON parse failed:', parseErr)
-      return new Response(JSON.stringify({
-        error: 'json_parse_failed',
-        detail: String(parseErr),
-        raw: content,
-      }), { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } })
+    } catch {
+      return new Response(JSON.stringify({ error: 'json_parse_failed', raw: content }), {
+        status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
     }
 
     return new Response(JSON.stringify({ analysis: parsed }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     })
+
   } catch (err) {
-    console.error('[diagnose] Unhandled error:', err)
-    return new Response(JSON.stringify({
-      error: 'unhandled_error',
-      detail: String(err),
-      stack: err instanceof Error ? err.stack : undefined,
-    }), {
-      status: 500,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    return new Response(JSON.stringify({ error: 'unhandled_error', detail: String(err) }), {
+      status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     })
   }
 })
