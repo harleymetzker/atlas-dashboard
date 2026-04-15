@@ -14,6 +14,7 @@ import { Landing } from './pages/Landing'
 import { PrecificacaoProduto } from './pages/ferramentas/PrecificacaoProduto'
 import { PrecificacaoServico } from './pages/ferramentas/PrecificacaoServico'
 import { PontoEquilibrioDash } from './pages/ferramentas/PontoEquilibrioDash'
+import { SimuladorCenarios } from './pages/ferramentas/SimuladorCenarios'
 
 function AppRoutes() {
   const { session, loading, isAdmin } = useAuth()
@@ -53,6 +54,7 @@ function AppRoutes() {
               <Route path="/ferramentas/precificacao-produto" element={<PrecificacaoProduto />} />
               <Route path="/ferramentas/precificacao-servico" element={<PrecificacaoServico />} />
               <Route path="/ferramentas/ponto-equilibrio" element={<PontoEquilibrioDash />} />
+              <Route path="/ferramentas/simulador-cenarios" element={<SimuladorCenarios />} />
               <Route path="*" element={<Navigate to="/dashboard" replace />} />
             </>
           )}

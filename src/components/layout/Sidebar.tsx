@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
-import { LayoutDashboard, TrendingUp, ArrowLeftRight, BarChart3, PlusCircle, BrainCircuit, Users, LogOut, Wrench, ChevronDown, Tag, Clock, Target } from 'lucide-react'
+import { LayoutDashboard, TrendingUp, ArrowLeftRight, BarChart3, PlusCircle, BrainCircuit, Users, LogOut, Wrench, ChevronDown, Tag, Clock, Target, GitCompare } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 
 const navItems = [
@@ -16,6 +16,7 @@ const ferramentasItems = [
   { to: '/ferramentas/precificacao-produto', icon: Tag, label: 'Preço de Produto' },
   { to: '/ferramentas/precificacao-servico', icon: Clock, label: 'Preço de Serviço' },
   { to: '/ferramentas/ponto-equilibrio', icon: Target, label: 'Ponto de Equilíbrio' },
+  { to: '/ferramentas/simulador-cenarios', icon: GitCompare, label: 'Simulador de Cenários' },
 ]
 
 export function Sidebar() {
