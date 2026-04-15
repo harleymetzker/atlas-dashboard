@@ -1,9 +1,11 @@
 import { useState, useEffect, useMemo } from 'react'
+import { format, startOfMonth, endOfMonth } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
 import { RefreshCw } from 'lucide-react'
-import { useDreSnapshot } from '../../hooks/useDreSnapshot'
-import { formatCurrency } from '../../lib/calculations'
+import { supabase } from '../../lib/supabase'
+import { calcDRE, formatCurrency } from '../../lib/calculations'
 import { CurrencyInput } from '../../components/ui/CurrencyInput'
-import type { DRE } from '../../types'
+import type { DRE, Entry } from '../../types'
 
 interface SimForm {
   faturamentoBruto: string
@@ -139,14 +141,60 @@ function SectionRow({ label }: { label: string }) {
 }
 
 export function SimuladorCenarios() {
-  const { snapshot, loading } = useDreSnapshot()
+  const [availableMonths, setAvailableMonths] = useState<Array<{ value: string; label: string }>>([])
+  const [selectedMonth, setSelectedMonth] = useState<string>('')
+  const [dre, setDre] = useState<DRE | null>(null)
   const [form, setForm] = useState<SimForm | null>(null)
+  const [loadingMonths, setLoadingMonths] = useState(true)
+  const [loadingDre, setLoadingDre] = useState(false)
 
+  // Load distinct months available in entries
   useEffect(() => {
-    if (snapshot && !form) {
-      setForm(dreToForm(snapshot.dre))
+    async function load() {
+      const { data } = await supabase.from('entries').select('competence_date')
+      if (!data || data.length === 0) { setLoadingMonths(false); return }
+
+      const monthSet = new Set(data.map((e: { competence_date: string }) => e.competence_date.slice(0, 7)))
+      const months = Array.from(monthSet).sort().reverse() as string[]
+      const formatted = months.map(m => ({
+        value: m,
+        label: format(new Date(m + '-02'), 'MMMM/yyyy', { locale: ptBR }),
+      }))
+
+      setAvailableMonths(formatted)
+      if (months.length > 0) setSelectedMonth(months[0])
+      setLoadingMonths(false)
     }
-  }, [snapshot])
+    load()
+  }, [])
+
+  // Load DRE whenever selected month changes
+  useEffect(() => {
+    if (!selectedMonth) return
+    async function load() {
+      setLoadingDre(true)
+      const ref = new Date(selectedMonth + '-02')
+      const startDate = format(startOfMonth(ref), 'yyyy-MM-dd')
+      const endDate = format(endOfMonth(ref), 'yyyy-MM-dd')
+
+      const { data } = await supabase
+        .from('entries')
+        .select('*')
+        .gte('competence_date', startDate)
+        .lte('competence_date', endDate)
+
+      if (data && data.length > 0) {
+        const computed = calcDRE(data as Entry[])
+        setDre(computed)
+        setForm(dreToForm(computed))
+      } else {
+        setDre(null)
+        setForm(null)
+      }
+      setLoadingDre(false)
+    }
+    load()
+  }, [selectedMonth])
 
   const sim = useMemo(() => (form ? calcSim(form) : null), [form])
 
@@ -155,10 +203,12 @@ export function SimuladorCenarios() {
   }
 
   function handleReset() {
-    if (snapshot) setForm(dreToForm(snapshot.dre))
+    if (dre) setForm(dreToForm(dre))
   }
 
-  if (loading) {
+  const loading = loadingMonths || loadingDre
+
+  if (loading && !dre) {
     return (
       <div className="p-8 flex items-center justify-center min-h-64">
         <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
@@ -166,7 +216,7 @@ export function SimuladorCenarios() {
     )
   }
 
-  if (!snapshot || !form || !sim) {
+  if (!loadingMonths && availableMonths.length === 0) {
     return (
       <div className="p-8 space-y-8">
         <div>
@@ -180,7 +230,14 @@ export function SimuladorCenarios() {
     )
   }
 
-  const dre = snapshot.dre
+  if (!dre || !form || !sim) {
+    return (
+      <div className="p-8 flex items-center justify-center min-h-64">
+        <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+      </div>
+    )
+  }
+
   const liq = dre.faturamentoLiquido || 1
   const bruto = dre.faturamentoBruto || 1
   const lucroAtual = dre.lucro
@@ -205,53 +262,58 @@ export function SimuladorCenarios() {
         </button>
       </div>
 
+      {/* Period selector */}
+      <div className="flex items-center gap-3">
+        <span className="text-xs text-white/30 uppercase tracking-widest whitespace-nowrap">Período de referência</span>
+        <select
+          value={selectedMonth}
+          onChange={e => setSelectedMonth(e.target.value)}
+          className="bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-white/30 transition-colors appearance-none cursor-pointer"
+        >
+          {availableMonths.map(m => (
+            <option key={m.value} value={m.value} className="bg-[#0a0a0a]">{m.label}</option>
+          ))}
+        </select>
+        {loadingDre && (
+          <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+        )}
+      </div>
+
       {/* Comparison Table */}
       <div className="bg-white/[0.03] border border-white/10 rounded-2xl overflow-hidden">
         {/* Column headers */}
         <div className="grid grid-cols-[1fr_160px_200px_130px] items-center px-6 py-3 border-b border-white/10">
           <span className="text-xs text-white/25 uppercase tracking-widest">Linha DRE</span>
-          <div className="flex items-center justify-end gap-2 pr-4">
-            <span className="text-xs text-white/25 uppercase tracking-widest">Atual</span>
-            <span className="text-[10px] text-white/25 bg-white/5 px-1.5 py-0.5 rounded">{snapshot.referenciaMes}</span>
-          </div>
+          <span className="text-xs text-white/25 uppercase tracking-widest text-right pr-4">Atual</span>
           <span className="text-xs text-white/25 uppercase tracking-widest">Simulado</span>
           <span className="text-xs text-white/25 uppercase tracking-widest text-right">Δ</span>
         </div>
 
         <div className="divide-y divide-white/[0.04]">
-          {/* Faturamento Bruto */}
           <Row
             label="(+) Faturamento Bruto"
             actual={formatCurrency(dre.faturamentoBruto)}
             simNode={<SimCurrencyInput value={form.faturamentoBruto} onChange={set('faturamentoBruto')} />}
             delta={<Delta actual={dre.faturamentoBruto} simulated={sim.faturamentoBruto} />}
           />
-
-          {/* Impostos */}
           <Row indent
             label="(-) Impostos"
             actual={`${((dre.impostos / bruto) * 100).toFixed(1)}%`}
             simNode={<PctInput value={form.impostosPct} onChange={set('impostosPct')} />}
             delta={<Delta actual={dre.impostos} simulated={sim.impostos} positive={false} />}
           />
-
-          {/* Faturamento Líquido */}
           <TotalRow
             label="(=) Faturamento Líquido"
             actual={formatCurrency(dre.faturamentoLiquido)}
             simValue={formatCurrency(sim.faturamentoLiquido)}
             delta={<Delta actual={dre.faturamentoLiquido} simulated={sim.faturamentoLiquido} />}
           />
-
-          {/* CMV */}
           <Row indent
             label="(-) CMV"
             actual={`${((dre.cmv / liq) * 100).toFixed(1)}%`}
             simNode={<PctInput value={form.cmvPct} onChange={set('cmvPct')} />}
             delta={<Delta actual={dre.cmv} simulated={sim.cmv} positive={false} />}
           />
-
-          {/* Lucro Bruto */}
           <TotalRow
             label="(=) Lucro Bruto"
             actual={formatCurrency(dre.lucroBruto)}
@@ -259,9 +321,7 @@ export function SimuladorCenarios() {
             delta={<Delta actual={dre.lucroBruto} simulated={sim.lucroBruto} />}
           />
 
-          {/* Despesas Variáveis */}
           <SectionRow label="Despesas Variáveis de Venda" />
-
           <Row indent
             label="Comissões de Venda"
             actual={`${((dre.comissoesVendas / liq) * 100).toFixed(1)}%`}
@@ -280,8 +340,6 @@ export function SimuladorCenarios() {
             simNode={<PctInput value={form.taxasCartaoPct} onChange={set('taxasCartaoPct')} />}
             delta={<Delta actual={dre.taxasCartao} simulated={sim.taxasCartao} positive={false} />}
           />
-
-          {/* Margem de Contribuição */}
           <TotalRow
             label="(=) Margem de Contribuição"
             actual={formatCurrency(dre.margemContribuicao)}
@@ -289,9 +347,7 @@ export function SimuladorCenarios() {
             delta={<Delta actual={dre.margemContribuicao} simulated={sim.margemContribuicao} />}
           />
 
-          {/* Despesas Fixas */}
           <SectionRow label="Despesas Fixas" />
-
           <Row indent
             label="RH"
             actual={formatCurrency(dre.despesasRH)}
@@ -310,16 +366,12 @@ export function SimuladorCenarios() {
             simNode={<SimCurrencyInput value={form.despesasAdmin} onChange={set('despesasAdmin')} />}
             delta={<Delta actual={dre.despesasAdmin} simulated={sim.despesasAdmin} positive={false} />}
           />
-
-          {/* EBITDA */}
           <TotalRow
             label="(=) EBITDA"
             actual={formatCurrency(dre.ebitda)}
             simValue={formatCurrency(sim.ebitda)}
             delta={<Delta actual={dre.ebitda} simulated={sim.ebitda} />}
           />
-
-          {/* Retiradas */}
           <Row indent
             label="(-) Retiradas"
             actual={formatCurrency(dre.retiradas)}
