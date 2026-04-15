@@ -132,8 +132,9 @@ export function PrecificacaoServico() {
     const horasDisponiveis = numProf * diasMes * horasDia * (11 / 12) * fatorProd
     const custoHora = horasDisponiveis > 0 ? custoMensalPessoal / horasDisponiveis : 0
     const impostoDivisor = 1 - impostos
-    const precoHora = horasDisponiveis > 0 && impostoDivisor > 0
-      ? (((custoFixo + metaFaturamento) / horasDisponiveis) + custoHora + custoVariavel) / impostoDivisor
+    const custoVariavelDivisor = 1 - custoVariavel
+    const precoHora = horasDisponiveis > 0 && impostoDivisor > 0 && custoVariavelDivisor > 0
+      ? (((custoFixo + metaFaturamento) / horasDisponiveis) + custoHora) / custoVariavelDivisor / impostoDivisor
       : 0
 
     return { horasDisponiveis, custoHora, precoHora }
