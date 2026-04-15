@@ -21,6 +21,7 @@ interface PricingProduct {
   rh: number
   ocupacao: number
   administrativo: number
+  desconto: number
   preco_liquido_sugerido: number
   preco_final_sugerido: number
   markup: number
@@ -39,6 +40,7 @@ const defaultForm = {
   rh: '',
   ocupacao: '',
   administrativo: '',
+  desconto: '',
 }
 
 function n(v: string) { return parseFloat(v) || 0 }
@@ -107,24 +109,27 @@ export function PrecificacaoProduto() {
 
   const calc = useMemo(() => {
     const cmv = n(form.cmv)
-    const metaLucro = n(form.meta_lucro)
-    const impostos = n(form.impostos)
-    const taxasCartao = n(form.taxas_cartao)
-    const marketing = n(form.marketing)
-    const comissoes = n(form.comissoes)
-    const logistica = n(form.logistica)
-    const rh = n(form.rh)
-    const ocupacao = n(form.ocupacao)
-    const administrativo = n(form.administrativo)
+    const impostos = n(form.impostos) / 100
+    const taxasCartao = n(form.taxas_cartao) / 100
+    const marketing = n(form.marketing) / 100
+    const comissoes = n(form.comissoes) / 100
+    const logistica = n(form.logistica) / 100
+    const rh = n(form.rh) / 100
+    const ocupacao = n(form.ocupacao) / 100
+    const administrativo = n(form.administrativo) / 100
+    const desconto = n(form.desconto) / 100
+    const metaLucroD = n(form.meta_lucro) / 100
 
-    const metaMargemBruta = metaLucro + rh + ocupacao + administrativo + marketing + comissoes + taxasCartao + logistica
+    const metaMargemBruta = (metaLucroD + impostos + taxasCartao + marketing + comissoes + logistica + rh + ocupacao + administrativo) * 100
     const divisor = 1 - metaMargemBruta / 100
     const precoLiquido = divisor > 0 && cmv > 0 ? cmv / divisor : 0
-    const impostoDivisor = 1 - impostos / 100
-    const precoFinal = impostoDivisor > 0 && precoLiquido > 0 ? precoLiquido / impostoDivisor : 0
-    const markup = cmv > 0 && precoFinal > 0 ? precoFinal / cmv : 0
+    const impostoDivisor = 1 - impostos
+    const descontoDivisor = desconto > 0 ? 1 - desconto : 1
+    const precoSugerido = impostoDivisor > 0 && descontoDivisor > 0 && precoLiquido > 0
+      ? precoLiquido / impostoDivisor / descontoDivisor : 0
+    const markup = cmv > 0 && precoSugerido > 0 ? precoSugerido / cmv : 0
 
-    return { metaMargemBruta, precoLiquido, precoFinal, markup }
+    return { metaMargemBruta, precoSugerido, markup }
   }, [form])
 
   function setStr(key: keyof typeof defaultForm) {
@@ -149,6 +154,7 @@ export function PrecificacaoProduto() {
       rh: String(p.rh),
       ocupacao: String(p.ocupacao),
       administrativo: String(p.administrativo),
+      desconto: String(p.desconto ?? 0),
     })
   }
 
@@ -183,8 +189,9 @@ export function PrecificacaoProduto() {
       rh: n(form.rh),
       ocupacao: n(form.ocupacao),
       administrativo: n(form.administrativo),
-      preco_liquido_sugerido: calc.precoLiquido,
-      preco_final_sugerido: calc.precoFinal,
+      desconto: n(form.desconto),
+      preco_liquido_sugerido: calc.precoSugerido,
+      preco_final_sugerido: calc.precoSugerido,
       markup: calc.markup,
       margem_lucro_calculada: n(form.meta_lucro),
       updated_at: new Date().toISOString(),
@@ -253,6 +260,7 @@ export function PrecificacaoProduto() {
                 <PctInput label="RH — % média" value={form.rh} onChange={setPct('rh')} badge={dreBadge} />
                 <PctInput label="Ocupação — % média" value={form.ocupacao} onChange={setPct('ocupacao')} badge={dreBadge} />
                 <PctInput label="Administrativo — % média" value={form.administrativo} onChange={setPct('administrativo')} badge={dreBadge} />
+                <PctInput label="Desconto máximo (opcional)" value={form.desconto} onChange={setPct('desconto')} />
               </div>
             </div>
 
@@ -273,13 +281,9 @@ export function PrecificacaoProduto() {
               <span className="text-sm text-white/50">Meta Margem Bruta</span>
               <span className="text-sm font-semibold text-white tabular-nums">{calc.metaMargemBruta.toFixed(2)}%</span>
             </div>
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-white/50">Preço Líquido Sugerido</span>
-              <span className="text-sm font-semibold text-white tabular-nums">{formatCurrency(calc.precoLiquido)}</span>
-            </div>
             <div className="flex justify-between items-center py-4 border-y border-white/10">
-              <span className="text-sm font-semibold text-white">Preço Final Sugerido</span>
-              <span className="text-2xl font-bold text-emerald-400 tabular-nums">{formatCurrency(calc.precoFinal)}</span>
+              <span className="text-sm font-semibold text-white">Preço Sugerido</span>
+              <span className="text-2xl font-bold text-emerald-400 tabular-nums">{formatCurrency(calc.precoSugerido)}</span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-sm text-white/50">Mark-up</span>
@@ -300,7 +304,7 @@ export function PrecificacaoProduto() {
               <thead>
                 <tr className="text-xs text-white/30 uppercase tracking-widest">
                   <th className="text-left pb-4">Nome</th>
-                  <th className="text-right pb-4">Preço Final</th>
+                  <th className="text-right pb-4">Preço Sugerido</th>
                   <th className="text-right pb-4">Mark-up</th>
                   <th className="text-right pb-4">Meta Lucro</th>
                   <th className="text-right pb-4">CMV</th>
@@ -311,7 +315,7 @@ export function PrecificacaoProduto() {
                 {products.map(p => (
                   <tr key={p.id} className="group text-white/70">
                     <td className="py-3 font-medium text-white">{p.name}</td>
-                    <td className="py-3 text-right tabular-nums text-emerald-400 font-semibold">{formatCurrency(p.preco_final_sugerido)}</td>
+                    <td className="py-3 text-right tabular-nums text-emerald-400 font-semibold">{formatCurrency(p.preco_final_sugerido ?? p.preco_liquido_sugerido)}</td>
                     <td className="py-3 text-right tabular-nums">{p.markup.toFixed(2)}x</td>
                     <td className="py-3 text-right tabular-nums">{p.meta_lucro.toFixed(1)}%</td>
                     <td className="py-3 text-right tabular-nums">{formatCurrency(p.cmv)}</td>
