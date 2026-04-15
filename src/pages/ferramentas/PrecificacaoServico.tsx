@@ -104,6 +104,9 @@ export function PrecificacaoServico() {
       ...f,
       impostos: f.impostos || defaults.impostos.toFixed(2),
       custo_variavel: f.custo_variavel || (defaults.taxas_cartao + defaults.marketing + defaults.comissoes).toFixed(2),
+      custo_fixo: f.custo_fixo || (
+        (defaults.rh + defaults.ocupacao + defaults.administrativo) / 100 * defaults.faturamentoLiquido
+      ).toFixed(2),
     }))
   }, [defaults.hasData, loadingDefaults])
 
@@ -255,7 +258,23 @@ export function PrecificacaoServico() {
               </div>
               <div className="space-y-4">
                 <PctInput label="Custo Variável Mensal — % média" value={form.custo_variavel} onChange={v => setForm(f => ({ ...f, custo_variavel: v }))} badge={dreBadge} />
-                <NumInput label="Custo Fixo Mensal (R$)" value={form.custo_fixo} onChange={setStr('custo_fixo')} suffix="R$" />
+                <div className="flex flex-col gap-1.5">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <label className="text-xs text-white/40 uppercase tracking-widest">Custo Fixo Mensal (R$)</label>
+                    {dreBadge && (
+                      <span className="text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-1.5 py-0.5 rounded-md">{dreBadge}</span>
+                    )}
+                  </div>
+                  <div className="flex items-center bg-white/5 border border-white/10 rounded-xl overflow-hidden focus-within:border-white/30 transition-colors">
+                    <input
+                      type="number" min="0" step="0.01" value={form.custo_fixo}
+                      onChange={setStr('custo_fixo')}
+                      className="flex-1 bg-transparent px-4 py-2.5 text-sm text-white focus:outline-none tabular-nums"
+                      placeholder="0"
+                    />
+                    <span className="pr-4 text-sm text-white/30">R$</span>
+                  </div>
+                </div>
                 <NumInput label="Meta de Faturamento (R$)" value={form.meta_faturamento} onChange={setStr('meta_faturamento')} suffix="R$" />
                 <PctInput label="Impostos" value={form.impostos} onChange={v => setForm(f => ({ ...f, impostos: v }))} badge={dreBadge} />
               </div>

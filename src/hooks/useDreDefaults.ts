@@ -13,6 +13,7 @@ export interface DreDefaults {
   rh: number
   ocupacao: number
   administrativo: number
+  faturamentoLiquido: number  // R$ do mês de referência
   referenciaMes: string  // e.g. "março/2025"
   hasData: boolean
 }
@@ -25,6 +26,7 @@ const EMPTY: DreDefaults = {
   rh: 0,
   ocupacao: 0,
   administrativo: 0,
+  faturamentoLiquido: 0,
   referenciaMes: '',
   hasData: false,
 }
@@ -64,6 +66,7 @@ export function useDreDefaults(): { defaults: DreDefaults; loading: boolean } {
           rh: (dre.despesasRH / liquido) * 100,
           ocupacao: (dre.despesasOcupacao / liquido) * 100,
           administrativo: (dre.despesasAdmin / liquido) * 100,
+          faturamentoLiquido: dre.faturamentoLiquido,
           referenciaMes: format(ref, 'MMMM/yyyy', { locale: ptBR }),
           hasData: true,
         })
