@@ -8,6 +8,7 @@ import { formatCurrency } from '../lib/calculations'
 import { DateFilter } from '../components/layout/DateFilter'
 import { Button } from '../components/ui/Button'
 import { Input } from '../components/ui/Input'
+import { CurrencyInput } from '../components/ui/CurrencyInput'
 import { Select } from '../components/ui/Select'
 import { Modal } from '../components/ui/Modal'
 import { Card } from '../components/ui/Card'
@@ -255,14 +256,10 @@ export function Entries() {
             onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
             placeholder="Ex: Fatura fornecedor X"
           />
-          <Input
+          <CurrencyInput
             label="Valor (R$)"
-            type="number"
             value={form.amount}
-            onChange={e => setForm(f => ({ ...f, amount: e.target.value }))}
-            placeholder="0,00"
-            min="0"
-            step="0.01"
+            onChange={v => setForm(f => ({ ...f, amount: v }))}
           />
           <div className="grid grid-cols-2 gap-3">
             <Input

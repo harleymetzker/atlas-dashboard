@@ -7,6 +7,7 @@ import { calcCashFlow, calcProjected90Days, formatCurrency, formatPercent } from
 import { DateFilter } from '../components/layout/DateFilter'
 import { Card } from '../components/ui/Card'
 import { StatCard } from '../components/ui/StatCard'
+import { CurrencyInput } from '../components/ui/CurrencyInput'
 import { CashFlowLineChart } from '../components/charts/CashFlowLineChart'
 
 // Persiste saldo inicial por mês (chave: userId + YYYY-MM) no localStorage
@@ -82,13 +83,12 @@ export function CashFlow() {
         <span className="text-xs text-white/40 uppercase tracking-widest whitespace-nowrap">
           Saldo inicial de {format(new Date(yearMonth + '-02'), 'MMMM/yyyy', { locale: ptBR })}:
         </span>
-        <input
-          type="number"
-          value={openingBalance}
-          onChange={e => handleBalanceChange(Number(e.target.value))}
-          className="bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm text-white w-48 focus:outline-none focus:border-white/30"
-          step="0.01"
-        />
+        <div className="w-48">
+          <CurrencyInput
+            value={openingBalance === 0 ? '' : String(openingBalance)}
+            onChange={v => handleBalanceChange(parseFloat(v) || 0)}
+          />
+        </div>
       </div>
 
       {loading ? (

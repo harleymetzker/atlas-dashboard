@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { CurrencyInput } from '../../components/ui/CurrencyInput'
 
 function fmt(value: number): string {
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value)
@@ -110,7 +111,7 @@ export function PontoEquilibrioDash() {
         </h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {FIX_FIELDS.map(f => (
-            <NumInput key={f.key} label={f.label} value={fixFields[f.key]} onChange={setFix(f.key)} suffix="R$" />
+            <CurrencyInput key={f.key} label={f.label} value={fixFields[f.key]} onChange={setFix(f.key)} />
           ))}
         </div>
         <div className="mt-5 bg-white/5 border border-white/10 rounded-xl px-4 py-3 flex justify-between items-center">

@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react'
 import { RefreshCw } from 'lucide-react'
 import { useDreSnapshot } from '../../hooks/useDreSnapshot'
 import { formatCurrency } from '../../lib/calculations'
+import { CurrencyInput } from '../../components/ui/CurrencyInput'
 import type { DRE } from '../../types'
 
 interface SimForm {
@@ -85,17 +86,8 @@ function Delta({ actual, simulated, positive = true }: { actual: number; simulat
   )
 }
 
-function CurrencyInput({ value, onChange }: { value: string; onChange: (v: string) => void }) {
-  return (
-    <div className="flex items-center bg-white/5 border border-white/10 rounded-lg overflow-hidden focus-within:border-white/25 transition-colors">
-      <input
-        type="number" min="0" step="0.01" value={value}
-        onChange={e => onChange(e.target.value)}
-        className="w-full bg-transparent px-3 py-1.5 text-sm text-white focus:outline-none tabular-nums text-right"
-        placeholder="0"
-      />
-    </div>
-  )
+function SimCurrencyInput({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  return <CurrencyInput value={value} onChange={onChange} />
 }
 
 function PctInput({ value, onChange }: { value: string; onChange: (v: string) => void }) {
@@ -231,7 +223,7 @@ export function SimuladorCenarios() {
           <Row
             label="(+) Faturamento Bruto"
             actual={formatCurrency(dre.faturamentoBruto)}
-            simNode={<CurrencyInput value={form.faturamentoBruto} onChange={set('faturamentoBruto')} />}
+            simNode={<SimCurrencyInput value={form.faturamentoBruto} onChange={set('faturamentoBruto')} />}
             delta={<Delta actual={dre.faturamentoBruto} simulated={sim.faturamentoBruto} />}
           />
 
@@ -303,19 +295,19 @@ export function SimuladorCenarios() {
           <Row indent
             label="RH"
             actual={formatCurrency(dre.despesasRH)}
-            simNode={<CurrencyInput value={form.despesasRH} onChange={set('despesasRH')} />}
+            simNode={<SimCurrencyInput value={form.despesasRH} onChange={set('despesasRH')} />}
             delta={<Delta actual={dre.despesasRH} simulated={sim.despesasRH} positive={false} />}
           />
           <Row indent
             label="Ocupação"
             actual={formatCurrency(dre.despesasOcupacao)}
-            simNode={<CurrencyInput value={form.despesasOcupacao} onChange={set('despesasOcupacao')} />}
+            simNode={<SimCurrencyInput value={form.despesasOcupacao} onChange={set('despesasOcupacao')} />}
             delta={<Delta actual={dre.despesasOcupacao} simulated={sim.despesasOcupacao} positive={false} />}
           />
           <Row indent
             label="Administrativo"
             actual={formatCurrency(dre.despesasAdmin)}
-            simNode={<CurrencyInput value={form.despesasAdmin} onChange={set('despesasAdmin')} />}
+            simNode={<SimCurrencyInput value={form.despesasAdmin} onChange={set('despesasAdmin')} />}
             delta={<Delta actual={dre.despesasAdmin} simulated={sim.despesasAdmin} positive={false} />}
           />
 
@@ -331,7 +323,7 @@ export function SimuladorCenarios() {
           <Row indent
             label="(-) Retiradas"
             actual={formatCurrency(dre.retiradas)}
-            simNode={<CurrencyInput value={form.retiradas} onChange={set('retiradas')} />}
+            simNode={<SimCurrencyInput value={form.retiradas} onChange={set('retiradas')} />}
             delta={<Delta actual={dre.retiradas} simulated={sim.retiradas} positive={false} />}
           />
 

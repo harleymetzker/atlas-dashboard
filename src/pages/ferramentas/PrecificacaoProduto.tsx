@@ -6,6 +6,7 @@ import { useDreDefaults } from '../../hooks/useDreDefaults'
 import { Card } from '../../components/ui/Card'
 import { Input } from '../../components/ui/Input'
 import { Button } from '../../components/ui/Button'
+import { CurrencyInput } from '../../components/ui/CurrencyInput'
 import { formatCurrency } from '../../lib/calculations'
 
 interface PricingProduct {
@@ -237,7 +238,7 @@ export function PrecificacaoProduto() {
             <div className="pt-2 border-t border-white/5">
               <p className="text-xs text-white/30 uppercase tracking-widest mb-4">Custos do Produto</p>
               <div className="space-y-4">
-                <Input label="CMV — Custo da Mercadoria (R$)" type="number" value={form.cmv} onChange={setStr('cmv')} placeholder="0,00" min="0" step="0.01" />
+                <CurrencyInput label="CMV — Custo da Mercadoria (R$)" value={form.cmv} onChange={v => setForm(f => ({ ...f, cmv: v }))} />
                 <PctInput label="Meta de Lucro" value={form.meta_lucro} onChange={setPct('meta_lucro')} />
               </div>
             </div>

@@ -6,6 +6,7 @@ import { useDreDefaults } from '../../hooks/useDreDefaults'
 import { Card } from '../../components/ui/Card'
 import { Input } from '../../components/ui/Input'
 import { Button } from '../../components/ui/Button'
+import { CurrencyInput } from '../../components/ui/CurrencyInput'
 import { formatCurrency } from '../../lib/calculations'
 
 interface PricingService {
@@ -231,7 +232,7 @@ export function PrecificacaoServico() {
             <div className="pt-2 border-t border-white/5">
               <p className="text-xs text-white/30 uppercase tracking-widest mb-4">Equipe e Capacidade</p>
               <div className="space-y-4">
-                <NumInput label="Custo Mensal do Pessoal (R$)" value={form.custo_mensal_pessoal} onChange={setStr('custo_mensal_pessoal')} suffix="R$" />
+                <CurrencyInput label="Custo Mensal do Pessoal (R$)" value={form.custo_mensal_pessoal} onChange={v => setForm(f => ({ ...f, custo_mensal_pessoal: v }))} />
                 <div className="grid grid-cols-2 gap-3">
                   <NumInput label="Nº de Profissionais" value={form.num_profissionais} onChange={setStr('num_profissionais')} />
                   <NumInput label="Dias por Mês" value={form.dias_mes} onChange={setStr('dias_mes')} />
@@ -259,24 +260,8 @@ export function PrecificacaoServico() {
               </div>
               <div className="space-y-4">
                 <PctInput label="Custo Variável Mensal — % média" value={form.custo_variavel} onChange={v => setForm(f => ({ ...f, custo_variavel: v }))} badge={dreBadge} />
-                <div className="flex flex-col gap-1.5">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <label className="text-xs text-white/40 uppercase tracking-widest">Custo Fixo Mensal (R$)</label>
-                    {dreBadge && (
-                      <span className="text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-1.5 py-0.5 rounded-md">{dreBadge}</span>
-                    )}
-                  </div>
-                  <div className="flex items-center bg-white/5 border border-white/10 rounded-xl overflow-hidden focus-within:border-white/30 transition-colors">
-                    <input
-                      type="number" min="0" step="0.01" value={form.custo_fixo}
-                      onChange={setStr('custo_fixo')}
-                      className="flex-1 bg-transparent px-4 py-2.5 text-sm text-white focus:outline-none tabular-nums"
-                      placeholder="0"
-                    />
-                    <span className="pr-4 text-sm text-white/30">R$</span>
-                  </div>
-                </div>
-                <NumInput label="Meta de Faturamento (R$)" value={form.meta_faturamento} onChange={setStr('meta_faturamento')} suffix="R$" />
+                <CurrencyInput label="Custo Fixo Mensal (R$)" value={form.custo_fixo} onChange={v => setForm(f => ({ ...f, custo_fixo: v }))} badge={dreBadge} />
+                <CurrencyInput label="Meta de Faturamento (R$)" value={form.meta_faturamento} onChange={v => setForm(f => ({ ...f, meta_faturamento: v }))} />
                 <PctInput label="Impostos" value={form.impostos} onChange={v => setForm(f => ({ ...f, impostos: v }))} badge={dreBadge} />
               </div>
             </div>
