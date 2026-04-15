@@ -29,12 +29,12 @@ export function ProjectedChart({ data }: Props) {
     <Card>
       <div className="flex items-center gap-3 mb-6">
         <h3 className="text-sm font-semibold text-white/60 uppercase tracking-widest">Projeção 90 Dias</h3>
-        <span className="text-[10px] px-2 py-0.5 bg-white/5 rounded-full text-white/30 uppercase tracking-widest">
+        <span className="text-[10px] px-2 py-0.5 bg-white/5 rounded-full text-white/50 uppercase tracking-widest">
           Lançamentos futuros cadastrados
         </span>
       </div>
       {chartData.length === 0 ? (
-        <div className="h-[220px] flex items-center justify-center text-white/20 text-sm">Sem dados</div>
+        <div className="h-[220px] flex items-center justify-center text-white/35 text-sm">Sem dados</div>
       ) : (
         <ResponsiveContainer width="100%" height={220}>
           {/* Estrutura idêntica ao CashFlowLineChart */}

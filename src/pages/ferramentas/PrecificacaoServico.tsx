@@ -48,18 +48,18 @@ function NumInput({ label, value, onChange, suffix, tooltip }: {
   return (
     <div className="flex flex-col gap-1.5">
       <div className="flex items-center gap-1.5">
-        <label className="text-xs text-white/40 uppercase tracking-widest">{label}</label>
+        <label className="text-xs text-white/60 uppercase tracking-widest">{label}</label>
         {tooltip && (
-          <span className="text-[10px] text-white/25 normal-case" title={tooltip}>ⓘ</span>
+          <span className="text-[10px] text-white/40 normal-case" title={tooltip}>ⓘ</span>
         )}
       </div>
-      <div className="flex items-center bg-white/5 border border-white/10 rounded-xl overflow-hidden focus-within:border-white/30 transition-colors">
+      <div className="flex items-center bg-white/5 border border-white/15 rounded-xl overflow-hidden focus-within:border-white/50 transition-colors">
         <input
           type="number" min="0" step="0.01" value={value} onChange={onChange}
           className="flex-1 bg-transparent px-4 py-2.5 text-sm text-white focus:outline-none tabular-nums"
           placeholder="0"
         />
-        {suffix && <span className="pr-4 text-sm text-white/30">{suffix}</span>}
+        {suffix && <span className="pr-4 text-sm text-white/50">{suffix}</span>}
       </div>
     </div>
   )
@@ -71,19 +71,19 @@ function PctInput({ label, value, onChange, badge }: {
   return (
     <div className="flex flex-col gap-1.5">
       <div className="flex items-center gap-2 flex-wrap">
-        <label className="text-xs text-white/40 uppercase tracking-widest">{label}</label>
+        <label className="text-xs text-white/60 uppercase tracking-widest">{label}</label>
         {badge && (
-          <span className="text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-1.5 py-0.5 rounded-md">{badge}</span>
+          <span className="text-[10px] bg-brand-green/10 text-brand-green border border-brand-green/20 px-1.5 py-0.5 rounded-md">{badge}</span>
         )}
       </div>
-      <div className="flex items-center bg-white/5 border border-white/10 rounded-xl overflow-hidden focus-within:border-white/30 transition-colors">
+      <div className="flex items-center bg-white/5 border border-white/15 rounded-xl overflow-hidden focus-within:border-white/50 transition-colors">
         <input
           type="number" min="0" max="100" step="0.01" value={value}
           onChange={e => onChange(e.target.value)}
           className="flex-1 bg-transparent px-4 py-2.5 text-sm text-white focus:outline-none tabular-nums"
           placeholder="0"
         />
-        <span className="pr-4 text-sm text-white/30">%</span>
+        <span className="pr-4 text-sm text-white/50">%</span>
       </div>
     </div>
   )
@@ -221,7 +221,7 @@ export function PrecificacaoServico() {
     <div className="p-8 space-y-8">
       <div>
         <h2 className="text-2xl font-bold text-white tracking-tight">Precificação de Serviço</h2>
-        <p className="text-sm text-white/30 mt-1">Calcule o preço/hora considerando equipe, produtividade e custos.</p>
+        <p className="text-sm text-white/50 mt-1">Calcule o preço/hora considerando equipe, produtividade e custos.</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
@@ -230,7 +230,7 @@ export function PrecificacaoServico() {
             <Input label="Nome do serviço" value={form.name} onChange={setStr('name')} placeholder="Ex: Consultoria X" />
 
             <div className="pt-2 border-t border-white/5">
-              <p className="text-xs text-white/30 uppercase tracking-widest mb-4">Equipe e Capacidade</p>
+              <p className="text-xs text-white/50 uppercase tracking-widest mb-4">Equipe e Capacidade</p>
               <div className="space-y-4">
                 <CurrencyInput label="Custo Mensal do Pessoal (R$)" value={form.custo_mensal_pessoal} onChange={v => setForm(f => ({ ...f, custo_mensal_pessoal: v }))} />
                 <div className="grid grid-cols-2 gap-3">
@@ -245,15 +245,15 @@ export function PrecificacaoServico() {
                     onChange={v => setForm(f => ({ ...f, fator_produtividade: v }))}
                   />
                 </div>
-                <p className="text-xs text-white/20">Fator de produtividade: % do tempo efetivamente dedicado ao serviço</p>
+                <p className="text-xs text-white/35">Fator de produtividade: % do tempo efetivamente dedicado ao serviço</p>
               </div>
             </div>
 
             <div className="pt-2 border-t border-white/5">
               <div className="flex items-center gap-2 mb-4">
-                <p className="text-xs text-white/30 uppercase tracking-widest">Custos e Metas</p>
+                <p className="text-xs text-white/50 uppercase tracking-widest">Custos e Metas</p>
                 {defaults.hasData && !loadingDefaults && (
-                  <span className="text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-1.5 py-0.5 rounded-md">
+                  <span className="text-[10px] bg-brand-green/10 text-brand-green border border-brand-green/20 px-1.5 py-0.5 rounded-md">
                     Baseado em {defaults.referenciaMes}
                   </span>
                 )}
@@ -276,21 +276,21 @@ export function PrecificacaoServico() {
         </Card>
 
         <Card>
-          <p className="text-xs text-white/30 uppercase tracking-widest mb-5">Resultado</p>
+          <p className="text-xs text-white/50 uppercase tracking-widest mb-5">Resultado</p>
           <div className="space-y-4">
             <div className="flex justify-between items-center">
-              <span className="text-sm text-white/50">Horas disponíveis/mês</span>
+              <span className="text-sm text-white/70">Horas disponíveis/mês</span>
               <span className="text-sm font-semibold text-white tabular-nums">
                 {calc.horasDisponiveis > 0 ? `${calc.horasDisponiveis.toFixed(1)} h` : '—'}
               </span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-sm text-white/50">Custo por hora</span>
+              <span className="text-sm text-white/70">Custo por hora</span>
               <span className="text-sm font-semibold text-white tabular-nums">{formatCurrency(calc.custoHora)}</span>
             </div>
-            <div className="flex justify-between items-center py-4 border-y border-white/10">
+            <div className="flex justify-between items-center py-4 border-y border-white/15">
               <span className="text-sm font-semibold text-white">Preço/Hora Sugerido</span>
-              <span className="text-2xl font-bold text-emerald-400 tabular-nums">{formatCurrency(calc.precoHora)}</span>
+              <span className="text-2xl font-bold text-brand-green tabular-nums">{formatCurrency(calc.precoHora)}</span>
             </div>
           </div>
         </Card>
@@ -298,11 +298,11 @@ export function PrecificacaoServico() {
 
       {services.length > 0 && (
         <Card>
-          <p className="text-xs text-white/30 uppercase tracking-widest mb-5">Serviços Salvos</p>
+          <p className="text-xs text-white/50 uppercase tracking-widest mb-5">Serviços Salvos</p>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="text-xs text-white/30 uppercase tracking-widest">
+                <tr className="text-xs text-white/50 uppercase tracking-widest">
                   <th className="text-left pb-4">Nome</th>
                   <th className="text-right pb-4">Preço/Hora</th>
                   <th className="text-right pb-4">Horas Disponíveis</th>
@@ -314,15 +314,15 @@ export function PrecificacaoServico() {
                 {services.map(s => (
                   <tr key={s.id} className="group text-white/70">
                     <td className="py-3 font-medium text-white">{s.name}</td>
-                    <td className="py-3 text-right tabular-nums text-emerald-400 font-semibold">{formatCurrency(s.preco_hora_sugerido)}</td>
+                    <td className="py-3 text-right tabular-nums text-brand-green font-semibold">{formatCurrency(s.preco_hora_sugerido)}</td>
                     <td className="py-3 text-right tabular-nums">{s.horas_disponiveis.toFixed(1)} h</td>
                     <td className="py-3 text-right tabular-nums">{formatCurrency(s.custo_hora)}</td>
                     <td className="py-3 text-right">
                       <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button onClick={() => handleEdit(s)} className="p-1.5 rounded-lg text-white/30 hover:text-white hover:bg-white/10 transition-all">
+                        <button onClick={() => handleEdit(s)} className="p-1.5 rounded-lg text-white/50 hover:text-white hover:bg-white/15 transition-all">
                           <Pencil size={13} />
                         </button>
-                        <button onClick={() => handleDelete(s.id)} className="p-1.5 rounded-lg text-white/30 hover:text-red-400 hover:bg-red-500/10 transition-all">
+                        <button onClick={() => handleDelete(s.id)} className="p-1.5 rounded-lg text-white/50 hover:text-red-400 hover:bg-red-500/10 transition-all">
                           <Trash2 size={13} />
                         </button>
                       </div>

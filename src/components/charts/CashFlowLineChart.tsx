@@ -19,7 +19,7 @@ export function CashFlowLineChart({ data }: Props) {
         Padrão de Fluxo no Período
       </h3>
       {chartData.length === 0 ? (
-        <div className="h-[220px] flex items-center justify-center text-white/20 text-sm">Sem dados</div>
+        <div className="h-[220px] flex items-center justify-center text-white/35 text-sm">Sem dados</div>
       ) : (
         <ResponsiveContainer width="100%" height={220}>
           <LineChart data={chartData} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>

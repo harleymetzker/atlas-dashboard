@@ -10,15 +10,15 @@ function NumInput({ label, value, onChange, suffix = '' }: {
 }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="text-xs text-white/40 uppercase tracking-widest">{label}</label>
-      <div className="flex items-center bg-white/5 border border-white/10 rounded-xl overflow-hidden focus-within:border-white/30 transition-colors">
+      <label className="text-xs text-white/60 uppercase tracking-widest">{label}</label>
+      <div className="flex items-center bg-white/5 border border-white/15 rounded-xl overflow-hidden focus-within:border-white/50 transition-colors">
         <input
           type="number" min="0" step="0.01" value={value}
           onChange={e => onChange(e.target.value)}
           className="flex-1 bg-transparent px-4 py-2.5 text-sm text-white focus:outline-none tabular-nums"
           placeholder="0"
         />
-        {suffix && <span className="pr-4 text-sm text-white/30">{suffix}</span>}
+        {suffix && <span className="pr-4 text-sm text-white/50">{suffix}</span>}
       </div>
     </div>
   )
@@ -77,13 +77,13 @@ export function PontoEquilibrioDash() {
     <div className="p-8 space-y-8">
       <div>
         <h2 className="text-2xl font-bold text-white tracking-tight">Ponto de Equilíbrio</h2>
-        <p className="text-sm text-white/30 mt-1">Calcule o faturamento mínimo para cobrir todos os seus custos.</p>
+        <p className="text-sm text-white/50 mt-1">Calcule o faturamento mínimo para cobrir todos os seus custos.</p>
       </div>
 
       {/* Custos Variáveis */}
-      <div className="bg-white/[0.03] border border-white/10 rounded-2xl p-6">
-        <h3 className="text-xs font-semibold text-white/40 uppercase tracking-widest mb-5">
-          Custos Variáveis <span className="text-white/20">(%)</span>
+      <div className="bg-white/[0.03] border border-white/15 rounded-2xl p-6">
+        <h3 className="text-xs font-semibold text-white/60 uppercase tracking-widest mb-5">
+          Custos Variáveis <span className="text-white/35">(%)</span>
         </h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {VAR_FIELDS.map(f => (
@@ -91,13 +91,13 @@ export function PontoEquilibrioDash() {
           ))}
         </div>
         <div className="mt-5 flex flex-col sm:flex-row gap-3">
-          <div className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 flex justify-between items-center">
-            <span className="text-xs text-white/40 uppercase tracking-widest">Total variáveis</span>
+          <div className="flex-1 bg-white/5 border border-white/15 rounded-xl px-4 py-3 flex justify-between items-center">
+            <span className="text-xs text-white/60 uppercase tracking-widest">Total variáveis</span>
             <span className="text-sm font-bold tabular-nums text-white">{totalVar.toFixed(2)}%</span>
           </div>
-          <div className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 flex justify-between items-center">
-            <span className="text-xs text-white/40 uppercase tracking-widest">Margem de contribuição</span>
-            <span className={`text-sm font-bold tabular-nums ${margem > 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+          <div className="flex-1 bg-white/5 border border-white/15 rounded-xl px-4 py-3 flex justify-between items-center">
+            <span className="text-xs text-white/60 uppercase tracking-widest">Margem de contribuição</span>
+            <span className={`text-sm font-bold tabular-nums ${margem > 0 ? 'text-brand-green' : 'text-red-400'}`}>
               {margem.toFixed(2)}%
             </span>
           </div>
@@ -105,29 +105,29 @@ export function PontoEquilibrioDash() {
       </div>
 
       {/* Custos Fixos */}
-      <div className="bg-white/[0.03] border border-white/10 rounded-2xl p-6">
-        <h3 className="text-xs font-semibold text-white/40 uppercase tracking-widest mb-5">
-          Custos Fixos <span className="text-white/20">(R$/mês)</span>
+      <div className="bg-white/[0.03] border border-white/15 rounded-2xl p-6">
+        <h3 className="text-xs font-semibold text-white/60 uppercase tracking-widest mb-5">
+          Custos Fixos <span className="text-white/35">(R$/mês)</span>
         </h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {FIX_FIELDS.map(f => (
             <CurrencyInput key={f.key} label={f.label} value={fixFields[f.key]} onChange={setFix(f.key)} />
           ))}
         </div>
-        <div className="mt-5 bg-white/5 border border-white/10 rounded-xl px-4 py-3 flex justify-between items-center">
-          <span className="text-xs text-white/40 uppercase tracking-widest">Total custos fixos</span>
+        <div className="mt-5 bg-white/5 border border-white/15 rounded-xl px-4 py-3 flex justify-between items-center">
+          <span className="text-xs text-white/60 uppercase tracking-widest">Total custos fixos</span>
           <span className="text-sm font-bold tabular-nums text-white">{fmt(totalFix)}</span>
         </div>
       </div>
 
       {/* Resultado */}
-      <div className="bg-white/[0.03] border border-white/10 rounded-2xl p-8 text-center">
-        <p className="text-xs text-white/30 uppercase tracking-widest mb-3">Faturamento mínimo mensal</p>
-        <p className="text-4xl font-black tabular-nums text-emerald-400">
+      <div className="bg-white/[0.03] border border-white/15 rounded-2xl p-8 text-center">
+        <p className="text-xs text-white/50 uppercase tracking-widest mb-3">Faturamento mínimo mensal</p>
+        <p className="text-4xl font-black tabular-nums text-brand-green">
           {pe > 0 ? fmt(pe) : '—'}
         </p>
         {pe > 0 && (
-          <p className="text-xs text-white/20 mt-2">
+          <p className="text-xs text-white/35 mt-2">
             Ponto de Equilíbrio = {fmt(totalFix)} ÷ {margem.toFixed(1)}%
           </p>
         )}
@@ -135,12 +135,12 @@ export function PontoEquilibrioDash() {
 
       {/* Simulação */}
       {pe > 0 && (
-        <div className="bg-white/[0.03] border border-white/10 rounded-2xl p-6">
-          <h3 className="text-xs font-semibold text-white/40 uppercase tracking-widest mb-5">Simulação de Cenários</h3>
+        <div className="bg-white/[0.03] border border-white/15 rounded-2xl p-6">
+          <h3 className="text-xs font-semibold text-white/60 uppercase tracking-widest mb-5">Simulação de Cenários</h3>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="text-xs text-white/30 uppercase tracking-widest">
+                <tr className="text-xs text-white/50 uppercase tracking-widest">
                   <th className="text-left pb-4">Cenário</th>
                   <th className="text-right pb-4">Faturamento</th>
                   <th className="text-right pb-4">Custos Variáveis</th>
@@ -155,11 +155,11 @@ export function PontoEquilibrioDash() {
                   const lucro = fat - custoVar - totalFix
                   return (
                     <tr key={label} className={pct === 1 ? 'bg-white/5' : ''}>
-                      <td className="py-3 text-white/50">{label} do PE</td>
+                      <td className="py-3 text-white/70">{label} do PE</td>
                       <td className="py-3 text-right tabular-nums text-white/80">{fmt(fat)}</td>
-                      <td className="py-3 text-right tabular-nums text-white/50">{fmt(custoVar)}</td>
-                      <td className="py-3 text-right tabular-nums text-white/50">{fmt(totalFix)}</td>
-                      <td className={`py-3 text-right tabular-nums font-semibold ${lucro >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                      <td className="py-3 text-right tabular-nums text-white/70">{fmt(custoVar)}</td>
+                      <td className="py-3 text-right tabular-nums text-white/70">{fmt(totalFix)}</td>
+                      <td className={`py-3 text-right tabular-nums font-semibold ${lucro >= 0 ? 'text-brand-green' : 'text-red-400'}`}>
                         {fmt(lucro)}
                       </td>
                     </tr>

@@ -44,9 +44,9 @@ function AnalysisResult({ content }: { content: AnalysisContent }) {
     <div className="space-y-4">
       <Card>
         <div className="flex items-start gap-3">
-          <BrainCircuit size={18} className="text-white/40 mt-0.5 shrink-0" />
+          <BrainCircuit size={18} className="text-white/60 mt-0.5 shrink-0" />
           <div>
-            <h4 className="text-xs font-semibold text-white/40 uppercase tracking-widest mb-2">Diagnóstico Geral</h4>
+            <h4 className="text-xs font-semibold text-white/60 uppercase tracking-widest mb-2">Diagnóstico Geral</h4>
             <p className="text-sm text-white/80 leading-relaxed">{content.diagnostico_geral}</p>
           </div>
         </div>
@@ -54,9 +54,9 @@ function AnalysisResult({ content }: { content: AnalysisContent }) {
 
       <Card>
         <div className="flex items-start gap-3">
-          <ArrowLeftRight size={18} className="text-white/40 mt-0.5 shrink-0" />
+          <ArrowLeftRight size={18} className="text-white/60 mt-0.5 shrink-0" />
           <div>
-            <h4 className="text-xs font-semibold text-white/40 uppercase tracking-widest mb-2">DRE vs Fluxo de Caixa</h4>
+            <h4 className="text-xs font-semibold text-white/60 uppercase tracking-widest mb-2">DRE vs Fluxo de Caixa</h4>
             <p className="text-sm text-white/80 leading-relaxed">{content.dre_vs_caixa}</p>
           </div>
         </div>
@@ -64,9 +64,9 @@ function AnalysisResult({ content }: { content: AnalysisContent }) {
 
       <Card>
         <div className="flex items-start gap-3">
-          <TrendingUp size={18} className="text-white/40 mt-0.5 shrink-0" />
+          <TrendingUp size={18} className="text-white/60 mt-0.5 shrink-0" />
           <div>
-            <h4 className="text-xs font-semibold text-white/40 uppercase tracking-widest mb-2">Tendência</h4>
+            <h4 className="text-xs font-semibold text-white/60 uppercase tracking-widest mb-2">Tendência</h4>
             <p className="text-sm text-white/80 leading-relaxed">{content.tendencia}</p>
           </div>
         </div>
@@ -77,9 +77,9 @@ function AnalysisResult({ content }: { content: AnalysisContent }) {
           <div className="flex items-start gap-3">
             <AlertCircle size={18} className="text-red-400 mt-0.5 shrink-0" />
             <div className="flex-1">
-              <h4 className="text-xs font-semibold text-white/40 uppercase tracking-widest mb-3">Pontos Críticos</h4>
+              <h4 className="text-xs font-semibold text-white/60 uppercase tracking-widest mb-3">Pontos Críticos</h4>
               {content.pontos_criticos.length === 0 ? (
-                <p className="text-xs text-white/30 italic">Nenhum ponto crítico identificado.</p>
+                <p className="text-xs text-white/50 italic">Nenhum ponto crítico identificado.</p>
               ) : (
                 <ul className="space-y-2">
                   {content.pontos_criticos.map((p, i) => (
@@ -96,16 +96,16 @@ function AnalysisResult({ content }: { content: AnalysisContent }) {
 
         <Card>
           <div className="flex items-start gap-3">
-            <CheckCircle2 size={18} className="text-emerald-400 mt-0.5 shrink-0" />
+            <CheckCircle2 size={18} className="text-brand-green mt-0.5 shrink-0" />
             <div className="flex-1">
-              <h4 className="text-xs font-semibold text-white/40 uppercase tracking-widest mb-3">Pontos Positivos</h4>
+              <h4 className="text-xs font-semibold text-white/60 uppercase tracking-widest mb-3">Pontos Positivos</h4>
               {content.pontos_positivos.length === 0 ? (
-                <p className="text-xs text-white/30 italic">Nenhum ponto positivo identificado.</p>
+                <p className="text-xs text-white/50 italic">Nenhum ponto positivo identificado.</p>
               ) : (
                 <ul className="space-y-2">
                   {content.pontos_positivos.map((p, i) => (
                     <li key={i} className="flex items-start gap-2 text-sm text-white/70">
-                      <span className="text-emerald-400 mt-0.5 shrink-0">•</span>
+                      <span className="text-brand-green mt-0.5 shrink-0">•</span>
                       {p}
                     </li>
                   ))}
@@ -120,7 +120,7 @@ function AnalysisResult({ content }: { content: AnalysisContent }) {
         <div className="flex items-start gap-3">
           <Zap size={18} className="text-amber-400 mt-0.5 shrink-0" />
           <div className="flex-1">
-            <h4 className="text-xs font-semibold text-white/40 uppercase tracking-widest mb-3">Ações Prioritárias</h4>
+            <h4 className="text-xs font-semibold text-white/60 uppercase tracking-widest mb-3">Ações Prioritárias</h4>
             <ol className="space-y-2">
               {content.acoes_prioritarias.map((a, i) => (
                 <li key={i} className="flex items-start gap-3 text-sm text-white/70">
@@ -334,7 +334,7 @@ export function Diagnostico() {
 
   if (loadingProfile) return (
     <div className="p-8 flex items-center justify-center min-h-[400px]">
-      <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+      <div className="w-5 h-5 border-2 border-white/35 border-t-white rounded-full animate-spin" />
     </div>
   )
 
@@ -344,7 +344,7 @@ export function Diagnostico() {
         <div className="max-w-md w-full">
           <div className="mb-10">
             <h2 className="text-2xl font-bold text-white tracking-tight">Antes de começar</h2>
-            <p className="text-sm text-white/40 mt-2">Precisamos entender o seu negócio para que a IA possa comparar seus números com benchmarks reais do seu setor.</p>
+            <p className="text-sm text-white/60 mt-2">Precisamos entender o seu negócio para que a IA possa comparar seus números com benchmarks reais do seu setor.</p>
           </div>
           <button
             onClick={() => setShowProfileForm(true)}
@@ -363,8 +363,8 @@ export function Diagnostico() {
     const TEMPOS = ['Menos de 1 ano', '1–3 anos', '3+ anos']
     const TICKETS = ['Até R$200', 'R$200–2k', 'R$2k–10k', 'Acima de R$10k']
 
-    const selectStyle = "w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-white/30 appearance-none cursor-pointer"
-    const labelStyle = "block text-xs text-white/40 uppercase tracking-widest mb-2"
+    const selectStyle = "w-full bg-white/5 border border-white/15 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-white/50 appearance-none cursor-pointer"
+    const labelStyle = "block text-xs text-white/60 uppercase tracking-widest mb-2"
 
     const isValid = profileForm.setor && profileForm.modelo_negocio && profileForm.tempo_operacao && profileForm.ticket_medio
 
@@ -373,7 +373,7 @@ export function Diagnostico() {
         <div className="max-w-md">
           <div className="mb-10">
             <h2 className="text-2xl font-bold text-white tracking-tight">Perfil da empresa</h2>
-            <p className="text-sm text-white/40 mt-2">Essas informações definem os benchmarks usados na análise. Preenchimento único.</p>
+            <p className="text-sm text-white/60 mt-2">Essas informações definem os benchmarks usados na análise. Preenchimento único.</p>
           </div>
 
           <div className="space-y-6">
@@ -428,10 +428,10 @@ export function Diagnostico() {
       <div className="flex flex-wrap items-start justify-between gap-6">
         <div>
           <h2 className="text-2xl font-bold text-white tracking-tight">Diagnóstico IA</h2>
-          <p className="text-sm text-white/30 mt-1">Análise financeira gerada por inteligência artificial</p>
+          <p className="text-sm text-white/50 mt-1">Análise financeira gerada por inteligência artificial</p>
           <button
             onClick={() => { setProfileForm(companyProfile!); setShowProfileForm(true) }}
-            className="text-xs text-white/20 hover:text-white/50 transition-colors mt-1"
+            className="text-xs text-white/35 hover:text-white/70 transition-colors mt-1"
           >
             {companyProfile?.setor} · Editar perfil
           </button>
@@ -441,7 +441,7 @@ export function Diagnostico() {
           <select
             value={month}
             onChange={e => setMonth(Number(e.target.value))}
-            className="bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-white/30 appearance-none cursor-pointer"
+            className="bg-white/5 border border-white/15 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-white/50 appearance-none cursor-pointer"
           >
             {MONTHS.map((m, i) => (
               <option key={i + 1} value={i + 1} className="bg-black">{m}</option>
@@ -450,7 +450,7 @@ export function Diagnostico() {
           <select
             value={year}
             onChange={e => setYear(Number(e.target.value))}
-            className="bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-white/30 appearance-none cursor-pointer"
+            className="bg-white/5 border border-white/15 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-white/50 appearance-none cursor-pointer"
           >
             {years.map(y => (
               <option key={y} value={y} className="bg-black">{y}</option>
@@ -468,9 +468,9 @@ export function Diagnostico() {
             { label: 'EBITDA',            value: formatCurrency(dre.ebitda), colored: true, positive: dre.ebitda >= 0 },
             { label: 'Geração de Caixa',  value: formatCurrency(geracao),    colored: true, positive: geracao >= 0 },
           ].map(({ label, value, colored, positive }) => (
-            <div key={label} className="bg-white/5 border border-white/10 rounded-2xl p-4">
-              <p className="text-xs text-white/30 uppercase tracking-widest mb-1">{label}</p>
-              <p className={`text-lg font-bold tabular-nums ${colored ? (positive ? 'text-emerald-400' : 'text-red-400') : 'text-white'}`}>
+            <div key={label} className="bg-white/5 border border-white/15 rounded-2xl p-4">
+              <p className="text-xs text-white/50 uppercase tracking-widest mb-1">{label}</p>
+              <p className={`text-lg font-bold tabular-nums ${colored ? (positive ? 'text-brand-green' : 'text-red-400') : 'text-white'}`}>
                 {value}
               </p>
             </div>
@@ -479,7 +479,7 @@ export function Diagnostico() {
       )}
 
       {/* Credit counter */}
-      <div className={`text-sm font-semibold ${hasCredits ? 'text-emerald-400' : 'text-red-400'}`}>
+      <div className={`text-sm font-semibold ${hasCredits ? 'text-brand-green' : 'text-red-400'}`}>
         Créditos disponíveis: {creditsAvailable}/{CREDIT_LIMIT}
         {!hasCredits && <span className="ml-2 font-normal text-red-400/70">— Você atingiu o limite de {CREDIT_LIMIT} análises este mês.</span>}
       </div>
@@ -516,7 +516,7 @@ export function Diagnostico() {
       {/* Current analysis result */}
       {analysis && (
         <div>
-          <p className="text-xs text-white/30 uppercase tracking-widest mb-4">Análise — {periodLabel}</p>
+          <p className="text-xs text-white/50 uppercase tracking-widest mb-4">Análise — {periodLabel}</p>
           <AnalysisResult content={analysis} />
         </div>
       )}
@@ -524,27 +524,27 @@ export function Diagnostico() {
       {/* History */}
       {history.length > 0 && (
         <div>
-          <h3 className="text-xs font-semibold text-white/30 uppercase tracking-widest mb-4">Últimas Análises</h3>
+          <h3 className="text-xs font-semibold text-white/50 uppercase tracking-widest mb-4">Últimas Análises</h3>
           <div className="space-y-3">
             {history.map(item => (
               <Card key={item.id}>
                 <div className="flex items-center justify-between gap-4">
                   <div>
                     <p className="text-sm font-semibold text-white capitalize">{item.period}</p>
-                    <p className="text-xs text-white/30 mt-0.5">
+                    <p className="text-xs text-white/50 mt-0.5">
                       {format(new Date(item.created_at), "dd/MM/yyyy 'às' HH:mm")}
                     </p>
                   </div>
                   <div className="flex items-center gap-3">
                     <button
                       onClick={() => setExpandedId(expandedId === item.id ? null : item.id)}
-                      className="text-xs text-white/40 hover:text-white transition-colors whitespace-nowrap"
+                      className="text-xs text-white/60 hover:text-white transition-colors whitespace-nowrap"
                     >
                       {expandedId === item.id ? 'Fechar' : 'Ver análise completa'}
                     </button>
                     <button
                       onClick={() => handleDelete(item.id)}
-                      className="text-white/20 hover:text-red-400 transition-colors"
+                      className="text-white/35 hover:text-red-400 transition-colors"
                       title="Excluir análise"
                     >
                       <Trash2 size={14} />

@@ -73,14 +73,14 @@ export function CashFlow() {
       <div className="flex flex-wrap items-start justify-between gap-6">
         <div>
           <h2 className="text-2xl font-bold text-white tracking-tight">Fluxo de Caixa</h2>
-          <p className="text-sm text-white/30 mt-1">Por data de pagamento/recebimento</p>
+          <p className="text-sm text-white/50 mt-1">Por data de pagamento/recebimento</p>
         </div>
         <DateFilter startDate={startDate} endDate={endDate} onChange={(s, e) => { setStartDate(s); setEndDate(e) }} />
       </div>
 
       {/* Saldo inicial por mês */}
       <div className="flex items-center gap-3">
-        <span className="text-xs text-white/40 uppercase tracking-widest whitespace-nowrap">
+        <span className="text-xs text-white/60 uppercase tracking-widest whitespace-nowrap">
           Saldo inicial de {format(new Date(yearMonth + '-02'), 'MMMM/yyyy', { locale: ptBR })}:
         </span>
         <div className="w-48">
@@ -92,7 +92,7 @@ export function CashFlow() {
       </div>
 
       {loading ? (
-        <div className="flex items-center justify-center h-64 text-white/20">Carregando...</div>
+        <div className="flex items-center justify-center h-64 text-white/35">Carregando...</div>
       ) : (
         <>
           {/* Indicadores */}
@@ -120,12 +120,12 @@ export function CashFlow() {
           <Card>
             <h3 className="text-sm font-semibold text-white/60 uppercase tracking-widest mb-6">Movimentação Diária</h3>
             {cashFlowEntries.length === 0 ? (
-              <p className="text-white/20 text-sm py-8 text-center">Nenhuma movimentação no período.</p>
+              <p className="text-white/35 text-sm py-8 text-center">Nenhuma movimentação no período.</p>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="text-xs text-white/30 uppercase tracking-widest">
+                    <tr className="text-xs text-white/60 uppercase tracking-widest">
                       <th className="text-left pb-4">Data Pagamento</th>
                       <th className="text-right pb-4">Entradas</th>
                       <th className="text-right pb-4">Saídas</th>
@@ -134,9 +134,9 @@ export function CashFlow() {
                   </thead>
                   <tbody className="divide-y divide-white/5">
                     {cashFlowEntries.map(entry => (
-                      <tr key={entry.date} className="text-white/70">
+                      <tr key={entry.date} className="text-white/80">
                         <td className="py-3 tabular-nums">{entry.date}</td>
-                        <td className="py-3 text-right tabular-nums text-emerald-400/80">
+                        <td className="py-3 text-right tabular-nums text-brand-green/80">
                           {entry.revenue > 0 ? formatCurrency(entry.revenue) : '—'}
                         </td>
                         <td className="py-3 text-right tabular-nums text-red-400/80">
@@ -160,20 +160,20 @@ export function CashFlow() {
           <Card>
             <div className="flex items-center gap-3 mb-6">
               <h3 className="text-sm font-semibold text-white/60 uppercase tracking-widest">Fluxo Projetado — 90 dias</h3>
-              <span className="text-[10px] px-2 py-0.5 bg-white/5 rounded-full text-white/30 uppercase tracking-widest">
+              <span className="text-[10px] px-2 py-0.5 bg-white/5 rounded-full text-white/50 uppercase tracking-widest">
                 Lançamentos futuros cadastrados
               </span>
             </div>
 
             {!hasProjected ? (
-              <p className="text-sm text-white/20 py-8 text-center">
+              <p className="text-sm text-white/35 py-8 text-center">
                 Nenhum lançamento futuro cadastrado. Lance receitas ou despesas com data de pagamento futura para ver a projeção.
               </p>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="text-xs text-white/30 uppercase tracking-widest">
+                    <tr className="text-xs text-white/60 uppercase tracking-widest">
                       <th className="text-left pb-4">Mês</th>
                       <th className="text-right pb-4">Entradas previstas</th>
                       <th className="text-right pb-4">Saídas previstas</th>
@@ -200,9 +200,9 @@ export function CashFlow() {
                       return (
                         <>
                           {weekRows.map(({ row, rowBalance, accum }) => (
-                            <tr key={row.month} className="border-b border-white/5 text-white/60">
+                            <tr key={row.month} className="border-b border-white/5 text-white/80">
                               <td className="py-2.5 pl-3 tabular-nums">{row.month}</td>
-                              <td className="py-2.5 text-right tabular-nums text-emerald-400/70">
+                              <td className="py-2.5 text-right tabular-nums text-brand-green/70">
                                 {row.projectedRevenue > 0 ? formatCurrency(row.projectedRevenue) : '—'}
                               </td>
                               <td className="py-2.5 text-right tabular-nums text-red-400/70">
@@ -210,20 +210,20 @@ export function CashFlow() {
                                   ? formatCurrency(row.projectedCosts + row.projectedWithdrawals)
                                   : '—'}
                               </td>
-                              <td className={`py-2.5 text-right tabular-nums ${rowBalance >= 0 ? 'text-white/60' : 'text-red-400/70'}`}>
+                              <td className={`py-2.5 text-right tabular-nums ${rowBalance >= 0 ? 'text-white/80' : 'text-red-400/70'}`}>
                                 {formatCurrency(rowBalance)}
                               </td>
-                              <td className={`py-2.5 text-right tabular-nums ${accum >= 0 ? 'text-white/40' : 'text-red-400/60'}`}>
+                              <td className={`py-2.5 text-right tabular-nums ${accum >= 0 ? 'text-white/80' : 'text-red-400/70'}`}>
                                 {formatCurrency(accum)}
                               </td>
                             </tr>
                           ))}
-                          <tr key={label} className="bg-white/5 border-b border-white/10">
+                          <tr key={label} className="bg-white/5 border-b border-white/15">
                             <td className="py-3 pl-3 font-bold text-white text-xs uppercase tracking-widest">{label}</td>
-                            <td className={`py-3 text-right tabular-nums font-bold ${subEntradas > 0 ? 'text-emerald-400' : 'text-white/40'}`}>
+                            <td className={`py-3 text-right tabular-nums font-bold ${subEntradas > 0 ? 'text-brand-green' : 'text-white/60'}`}>
                               {subEntradas > 0 ? formatCurrency(subEntradas) : '—'}
                             </td>
-                            <td className={`py-3 text-right tabular-nums font-bold ${subSaidas > 0 ? 'text-red-400' : 'text-white/40'}`}>
+                            <td className={`py-3 text-right tabular-nums font-bold ${subSaidas > 0 ? 'text-red-400' : 'text-white/60'}`}>
                               {subSaidas > 0 ? formatCurrency(subSaidas) : '—'}
                             </td>
                             <td className={`py-3 text-right tabular-nums font-bold ${subBalance >= 0 ? 'text-white' : 'text-red-400'}`}>

@@ -24,7 +24,7 @@ function AppRoutes() {
       <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-center">
           <p className="text-4xl font-black tracking-[0.25em] text-white mb-4">ATLAS</p>
-          <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin mx-auto" />
+          <div className="w-5 h-5 border-2 border-white/35 border-t-white rounded-full animate-spin mx-auto" />
         </div>
       </div>
     )

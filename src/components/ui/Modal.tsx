@@ -22,10 +22,10 @@ export function Modal({ open, onClose, title, children, width = 'max-w-lg' }: Mo
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={onClose} />
-      <div className={`relative bg-[#0a0a0a] border border-white/10 rounded-2xl w-full ${width} max-h-[90vh] overflow-y-auto`}>
-        <div className="flex items-center justify-between p-6 border-b border-white/10">
+      <div className={`relative bg-[#0a0a0a] border border-white/15 rounded-2xl w-full ${width} max-h-[90vh] overflow-y-auto`}>
+        <div className="flex items-center justify-between p-6 border-b border-white/15">
           <h2 className="text-base font-semibold text-white">{title}</h2>
-          <button onClick={onClose} className="text-white/40 hover:text-white transition-colors">
+          <button onClick={onClose} className="text-white/60 hover:text-white transition-colors">
             <X size={18} />
           </button>
         </div>

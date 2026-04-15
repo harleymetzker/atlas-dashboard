@@ -36,7 +36,7 @@ export function MonthlyChart({ data, title, subtitle }: Props) {
       <div className="flex items-center gap-3 mb-6">
         <h3 className="text-sm font-semibold text-white/60 uppercase tracking-widest">{title}</h3>
         {subtitle && (
-          <span className="text-[10px] px-2 py-0.5 bg-white/5 rounded-full text-white/30 uppercase tracking-widest">{subtitle}</span>
+          <span className="text-[10px] px-2 py-0.5 bg-white/5 rounded-full text-white/50 uppercase tracking-widest">{subtitle}</span>
         )}
       </div>
       <ResponsiveContainer width="100%" height={280}>

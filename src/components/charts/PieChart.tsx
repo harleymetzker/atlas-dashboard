@@ -18,7 +18,7 @@ export function PieChart({ data, title }: Props) {
     <Card>
       <h3 className="text-sm font-semibold text-white/60 uppercase tracking-widest mb-6">{title}</h3>
       {data.length === 0 ? (
-        <div className="h-[260px] flex items-center justify-center text-white/20 text-sm">Sem dados</div>
+        <div className="h-[260px] flex items-center justify-center text-white/35 text-sm">Sem dados</div>
       ) : (
         <ResponsiveContainer width="100%" height={260}>
           <RechartsPie>

@@ -36,12 +36,12 @@ const MONTHS = [
 function BigMetricCard({
   label, value, sub, positive, negative,
 }: { label: string; value: string; sub?: string; positive?: boolean; negative?: boolean }) {
-  const color = positive ? 'text-emerald-400' : negative ? 'text-red-400' : 'text-white'
+  const color = positive ? 'text-brand-green' : negative ? 'text-red-400' : 'text-white'
   return (
-    <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl p-6">
-      <p className="text-xs text-white/40 uppercase tracking-widest mb-3 whitespace-nowrap overflow-hidden text-ellipsis">{label}</p>
+    <div className="bg-[#0a0a0a] border border-white/15 rounded-2xl p-6">
+      <p className="text-xs text-white/60 uppercase tracking-widest mb-3 whitespace-nowrap overflow-hidden text-ellipsis">{label}</p>
       <p className={`text-2xl font-bold tabular-nums tracking-tight leading-tight ${color}`}>{value}</p>
-      {sub && <p className="text-xs text-white/50 mt-1.5 leading-snug">{sub}</p>}
+      {sub && <p className="text-xs text-white/70 mt-1.5 leading-snug">{sub}</p>}
     </div>
   )
 }
@@ -49,7 +49,7 @@ function BigMetricCard({
 function DeltaBadge({ pct }: { pct: number }) {
   const up = pct >= 0
   return (
-    <span className={`inline-flex items-center gap-0.5 text-xs font-semibold tabular-nums ${up ? 'text-emerald-400' : 'text-red-400'}`}>
+    <span className={`inline-flex items-center gap-0.5 text-xs font-semibold tabular-nums ${up ? 'text-brand-green' : 'text-red-400'}`}>
       {up ? <ArrowUpRight size={13} /> : <ArrowDownRight size={13} />}
       {Math.abs(pct).toFixed(1)}%
     </span>
@@ -126,7 +126,7 @@ export function Overview() {
   }
 
   const statusConfig = {
-    green:  { bg: 'bg-emerald-500/10 border-emerald-500/20', icon: <CheckCircle size={28} className="text-emerald-400" />, label: 'Negócio saudável',    text: 'text-emerald-400' },
+    green:  { bg: 'bg-brand-green/10 border-brand-green/20', icon: <CheckCircle size={28} className="text-brand-green" />, label: 'Negócio saudável',    text: 'text-brand-green' },
     yellow: { bg: 'bg-yellow-500/10 border-yellow-500/20',   icon: <AlertTriangle size={28} className="text-yellow-400" />, label: 'Atenção necessária', text: 'text-yellow-400' },
     red:    { bg: 'bg-red-500/10 border-red-500/20',         icon: <XCircle size={28} className="text-red-400" />,         label: 'Situação crítica',   text: 'text-red-400' },
   }[status]
@@ -202,15 +202,15 @@ export function Overview() {
       <div className="flex flex-wrap items-start justify-between gap-6">
         <div>
           <h2 className="text-2xl font-bold text-white tracking-tight">Visão Geral</h2>
-          <p className="text-sm text-white/30 mt-1">Resumo financeiro do período selecionado</p>
+          <p className="text-sm text-white/50 mt-1">Resumo financeiro do período selecionado</p>
         </div>
         <div className="flex items-end gap-2">
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs text-white/50 uppercase tracking-widest">Mês</label>
+            <label className="text-xs text-white/70 uppercase tracking-widest">Mês</label>
             <select
               value={selectedMonth}
               onChange={e => setSelectedMonth(Number(e.target.value))}
-              className="bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-white/30 transition-colors"
+              className="bg-white/5 border border-white/15 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-white/50 transition-colors"
             >
               {MONTHS.map((name, i) => (
                 <option key={i + 1} value={i + 1} className="bg-[#111] text-white">{name}</option>
@@ -218,11 +218,11 @@ export function Overview() {
             </select>
           </div>
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs text-white/50 uppercase tracking-widest">Ano</label>
+            <label className="text-xs text-white/70 uppercase tracking-widest">Ano</label>
             <select
               value={selectedYear}
               onChange={e => setSelectedYear(Number(e.target.value))}
-              className="bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-white/30 transition-colors"
+              className="bg-white/5 border border-white/15 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-white/50 transition-colors"
             >
               {yearOptions.map(y => (
                 <option key={y} value={y} className="bg-[#111] text-white">{y}</option>
@@ -233,7 +233,7 @@ export function Overview() {
       </div>
 
       {loading ? (
-        <div className="flex items-center justify-center h-64 text-white/20">Carregando...</div>
+        <div className="flex items-center justify-center h-64 text-white/35">Carregando...</div>
       ) : (
         <>
 
@@ -242,7 +242,7 @@ export function Overview() {
             {statusConfig.icon}
             <div className="flex-1">
               <p className={`text-lg font-bold ${statusConfig.text}`}>{statusConfig.label}</p>
-              <p className="text-sm text-white/40 mt-0.5">
+              <p className="text-sm text-white/60 mt-0.5">
                 Margem líquida {formatPercent(dre.lucroMargin)}
                 {' · '}
                 Runway {runwayDisplay}
@@ -296,32 +296,32 @@ export function Overview() {
 
           {/* ── 4. Comparativo mês anterior ── */}
           <Card>
-            <p className="text-[10px] font-bold uppercase tracking-widest text-white/30 mb-5">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-white/50 mb-5">
               Comparativo — {MONTHS[selectedMonth - 1]} vs {MONTHS[(selectedMonth === 1 ? 12 : selectedMonth) - 2]}
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               {/* Faturamento */}
               <div className="space-y-2">
-                <p className="text-xs text-white/40 uppercase tracking-widest">Faturamento Bruto</p>
+                <p className="text-xs text-white/60 uppercase tracking-widest">Faturamento Bruto</p>
                 <div className="flex items-baseline gap-3">
                   <span className="text-xl font-bold tabular-nums text-white">{formatCurrency(dre.faturamentoBruto)}</span>
                   <DeltaBadge pct={fatDelta} />
                 </div>
-                <div className="flex items-baseline gap-2 text-xs text-white/30 tabular-nums">
+                <div className="flex items-baseline gap-2 text-xs text-white/50 tabular-nums">
                   <span>mês anterior:</span>
                   <span>{formatCurrency(prevDre.faturamentoBruto)}</span>
                 </div>
               </div>
               {/* Lucro */}
               <div className="space-y-2">
-                <p className="text-xs text-white/40 uppercase tracking-widest">Lucro Líquido</p>
+                <p className="text-xs text-white/60 uppercase tracking-widest">Lucro Líquido</p>
                 <div className="flex items-baseline gap-3">
-                  <span className={`text-xl font-bold tabular-nums ${dre.lucro >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                  <span className={`text-xl font-bold tabular-nums ${dre.lucro >= 0 ? 'text-brand-green' : 'text-red-400'}`}>
                     {formatCurrency(dre.lucro)}
                   </span>
                   {prevDre.lucro !== 0 && <DeltaBadge pct={lucroDelta} />}
                 </div>
-                <div className="flex items-baseline gap-2 text-xs text-white/30 tabular-nums">
+                <div className="flex items-baseline gap-2 text-xs text-white/50 tabular-nums">
                   <span>mês anterior:</span>
                   <span>{formatCurrency(prevDre.lucro)}</span>
                 </div>
@@ -331,9 +331,9 @@ export function Overview() {
 
           {/* ── 5. Alertas automáticos ── */}
           <Card>
-            <p className="text-[10px] font-bold uppercase tracking-widest text-white/30 mb-4">Alertas</p>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-white/50 mb-4">Alertas</p>
             {shownAlerts.length === 0 ? (
-              <div className="flex items-center gap-2 text-emerald-400">
+              <div className="flex items-center gap-2 text-brand-green">
                 <CheckCircle size={16} />
                 <span className="text-sm">Nenhum alerta crítico este mês.</span>
               </div>
@@ -353,10 +353,10 @@ export function Overview() {
 
           {/* ── 6. Meta de retirada ── */}
           <Card>
-            <p className="text-[10px] font-bold uppercase tracking-widest text-white/30 mb-4">Meta de Retirada Mensal</p>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-white/50 mb-4">Meta de Retirada Mensal</p>
             <div className="flex flex-wrap items-end gap-6">
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs text-white/50 uppercase tracking-widest">Quero retirar por mês</label>
+                <label className="text-xs text-white/70 uppercase tracking-widest">Quero retirar por mês</label>
                 <input
                   type="number"
                   value={withdrawalGoal}
@@ -364,33 +364,33 @@ export function Overview() {
                   placeholder="R$ 0,00"
                   min="0"
                   step="100"
-                  className="bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white w-52 focus:outline-none focus:border-white/30"
+                  className="bg-white/5 border border-white/15 rounded-xl px-4 py-2.5 text-sm text-white w-52 focus:outline-none focus:border-white/50"
                 />
               </div>
 
               {goalAmount > 0 && (
                 <div className="flex flex-wrap gap-6 items-end">
                   <div>
-                    <p className="text-xs text-white/40 uppercase tracking-widest mb-1">Faturamento necessário</p>
+                    <p className="text-xs text-white/60 uppercase tracking-widest mb-1">Faturamento necessário</p>
                     <p className="text-lg font-bold tabular-nums text-white">{formatCurrency(requiredRevenue)}</p>
-                    <p className="text-xs text-white/30 mt-0.5">baseado na margem líquida atual ({formatPercent(dre.lucroMargin)})</p>
+                    <p className="text-xs text-white/50 mt-0.5">baseado na margem líquida atual ({formatPercent(dre.lucroMargin)})</p>
                   </div>
                   <div>
-                    <p className="text-xs text-white/40 uppercase tracking-widest mb-1">
+                    <p className="text-xs text-white/60 uppercase tracking-widest mb-1">
                       {goalReached ? 'Faturamento excedente' : 'Faturamento que falta'}
                     </p>
-                    <p className={`text-lg font-bold tabular-nums ${goalReached ? 'text-emerald-400' : 'text-red-400'}`}>
+                    <p className={`text-lg font-bold tabular-nums ${goalReached ? 'text-brand-green' : 'text-red-400'}`}>
                       {goalReached ? '+' : '-'}{formatCurrency(Math.abs(revenueGap))}
                     </p>
-                    <p className="text-xs text-white/30 mt-0.5">
+                    <p className="text-xs text-white/50 mt-0.5">
                       {goalReached
                         ? 'Meta atingida com o faturamento atual'
                         : `Precisa crescer ${formatPercent(((requiredRevenue - dre.faturamentoBruto) / (dre.faturamentoBruto || 1)) * 100)}`}
                     </p>
                   </div>
-                  <div className={`flex items-center gap-2 rounded-lg px-3 py-2 self-end ${goalReached ? 'bg-emerald-500/10' : 'bg-red-500/10'}`}>
-                    <div className={`w-1.5 h-1.5 rounded-full ${goalReached ? 'bg-emerald-400' : 'bg-red-400'}`} />
-                    <span className={`text-xs font-medium ${goalReached ? 'text-emerald-400' : 'text-red-400'}`}>
+                  <div className={`flex items-center gap-2 rounded-lg px-3 py-2 self-end ${goalReached ? 'bg-brand-green/10' : 'bg-red-500/10'}`}>
+                    <div className={`w-1.5 h-1.5 rounded-full ${goalReached ? 'bg-brand-green' : 'bg-red-400'}`} />
+                    <span className={`text-xs font-medium ${goalReached ? 'text-brand-green' : 'text-red-400'}`}>
                       {goalReached ? 'Meta atingida' : 'Abaixo da meta'}
                     </span>
                   </div>
@@ -401,7 +401,7 @@ export function Overview() {
 
           {/* ── 7. Gráfico evolução 6 meses ── */}
           <Card>
-            <p className="text-[10px] font-bold uppercase tracking-widest text-white/30 mb-6">Evolução — Últimos 6 Meses</p>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-white/50 mb-6">Evolução — Últimos 6 Meses</p>
             <ResponsiveContainer width="100%" height={260}>
               <ComposedChart data={chartData} margin={{ top: 0, right: 24, left: 0, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />

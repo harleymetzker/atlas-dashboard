@@ -78,9 +78,9 @@ function calcSim(f: SimForm): SimCalc {
 
 function Delta({ actual, simulated, positive = true }: { actual: number; simulated: number; positive?: boolean }) {
   const diff = simulated - actual
-  if (Math.abs(diff) < 0.005) return <span className="text-white/20 tabular-nums text-xs">—</span>
+  if (Math.abs(diff) < 0.005) return <span className="text-white/35 tabular-nums text-xs">—</span>
   const good = positive ? diff > 0 : diff < 0
-  const color = good ? 'text-emerald-400' : 'text-red-400'
+  const color = good ? 'text-brand-green' : 'text-red-400'
   return (
     <span className={`${color} tabular-nums text-xs font-semibold`}>
       {diff > 0 ? '+' : ''}{formatCurrency(diff)}
@@ -94,14 +94,14 @@ function SimCurrencyInput({ value, onChange }: { value: string; onChange: (v: st
 
 function PctInput({ value, onChange }: { value: string; onChange: (v: string) => void }) {
   return (
-    <div className="flex items-center bg-white/5 border border-white/10 rounded-lg overflow-hidden focus-within:border-white/25 transition-colors">
+    <div className="flex items-center bg-white/5 border border-white/15 rounded-lg overflow-hidden focus-within:border-white/40 transition-colors">
       <input
         type="number" min="0" max="100" step="0.01" value={value}
         onChange={e => onChange(e.target.value)}
         className="flex-1 bg-transparent px-3 py-1.5 text-sm text-white focus:outline-none tabular-nums text-right"
         placeholder="0"
       />
-      <span className="pr-2 text-xs text-white/30">%</span>
+      <span className="pr-2 text-xs text-white/50">%</span>
     </div>
   )
 }
@@ -111,8 +111,8 @@ function Row({ label, actual, simNode, delta, indent = false }: {
 }) {
   return (
     <div className="grid grid-cols-[1fr_160px_200px_130px] items-center px-6 py-3">
-      <span className={`text-sm text-white/60 ${indent ? 'pl-5' : ''}`}>{label}</span>
-      <span className="text-sm text-white/50 tabular-nums text-right pr-4">{actual}</span>
+      <span className={`text-sm text-white/80 ${indent ? 'pl-5' : ''}`}>{label}</span>
+      <span className="text-sm text-white/80 tabular-nums text-right pr-4">{actual}</span>
       <div>{simNode}</div>
       <div className="text-right">{delta}</div>
     </div>
@@ -135,7 +135,7 @@ function TotalRow({ label, actual, simValue, delta }: {
 function SectionRow({ label }: { label: string }) {
   return (
     <div className="px-6 py-2 border-t border-white/5 bg-white/[0.01]">
-      <span className="text-[10px] text-white/25 uppercase tracking-widest">{label}</span>
+      <span className="text-[10px] text-white/60 uppercase tracking-widest">{label}</span>
     </div>
   )
 }
@@ -211,7 +211,7 @@ export function SimuladorCenarios() {
   if (loading && !dre) {
     return (
       <div className="p-8 flex items-center justify-center min-h-64">
-        <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+        <div className="w-5 h-5 border-2 border-white/35 border-t-white rounded-full animate-spin" />
       </div>
     )
   }
@@ -221,10 +221,10 @@ export function SimuladorCenarios() {
       <div className="p-8 space-y-8">
         <div>
           <h2 className="text-2xl font-bold text-white tracking-tight">Simulador de Cenários</h2>
-          <p className="text-sm text-white/30 mt-1">Altere os indicadores e veja o impacto no lucro em tempo real.</p>
+          <p className="text-sm text-white/50 mt-1">Altere os indicadores e veja o impacto no lucro em tempo real.</p>
         </div>
         <div className="mt-12 text-center py-16">
-          <p className="text-white/30 text-sm">Nenhum dado encontrado. Lance suas entradas na DRE para usar o simulador.</p>
+          <p className="text-white/50 text-sm">Nenhum dado encontrado. Lance suas entradas na DRE para usar o simulador.</p>
         </div>
       </div>
     )
@@ -233,7 +233,7 @@ export function SimuladorCenarios() {
   if (!dre || !form || !sim) {
     return (
       <div className="p-8 flex items-center justify-center min-h-64">
-        <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+        <div className="w-5 h-5 border-2 border-white/35 border-t-white rounded-full animate-spin" />
       </div>
     )
   }
@@ -251,11 +251,11 @@ export function SimuladorCenarios() {
       <div className="flex items-start justify-between">
         <div>
           <h2 className="text-2xl font-bold text-white tracking-tight">Simulador de Cenários</h2>
-          <p className="text-sm text-white/30 mt-1">Altere os indicadores e veja o impacto no lucro em tempo real.</p>
+          <p className="text-sm text-white/50 mt-1">Altere os indicadores e veja o impacto no lucro em tempo real.</p>
         </div>
         <button
           onClick={handleReset}
-          className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm text-white/40 hover:text-white hover:bg-white/5 border border-white/10 transition-all"
+          className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm text-white/60 hover:text-white hover:bg-white/5 border border-white/15 transition-all"
         >
           <RefreshCw size={14} />
           Resetar Simulação
@@ -264,29 +264,29 @@ export function SimuladorCenarios() {
 
       {/* Period selector */}
       <div className="flex items-center gap-3">
-        <span className="text-xs text-white/30 uppercase tracking-widest whitespace-nowrap">Período de referência</span>
+        <span className="text-xs text-white/50 uppercase tracking-widest whitespace-nowrap">Período de referência</span>
         <select
           value={selectedMonth}
           onChange={e => setSelectedMonth(e.target.value)}
-          className="bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-white/30 transition-colors appearance-none cursor-pointer"
+          className="bg-white/5 border border-white/15 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-white/50 transition-colors appearance-none cursor-pointer"
         >
           {availableMonths.map(m => (
             <option key={m.value} value={m.value} className="bg-[#0a0a0a]">{m.label}</option>
           ))}
         </select>
         {loadingDre && (
-          <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+          <div className="w-4 h-4 border-2 border-white/35 border-t-white rounded-full animate-spin" />
         )}
       </div>
 
       {/* Comparison Table */}
-      <div className="bg-white/[0.03] border border-white/10 rounded-2xl overflow-hidden">
+      <div className="bg-white/[0.03] border border-white/15 rounded-2xl overflow-hidden">
         {/* Column headers */}
-        <div className="grid grid-cols-[1fr_160px_200px_130px] items-center px-6 py-3 border-b border-white/10">
-          <span className="text-xs text-white/25 uppercase tracking-widest">Linha DRE</span>
-          <span className="text-xs text-white/25 uppercase tracking-widest text-right pr-4">Atual</span>
-          <span className="text-xs text-white/25 uppercase tracking-widest">Simulado</span>
-          <span className="text-xs text-white/25 uppercase tracking-widest text-right">Δ</span>
+        <div className="grid grid-cols-[1fr_160px_200px_130px] items-center px-6 py-3 border-b border-white/15">
+          <span className="text-xs text-white/60 uppercase tracking-widest">Linha DRE</span>
+          <span className="text-xs text-white/60 uppercase tracking-widest text-right pr-4">Atual</span>
+          <span className="text-xs text-white/60 uppercase tracking-widest">Simulado</span>
+          <span className="text-xs text-white/60 uppercase tracking-widest text-right">Δ</span>
         </div>
 
         <div className="divide-y divide-white/[0.04]">
@@ -380,12 +380,12 @@ export function SimuladorCenarios() {
           />
 
           {/* Lucro — destaque */}
-          <div className="grid grid-cols-[1fr_160px_200px_130px] items-center px-6 py-4 bg-white/5 border-t border-white/10">
+          <div className="grid grid-cols-[1fr_160px_200px_130px] items-center px-6 py-4 bg-white/5 border-t border-white/15">
             <span className="text-sm font-bold text-white">(=) Lucro</span>
-            <span className={`text-sm font-bold tabular-nums text-right pr-4 ${dre.lucro >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+            <span className={`text-sm font-bold tabular-nums text-right pr-4 ${dre.lucro >= 0 ? 'text-brand-green' : 'text-red-400'}`}>
               {formatCurrency(dre.lucro)}
             </span>
-            <span className={`text-sm font-bold tabular-nums text-right pr-2 ${sim.lucro >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+            <span className={`text-sm font-bold tabular-nums text-right pr-2 ${sim.lucro >= 0 ? 'text-brand-green' : 'text-red-400'}`}>
               {formatCurrency(sim.lucro)}
             </span>
             <div className="text-right">
@@ -396,27 +396,27 @@ export function SimuladorCenarios() {
       </div>
 
       {/* Result summary card */}
-      <div className="bg-white/[0.03] border border-white/10 rounded-2xl p-6">
+      <div className="bg-white/[0.03] border border-white/15 rounded-2xl p-6">
         <div className="grid grid-cols-3 gap-6 text-center divide-x divide-white/5">
           <div>
-            <p className="text-xs text-white/30 uppercase tracking-widest mb-3">Lucro Atual</p>
+            <p className="text-xs text-white/50 uppercase tracking-widest mb-3">Lucro Atual</p>
             <p className={`text-2xl font-black tabular-nums ${lucroAtual >= 0 ? 'text-white' : 'text-red-400'}`}>
               {formatCurrency(lucroAtual)}
             </p>
           </div>
           <div>
-            <p className="text-xs text-white/30 uppercase tracking-widest mb-3">Lucro Simulado</p>
-            <p className={`text-2xl font-black tabular-nums ${lucroSim >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+            <p className="text-xs text-white/50 uppercase tracking-widest mb-3">Lucro Simulado</p>
+            <p className={`text-2xl font-black tabular-nums ${lucroSim >= 0 ? 'text-brand-green' : 'text-red-400'}`}>
               {formatCurrency(lucroSim)}
             </p>
           </div>
           <div>
-            <p className="text-xs text-white/30 uppercase tracking-widest mb-3">Variação</p>
-            <p className={`text-2xl font-black tabular-nums ${lucroDiff >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+            <p className="text-xs text-white/50 uppercase tracking-widest mb-3">Variação</p>
+            <p className={`text-2xl font-black tabular-nums ${lucroDiff >= 0 ? 'text-brand-green' : 'text-red-400'}`}>
               {lucroDiff >= 0 ? '+' : ''}{formatCurrency(lucroDiff)}
             </p>
             {lucroAtual !== 0 && (
-              <p className={`text-xs mt-1 ${lucroDiff >= 0 ? 'text-emerald-400/60' : 'text-red-400/60'}`}>
+              <p className={`text-xs mt-1 ${lucroDiff >= 0 ? 'text-brand-green/60' : 'text-red-400/60'}`}>
                 ({lucroDiff >= 0 ? '+' : ''}{lucroPct.toFixed(1)}%)
               </p>
             )}

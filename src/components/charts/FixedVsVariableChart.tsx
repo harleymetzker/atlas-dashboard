@@ -17,7 +17,7 @@ export function FixedVsVariableChart({ fixed, variable }: Props) {
     <Card>
       <h3 className="text-sm font-semibold text-white/60 uppercase tracking-widest mb-6">Fixo vs Variável</h3>
       {total === 0 ? (
-        <div className="h-[260px] flex items-center justify-center text-white/20 text-sm">Sem dados</div>
+        <div className="h-[260px] flex items-center justify-center text-white/35 text-sm">Sem dados</div>
       ) : (
         <ResponsiveContainer width="100%" height={260}>
           <PieChart>

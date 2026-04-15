@@ -66,13 +66,13 @@ export function CurrencyInput({ label, value, onChange, placeholder = '0', badge
     <div className="flex flex-col gap-1.5">
       {(label || badge) && (
         <div className="flex items-center gap-2 flex-wrap">
-          {label && <label className="text-xs text-white/40 uppercase tracking-widest">{label}</label>}
+          {label && <label className="text-xs text-white/60 uppercase tracking-widest">{label}</label>}
           {badge && (
-            <span className="text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-1.5 py-0.5 rounded-md">{badge}</span>
+            <span className="text-[10px] bg-brand-green/10 text-brand-green border border-brand-green/20 px-1.5 py-0.5 rounded-md">{badge}</span>
           )}
         </div>
       )}
-      <div className="flex items-center bg-white/5 border border-white/10 rounded-xl overflow-hidden focus-within:border-white/30 transition-colors">
+      <div className="flex items-center bg-white/5 border border-white/15 rounded-xl overflow-hidden focus-within:border-white/50 transition-colors">
         <input
           type="text"
           inputMode="decimal"
@@ -81,7 +81,7 @@ export function CurrencyInput({ label, value, onChange, placeholder = '0', badge
           placeholder={placeholder}
           className="flex-1 bg-transparent px-4 py-2.5 text-sm text-white focus:outline-none tabular-nums"
         />
-        <span className="pr-4 text-sm text-white/30">R$</span>
+        <span className="pr-4 text-sm text-white/50">R$</span>
       </div>
     </div>
   )

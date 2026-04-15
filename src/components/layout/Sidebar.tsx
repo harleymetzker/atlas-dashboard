@@ -27,7 +27,7 @@ export function Sidebar() {
     <aside className="w-60 shrink-0 bg-[#050505] border-r border-white/5 flex flex-col h-screen sticky top-0">
       <div className="p-6 border-b border-white/5">
         <h1 className="text-xl font-black tracking-[0.2em] text-white">ATLAS</h1>
-        <p className="text-[10px] text-white/20 uppercase tracking-widest mt-0.5">Financial Dashboard</p>
+        <p className="text-[10px] text-white/35 uppercase tracking-widest mt-0.5">Financial Dashboard</p>
       </div>
 
       <nav className="flex-1 p-3 space-y-0.5 overflow-y-auto">
@@ -35,7 +35,7 @@ export function Sidebar() {
           <NavLink
             to="/admin"
             className={({ isActive }) =>
-              `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all ${isActive ? 'bg-white text-black font-semibold' : 'text-white/50 hover:text-white hover:bg-white/5'}`
+              `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all ${isActive ? 'bg-white text-black font-semibold' : 'text-white/70 hover:text-white hover:bg-white/5'}`
             }
           >
             <Users size={16} />
@@ -49,7 +49,7 @@ export function Sidebar() {
                 to={to}
                 end={to === '/dashboard'}
                 className={({ isActive }) =>
-                  `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all ${isActive ? 'bg-white text-black font-semibold' : 'text-white/50 hover:text-white hover:bg-white/5'}`
+                  `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all ${isActive ? 'bg-white text-black font-semibold' : 'text-white/70 hover:text-white hover:bg-white/5'}`
                 }
               >
                 <Icon size={16} />
@@ -61,7 +61,7 @@ export function Sidebar() {
             <div className="pt-2">
               <button
                 onClick={() => setFerramentasOpen(o => !o)}
-                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-white/50 hover:text-white hover:bg-white/5 transition-all"
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-white/70 hover:text-white hover:bg-white/5 transition-all"
               >
                 <Wrench size={16} />
                 <span className="flex-1 text-left">Ferramentas</span>
@@ -78,7 +78,7 @@ export function Sidebar() {
                       key={to}
                       to={to}
                       className={({ isActive }) =>
-                        `flex items-center gap-3 px-3 py-2 rounded-xl text-sm transition-all ${isActive ? 'bg-white text-black font-semibold' : 'text-white/40 hover:text-white hover:bg-white/5'}`
+                        `flex items-center gap-3 px-3 py-2 rounded-xl text-sm transition-all ${isActive ? 'bg-white text-black font-semibold' : 'text-white/60 hover:text-white hover:bg-white/5'}`
                       }
                     >
                       <Icon size={14} />
@@ -94,12 +94,12 @@ export function Sidebar() {
 
       <div className="p-3 border-t border-white/5">
         <div className="px-3 py-2 mb-1">
-          <p className="text-xs text-white/30 truncate">{user?.email}</p>
-          {isAdmin && <span className="text-[10px] text-white/20 uppercase tracking-widest">Admin</span>}
+          <p className="text-xs text-white/50 truncate">{user?.email}</p>
+          {isAdmin && <span className="text-[10px] text-white/35 uppercase tracking-widest">Admin</span>}
         </div>
         <button
           onClick={signOut}
-          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-white/30 hover:text-red-400 hover:bg-red-500/5 transition-all"
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-white/50 hover:text-red-400 hover:bg-red-500/5 transition-all"
         >
           <LogOut size={16} />
           Sair

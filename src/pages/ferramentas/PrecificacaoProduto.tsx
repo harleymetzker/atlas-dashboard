@@ -55,21 +55,21 @@ function PctInput({ label, value, onChange, badge }: {
   return (
     <div className="flex flex-col gap-1.5">
       <div className="flex items-center gap-2 flex-wrap">
-        <label className="text-xs text-white/40 uppercase tracking-widest">{label}</label>
+        <label className="text-xs text-white/60 uppercase tracking-widest">{label}</label>
         {badge && (
-          <span className="text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-1.5 py-0.5 rounded-md">
+          <span className="text-[10px] bg-brand-green/10 text-brand-green border border-brand-green/20 px-1.5 py-0.5 rounded-md">
             {badge}
           </span>
         )}
       </div>
-      <div className="flex items-center bg-white/5 border border-white/10 rounded-xl overflow-hidden focus-within:border-white/30 transition-colors">
+      <div className="flex items-center bg-white/5 border border-white/15 rounded-xl overflow-hidden focus-within:border-white/50 transition-colors">
         <input
           type="number" min="0" max="100" step="0.01" value={value}
           onChange={e => onChange(e.target.value)}
           className="flex-1 bg-transparent px-4 py-2.5 text-sm text-white focus:outline-none tabular-nums"
           placeholder="0"
         />
-        <span className="pr-4 text-sm text-white/30">%</span>
+        <span className="pr-4 text-sm text-white/50">%</span>
       </div>
     </div>
   )
@@ -227,7 +227,7 @@ export function PrecificacaoProduto() {
     <div className="p-8 space-y-8">
       <div>
         <h2 className="text-2xl font-bold text-white tracking-tight">Precificação de Produto</h2>
-        <p className="text-sm text-white/30 mt-1">Calcule o preço correto considerando todos os seus custos.</p>
+        <p className="text-sm text-white/50 mt-1">Calcule o preço correto considerando todos os seus custos.</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
@@ -236,7 +236,7 @@ export function PrecificacaoProduto() {
             <Input label="Nome do produto" value={form.name} onChange={setStr('name')} placeholder="Ex: Produto X" />
 
             <div className="pt-2 border-t border-white/5">
-              <p className="text-xs text-white/30 uppercase tracking-widest mb-4">Custos do Produto</p>
+              <p className="text-xs text-white/50 uppercase tracking-widest mb-4">Custos do Produto</p>
               <div className="space-y-4">
                 <CurrencyInput label="CMV — Custo da Mercadoria (R$)" value={form.cmv} onChange={v => setForm(f => ({ ...f, cmv: v }))} />
                 <PctInput label="Meta de Lucro" value={form.meta_lucro} onChange={setPct('meta_lucro')} />
@@ -245,9 +245,9 @@ export function PrecificacaoProduto() {
 
             <div className="pt-2 border-t border-white/5">
               <div className="flex items-center gap-2 mb-4">
-                <p className="text-xs text-white/30 uppercase tracking-widest">Custos Operacionais</p>
+                <p className="text-xs text-white/50 uppercase tracking-widest">Custos Operacionais</p>
                 {defaults.hasData && !loadingDefaults && (
-                  <span className="text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-1.5 py-0.5 rounded-md">
+                  <span className="text-[10px] bg-brand-green/10 text-brand-green border border-brand-green/20 px-1.5 py-0.5 rounded-md">
                     Baseado em {defaults.referenciaMes}
                   </span>
                 )}
@@ -276,18 +276,18 @@ export function PrecificacaoProduto() {
 
         {/* Results */}
         <Card>
-          <p className="text-xs text-white/30 uppercase tracking-widest mb-5">Resultado</p>
+          <p className="text-xs text-white/50 uppercase tracking-widest mb-5">Resultado</p>
           <div className="space-y-4">
             <div className="flex justify-between items-center">
-              <span className="text-sm text-white/50">Meta Margem Bruta</span>
+              <span className="text-sm text-white/70">Meta Margem Bruta</span>
               <span className="text-sm font-semibold text-white tabular-nums">{calc.metaMargemBruta.toFixed(2)}%</span>
             </div>
-            <div className="flex justify-between items-center py-4 border-y border-white/10">
+            <div className="flex justify-between items-center py-4 border-y border-white/15">
               <span className="text-sm font-semibold text-white">Preço Sugerido</span>
-              <span className="text-2xl font-bold text-emerald-400 tabular-nums">{formatCurrency(calc.precoSugerido)}</span>
+              <span className="text-2xl font-bold text-brand-green tabular-nums">{formatCurrency(calc.precoSugerido)}</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-sm text-white/50">Mark-up</span>
+              <span className="text-sm text-white/70">Mark-up</span>
               <span className="text-sm font-semibold text-white tabular-nums">
                 {calc.markup > 0 ? `${calc.markup.toFixed(2)}x` : '—'}
               </span>
@@ -299,11 +299,11 @@ export function PrecificacaoProduto() {
       {/* Saved Products */}
       {products.length > 0 && (
         <Card>
-          <p className="text-xs text-white/30 uppercase tracking-widest mb-5">Produtos Salvos</p>
+          <p className="text-xs text-white/50 uppercase tracking-widest mb-5">Produtos Salvos</p>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="text-xs text-white/30 uppercase tracking-widest">
+                <tr className="text-xs text-white/50 uppercase tracking-widest">
                   <th className="text-left pb-4">Nome</th>
                   <th className="text-right pb-4">Preço Sugerido</th>
                   <th className="text-right pb-4">Mark-up</th>
@@ -316,16 +316,16 @@ export function PrecificacaoProduto() {
                 {products.map(p => (
                   <tr key={p.id} className="group text-white/70">
                     <td className="py-3 font-medium text-white">{p.name}</td>
-                    <td className="py-3 text-right tabular-nums text-emerald-400 font-semibold">{formatCurrency(p.preco_final_sugerido ?? p.preco_liquido_sugerido)}</td>
+                    <td className="py-3 text-right tabular-nums text-brand-green font-semibold">{formatCurrency(p.preco_final_sugerido ?? p.preco_liquido_sugerido)}</td>
                     <td className="py-3 text-right tabular-nums">{p.markup.toFixed(2)}x</td>
                     <td className="py-3 text-right tabular-nums">{p.meta_lucro.toFixed(1)}%</td>
                     <td className="py-3 text-right tabular-nums">{formatCurrency(p.cmv)}</td>
                     <td className="py-3 text-right">
                       <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button onClick={() => handleEdit(p)} className="p-1.5 rounded-lg text-white/30 hover:text-white hover:bg-white/10 transition-all">
+                        <button onClick={() => handleEdit(p)} className="p-1.5 rounded-lg text-white/50 hover:text-white hover:bg-white/15 transition-all">
                           <Pencil size={13} />
                         </button>
-                        <button onClick={() => handleDelete(p.id)} className="p-1.5 rounded-lg text-white/30 hover:text-red-400 hover:bg-red-500/10 transition-all">
+                        <button onClick={() => handleDelete(p.id)} className="p-1.5 rounded-lg text-white/50 hover:text-red-400 hover:bg-red-500/10 transition-all">
                           <Trash2 size={13} />
                         </button>
                       </div>

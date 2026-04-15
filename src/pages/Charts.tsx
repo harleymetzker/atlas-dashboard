@@ -34,13 +34,13 @@ export function Charts() {
       <div className="flex flex-wrap items-start justify-between gap-6">
         <div>
           <h2 className="text-2xl font-bold text-white tracking-tight">Gráficos</h2>
-          <p className="text-sm text-white/30 mt-1">Análise visual dos dados financeiros</p>
+          <p className="text-sm text-white/50 mt-1">Análise visual dos dados financeiros</p>
         </div>
         <DateFilter startDate={startDate} endDate={endDate} onChange={(s, e) => { setStartDate(s); setEndDate(e) }} />
       </div>
 
       {loading ? (
-        <div className="flex items-center justify-center h-64 text-white/20">Carregando...</div>
+        <div className="flex items-center justify-center h-64 text-white/35">Carregando...</div>
       ) : (
         <>
           <MonthlyChart

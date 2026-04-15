@@ -18,8 +18,8 @@ function NumInput({
 }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="text-xs text-white/40 uppercase tracking-widest">{label}</label>
-      <div className="flex items-center bg-white/5 border border-white/10 rounded-xl overflow-hidden focus-within:border-white/30 transition-colors">
+      <label className="text-xs text-white/60 uppercase tracking-widest">{label}</label>
+      <div className="flex items-center bg-white/5 border border-white/15 rounded-xl overflow-hidden focus-within:border-white/50 transition-colors">
         <input
           type="number"
           min="0"
@@ -29,7 +29,7 @@ function NumInput({
           className="flex-1 bg-transparent px-4 py-2.5 text-sm text-white focus:outline-none tabular-nums"
           placeholder="0"
         />
-        {suffix && <span className="pr-4 text-sm text-white/30">{suffix}</span>}
+        {suffix && <span className="pr-4 text-sm text-white/50">{suffix}</span>}
       </div>
     </div>
   )
@@ -92,13 +92,13 @@ export function PontoEquilibrio() {
         {/* Logo */}
         <div className="text-center mb-12">
           <img src="/logo2.png" alt="ATLAS" className="h-20 mx-auto mb-2 block" />
-          <p className="text-xs text-white/20 uppercase tracking-widest">Calculadora de Ponto de Equilíbrio</p>
+          <p className="text-xs text-white/35 uppercase tracking-widest">Calculadora de Ponto de Equilíbrio</p>
         </div>
 
         {/* Custos Variáveis */}
         <section className="mb-10">
-          <h2 className="text-xs font-semibold text-white/40 uppercase tracking-widest mb-5">
-            Custos Variáveis <span className="text-white/20">(%)</span>
+          <h2 className="text-xs font-semibold text-white/60 uppercase tracking-widest mb-5">
+            Custos Variáveis <span className="text-white/35">(%)</span>
           </h2>
           <div className="grid grid-cols-2 gap-4">
             {VAR_FIELDS.map(f => (
@@ -106,42 +106,42 @@ export function PontoEquilibrio() {
             ))}
           </div>
           <div className="mt-5 flex flex-col sm:flex-row gap-3">
-            <div className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 flex justify-between items-center">
-              <span className="text-xs text-white/40 uppercase tracking-widest">Total variáveis</span>
+            <div className="flex-1 bg-white/5 border border-white/15 rounded-xl px-4 py-3 flex justify-between items-center">
+              <span className="text-xs text-white/60 uppercase tracking-widest">Total variáveis</span>
               <span className="text-sm font-bold tabular-nums text-white">{totalVar.toFixed(2)}%</span>
             </div>
-            <div className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 flex justify-between items-center">
-              <span className="text-xs text-white/40 uppercase tracking-widest">Margem de contribuição</span>
-              <span className={`text-sm font-bold tabular-nums ${margem > 0 ? 'text-emerald-400' : 'text-red-400'}`}>{margem.toFixed(2)}%</span>
+            <div className="flex-1 bg-white/5 border border-white/15 rounded-xl px-4 py-3 flex justify-between items-center">
+              <span className="text-xs text-white/60 uppercase tracking-widest">Margem de contribuição</span>
+              <span className={`text-sm font-bold tabular-nums ${margem > 0 ? 'text-brand-green' : 'text-red-400'}`}>{margem.toFixed(2)}%</span>
             </div>
           </div>
         </section>
 
         {/* Custos Fixos */}
         <section className="mb-10">
-          <h2 className="text-xs font-semibold text-white/40 uppercase tracking-widest mb-5">
-            Custos Fixos <span className="text-white/20">(R$/mês)</span>
+          <h2 className="text-xs font-semibold text-white/60 uppercase tracking-widest mb-5">
+            Custos Fixos <span className="text-white/35">(R$/mês)</span>
           </h2>
           <div className="grid grid-cols-2 gap-4">
             {FIX_FIELDS.map(f => (
               <CurrencyInput key={f.key} label={f.label} value={fixFields[f.key]} onChange={setFix(f.key)} />
             ))}
           </div>
-          <div className="mt-5 bg-white/5 border border-white/10 rounded-xl px-4 py-3 flex justify-between items-center">
-            <span className="text-xs text-white/40 uppercase tracking-widest">Total custos fixos</span>
+          <div className="mt-5 bg-white/5 border border-white/15 rounded-xl px-4 py-3 flex justify-between items-center">
+            <span className="text-xs text-white/60 uppercase tracking-widest">Total custos fixos</span>
             <span className="text-sm font-bold tabular-nums text-white">{fmt(totalFix)}</span>
           </div>
         </section>
 
         {/* Resultado */}
         <section className="mb-10">
-          <div className="bg-white/5 border border-white/10 rounded-2xl p-8 text-center mb-6">
-            <p className="text-xs text-white/30 uppercase tracking-widest mb-3">Faturamento mínimo mensal</p>
+          <div className="bg-white/5 border border-white/15 rounded-2xl p-8 text-center mb-6">
+            <p className="text-xs text-white/50 uppercase tracking-widest mb-3">Faturamento mínimo mensal</p>
             <p className="text-4xl font-black tabular-nums text-white">
               {pe > 0 ? fmt(pe) : '—'}
             </p>
             {pe > 0 && (
-              <p className="text-xs text-white/20 mt-2">
+              <p className="text-xs text-white/35 mt-2">
                 Ponto de Equilíbrio = {fmt(totalFix)} ÷ {margem.toFixed(1)}%
               </p>
             )}
@@ -152,7 +152,7 @@ export function PontoEquilibrio() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="text-xs text-white/30 uppercase tracking-widest">
+                  <tr className="text-xs text-white/50 uppercase tracking-widest">
                     <th className="text-left pb-4">Cenário</th>
                     <th className="text-right pb-4">Faturamento</th>
                     <th className="text-right pb-4">Custos Variáveis</th>
@@ -167,11 +167,11 @@ export function PontoEquilibrio() {
                     const lucro    = fat - custoVar - totalFix
                     return (
                       <tr key={label} className={pct === 1 ? 'bg-white/5' : ''}>
-                        <td className="py-3 text-white/50">{label} do PE</td>
+                        <td className="py-3 text-white/70">{label} do PE</td>
                         <td className="py-3 text-right tabular-nums text-white/80">{fmt(fat)}</td>
-                        <td className="py-3 text-right tabular-nums text-white/50">{fmt(custoVar)}</td>
-                        <td className="py-3 text-right tabular-nums text-white/50">{fmt(totalFix)}</td>
-                        <td className={`py-3 text-right tabular-nums font-semibold ${lucro >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                        <td className="py-3 text-right tabular-nums text-white/70">{fmt(custoVar)}</td>
+                        <td className="py-3 text-right tabular-nums text-white/70">{fmt(totalFix)}</td>
+                        <td className={`py-3 text-right tabular-nums font-semibold ${lucro >= 0 ? 'text-brand-green' : 'text-red-400'}`}>
                           {fmt(lucro)}
                         </td>
                       </tr>
@@ -184,13 +184,13 @@ export function PontoEquilibrio() {
         </section>
 
         {/* Rodapé */}
-        <footer className="text-center text-xs text-white/20 pt-6 border-t border-white/5 space-y-1">
+        <footer className="text-center text-xs text-white/35 pt-6 border-t border-white/5 space-y-1">
           <p>Ferramenta gratuita by ATLAS · by Black Sheep</p>
           <a
             href="https://atlasconsultoria.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-white/30 hover:text-white/60 transition-colors underline underline-offset-2"
+            className="text-white/50 hover:text-white/60 transition-colors underline underline-offset-2"
           >
             Conheça o ATLAS
           </a>

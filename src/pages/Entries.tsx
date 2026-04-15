@@ -20,7 +20,7 @@ const TYPE_OPTIONS = [
 ]
 
 const TYPE_COLORS: Record<EntryType, string> = {
-  revenue:    'text-emerald-400 bg-emerald-400/10',
+  revenue:    'text-brand-green bg-brand-green/10',
   expense:    'text-white/60 bg-white/5',
   withdrawal: 'text-yellow-400/70 bg-yellow-400/5',
 }
@@ -152,7 +152,7 @@ export function Entries() {
       <div className="flex flex-wrap items-start justify-between gap-6">
         <div>
           <h2 className="text-2xl font-bold text-white tracking-tight">Lançamentos</h2>
-          <p className="text-sm text-white/30 mt-1">Filtro por data de competência</p>
+          <p className="text-sm text-white/50 mt-1">Filtro por data de competência</p>
         </div>
         <Button onClick={openAdd}><Plus size={16} /> Novo Lançamento</Button>
       </div>
@@ -170,14 +170,14 @@ export function Entries() {
 
       <Card>
         {loading ? (
-          <div className="text-center py-12 text-white/20">Carregando...</div>
+          <div className="text-center py-12 text-white/35">Carregando...</div>
         ) : entries.length === 0 ? (
-          <div className="text-center py-12 text-white/20">Nenhum lançamento no período.</div>
+          <div className="text-center py-12 text-white/35">Nenhum lançamento no período.</div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="text-xs text-white/30 uppercase tracking-widest">
+                <tr className="text-xs text-white/60 uppercase tracking-widest">
                   <th className="text-left pb-4">Competência</th>
                   <th className="text-left pb-4">Pagamento</th>
                   <th className="text-left pb-4">Tipo</th>
@@ -189,16 +189,16 @@ export function Entries() {
               </thead>
               <tbody className="divide-y divide-white/5">
                 {entries.map(entry => (
-                  <tr key={entry.id} className="group text-white/70">
-                    <td className="py-3 text-white/40 tabular-nums">{entry.competence_date}</td>
-                    <td className="py-3 text-white/30 tabular-nums">{entry.payment_date}</td>
+                  <tr key={entry.id} className="group text-white/80">
+                    <td className="py-3 text-white/80 tabular-nums">{entry.competence_date}</td>
+                    <td className="py-3 text-white/70 tabular-nums">{entry.payment_date}</td>
                     <td className="py-3">
                       <span className={`text-xs px-2 py-1 rounded-lg ${TYPE_COLORS[entry.type]}`}>
                         {TYPE_LABELS[entry.type]}
                       </span>
                     </td>
                     <td className="py-3">{entry.category}</td>
-                    <td className="py-3 max-w-xs truncate text-white/50">
+                    <td className="py-3 max-w-xs truncate text-white/80">
                       {entry.description || '—'}
                       {entry.recurrence_id && (
                         <span style={{ fontSize: 10, color: '#555', letterSpacing: 1, textTransform: 'uppercase', marginLeft: 8, border: '1px solid #333', padding: '2px 6px', borderRadius: 3 }}>
@@ -206,15 +206,15 @@ export function Entries() {
                         </span>
                       )}
                     </td>
-                    <td className={`py-3 text-right tabular-nums font-medium ${entry.type === 'revenue' ? 'text-emerald-400' : 'text-white'}`}>
+                    <td className={`py-3 text-right tabular-nums font-medium ${entry.type === 'revenue' ? 'text-brand-green' : 'text-white'}`}>
                       {entry.type !== 'revenue' ? '(' : ''}{formatCurrency(entry.amount)}{entry.type !== 'revenue' ? ')' : ''}
                     </td>
                     <td className="py-3 text-right">
                       <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button onClick={() => openEdit(entry)} className="p-1.5 rounded-lg text-white/30 hover:text-white hover:bg-white/10 transition-all">
+                        <button onClick={() => openEdit(entry)} className="p-1.5 rounded-lg text-white/50 hover:text-white hover:bg-white/15 transition-all">
                           <Pencil size={13} />
                         </button>
-                        <button onClick={() => handleDelete(entry.id)} className="p-1.5 rounded-lg text-white/30 hover:text-red-400 hover:bg-red-500/10 transition-all">
+                        <button onClick={() => handleDelete(entry.id)} className="p-1.5 rounded-lg text-white/50 hover:text-red-400 hover:bg-red-500/10 transition-all">
                           <Trash2 size={13} />
                         </button>
                       </div>

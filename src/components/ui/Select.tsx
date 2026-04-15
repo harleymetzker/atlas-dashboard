@@ -15,14 +15,14 @@ interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
 export function Select({ label, options, groups, error, className = '', ...props }: SelectProps) {
   return (
     <div className="flex flex-col gap-1.5">
-      {label && <label className="text-xs text-white/50 uppercase tracking-widest">{label}</label>}
+      {label && <label className="text-xs text-white/70 uppercase tracking-widest">{label}</label>}
       <select
         {...props}
-        className={`bg-white/5 border ${error ? 'border-red-500/50' : 'border-white/10'} rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-white/30 transition-colors w-full ${className}`}
+        className={`bg-white/5 border ${error ? 'border-red-500/50' : 'border-white/15'} rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-white/50 transition-colors w-full ${className}`}
       >
         {groups
           ? groups.map(g => (
-              <optgroup key={g.group} label={g.group} className="bg-[#111] text-white/50">
+              <optgroup key={g.group} label={g.group} className="bg-[#111] text-white/70">
                 {g.options.map(o => (
                   <option key={o.value} value={o.value} className="bg-[#111] text-white">
                     {o.label}

@@ -25,19 +25,19 @@ interface DRERowProps {
 }
 
 function DRERow({ label, value, pct, isResult, isProfit, indent, negative }: DRERowProps) {
-  const profitColor = value >= 0 ? 'text-emerald-400' : 'text-red-400'
+  const profitColor = value >= 0 ? 'text-brand-green' : 'text-red-400'
   return (
-    <div className={`flex items-center justify-between py-2.5 ${isResult ? 'border-t border-white/10 mt-0.5 pt-3' : 'border-b border-white/[0.04]'}`}>
-      <span className={`text-sm ${isResult ? 'font-semibold text-white' : indent ? 'text-white/50 pl-4' : 'text-white/70'}`}>
+    <div className={`flex items-center justify-between py-2.5 ${isResult ? 'border-t border-white/15 mt-0.5 pt-3' : 'border-b border-white/[0.04]'}`}>
+      <span className={`text-sm ${isResult ? 'font-semibold text-white' : indent ? 'text-white/80 pl-4' : 'text-white/80'}`}>
         {label}
       </span>
       <div className="flex items-center gap-6">
         {pct !== undefined
-          ? <span className="text-xs text-white/20 w-14 text-right tabular-nums">{formatPercent(pct)}</span>
+          ? <span className="text-xs text-white/60 w-14 text-right tabular-nums">{formatPercent(pct)}</span>
           : <span className="w-14" />
         }
         <span className={`text-sm tabular-nums font-medium w-36 text-right ${
-          isProfit ? profitColor : negative ? 'text-white/55' : isResult ? 'text-white font-bold' : 'text-white'
+          isProfit ? profitColor : negative ? 'text-white/80' : isResult ? 'text-white font-bold' : 'text-white'
         }`}>
           {negative && value > 0 ? `(${formatCurrency(value)})` : formatCurrency(value)}
         </span>
@@ -49,7 +49,7 @@ function DRERow({ label, value, pct, isResult, isProfit, indent, negative }: DRE
 function SectionHeader({ label }: { label: string }) {
   return (
     <div className="pt-5 pb-1">
-      <span className="text-[10px] font-bold uppercase tracking-widest text-white/25">{label}</span>
+      <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">{label}</span>
     </div>
   )
 }
@@ -63,11 +63,11 @@ interface IndicCardProps {
 }
 
 function IndicCard({ label, mainValue, subValue, positive, negative }: IndicCardProps) {
-  const color = positive ? 'text-emerald-400' : negative ? 'text-red-400' : 'text-white'
-  const subColor = positive ? 'text-emerald-400/60' : negative ? 'text-red-400/60' : 'text-white/35'
+  const color = positive ? 'text-brand-green' : negative ? 'text-red-400' : 'text-white'
+  const subColor = positive ? 'text-brand-green/60' : negative ? 'text-red-400/60' : 'text-white/35'
   return (
     <div className="bg-white/5 rounded-xl p-4">
-      <p className="text-[10px] text-white/40 uppercase tracking-widest mb-2 leading-snug">{label}</p>
+      <p className="text-[10px] text-white/60 uppercase tracking-widest mb-2 leading-snug">{label}</p>
       <p className={`text-base font-bold tabular-nums leading-tight ${color}`}>{mainValue}</p>
       {subValue && <p className={`text-xs tabular-nums mt-1 ${subColor}`}>{subValue}</p>}
     </div>
@@ -76,9 +76,9 @@ function IndicCard({ label, mainValue, subValue, positive, negative }: IndicCard
 
 function StatusBadge({ ok, text }: { ok: boolean; text: string }) {
   return (
-    <div className={`flex items-center gap-2 rounded-lg px-3 py-2 ${ok ? 'bg-emerald-500/10' : 'bg-red-500/10'}`}>
-      <div className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${ok ? 'bg-emerald-400' : 'bg-red-400'}`} />
-      <span className={`text-xs font-medium ${ok ? 'text-emerald-400' : 'text-red-400'}`}>{text}</span>
+    <div className={`flex items-center gap-2 rounded-lg px-3 py-2 ${ok ? 'bg-brand-green/10' : 'bg-red-500/10'}`}>
+      <div className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${ok ? 'bg-brand-green' : 'bg-red-400'}`} />
+      <span className={`text-xs font-medium ${ok ? 'text-brand-green' : 'text-red-400'}`}>{text}</span>
     </div>
   )
 }
@@ -148,10 +148,10 @@ export function DRE() {
 
   // ── Runway ──
   const runway      = dre.totalDespesasFixas > 0 ? saldoAtual / dre.totalDespesasFixas : null
-  const runwayColor = runway === null ? 'text-white/40'
+  const runwayColor = runway === null ? 'text-white/60'
     : runway < 1  ? 'text-red-400'
     : runway <= 3 ? 'text-yellow-400'
-    : 'text-emerald-400'
+    : 'text-brand-green'
   const runwayDisplay = runway === null ? '—'
     : runway < 1 ? `${Math.round(runway * 30)} dias`
     : `${runway.toFixed(1)} meses`
@@ -162,15 +162,15 @@ export function DRE() {
       <div className="flex flex-wrap items-start justify-between gap-6">
         <div>
           <h2 className="text-2xl font-bold text-white tracking-tight">DRE</h2>
-          <p className="text-sm text-white/30 mt-1">Por data de competência</p>
+          <p className="text-sm text-white/50 mt-1">Por data de competência</p>
         </div>
         <div className="flex items-end gap-2">
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs text-white/50 uppercase tracking-widest">Mês</label>
+            <label className="text-xs text-white/70 uppercase tracking-widest">Mês</label>
             <select
               value={selectedMonth}
               onChange={e => setSelectedMonth(Number(e.target.value))}
-              className="bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-white/30 transition-colors"
+              className="bg-white/5 border border-white/15 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-white/50 transition-colors"
             >
               {MONTHS.map((name, i) => (
                 <option key={i + 1} value={i + 1} className="bg-[#111] text-white">{name}</option>
@@ -178,11 +178,11 @@ export function DRE() {
             </select>
           </div>
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs text-white/50 uppercase tracking-widest">Ano</label>
+            <label className="text-xs text-white/70 uppercase tracking-widest">Ano</label>
             <select
               value={selectedYear}
               onChange={e => setSelectedYear(Number(e.target.value))}
-              className="bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-white/30 transition-colors"
+              className="bg-white/5 border border-white/15 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-white/50 transition-colors"
             >
               {yearOptions.map(y => (
                 <option key={y} value={y} className="bg-[#111] text-white">{y}</option>
@@ -193,7 +193,7 @@ export function DRE() {
       </div>
 
       {loading ? (
-        <div className="flex items-center justify-center h-64 text-white/20">Carregando...</div>
+        <div className="flex items-center justify-center h-64 text-white/35">Carregando...</div>
       ) : (
         <>
         <div className="flex gap-6 items-start">
@@ -202,10 +202,10 @@ export function DRE() {
           <div className="flex-[3] min-w-0 self-start">
             <Card>
               <div className="flex items-center justify-between mb-4">
-                <span className="text-[10px] text-white/30 uppercase tracking-widest">Descrição</span>
+                <span className="text-[10px] text-white/60 uppercase tracking-widest">Descrição</span>
                 <div className="flex items-center gap-6">
-                  <span className="text-[10px] text-white/30 uppercase tracking-widest w-14 text-right">%</span>
-                  <span className="text-[10px] text-white/30 uppercase tracking-widest w-36 text-right">Valor (R$)</span>
+                  <span className="text-[10px] text-white/60 uppercase tracking-widest w-14 text-right">%</span>
+                  <span className="text-[10px] text-white/60 uppercase tracking-widest w-36 text-right">Valor (R$)</span>
                 </div>
               </div>
 
@@ -283,18 +283,18 @@ export function DRE() {
 
             {/* PE Operacional */}
             <Card>
-              <p className="text-[10px] font-bold uppercase tracking-widest text-white/30 mb-1">Ponto de Equilíbrio Operacional</p>
-              <p className="text-[10px] text-white/20 mb-4">Faturamento mínimo para cobrir os custos fixos</p>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-white/50 mb-1">Ponto de Equilíbrio Operacional</p>
+              <p className="text-[10px] text-white/35 mb-4">Faturamento mínimo para cobrir os custos fixos</p>
               {peOp === 0 ? (
-                <p className="text-xs text-white/30 py-2">Sem custos fixos cadastrados no período.</p>
+                <p className="text-xs text-white/50 py-2">Sem custos fixos cadastrados no período.</p>
               ) : (
                 <div className="space-y-2.5">
                   <div className="flex justify-between items-baseline">
-                    <span className="text-xs text-white/50">PE necessário</span>
+                    <span className="text-xs text-white/70">PE necessário</span>
                     <span className="text-sm font-bold tabular-nums text-white">{formatCurrency(peOp)}</span>
                   </div>
                   <div className="flex justify-between items-baseline">
-                    <span className="text-xs text-white/50">Equivale a</span>
+                    <span className="text-xs text-white/70">Equivale a</span>
                     <span className="text-sm tabular-nums text-white/60">{formatPercent(peOpPct)} do fat. atual</span>
                   </div>
                   <StatusBadge
@@ -309,18 +309,18 @@ export function DRE() {
 
             {/* PE Real */}
             <Card>
-              <p className="text-[10px] font-bold uppercase tracking-widest text-white/30 mb-1">Ponto de Equilíbrio Real</p>
-              <p className="text-[10px] text-white/20 mb-4">Faturamento mínimo para cobrir todos os custos incluindo variáveis de venda</p>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-white/50 mb-1">Ponto de Equilíbrio Real</p>
+              <p className="text-[10px] text-white/35 mb-4">Faturamento mínimo para cobrir todos os custos incluindo variáveis de venda</p>
               {peReal === 0 ? (
-                <p className="text-xs text-white/30 py-2">Sem custos cadastrados no período.</p>
+                <p className="text-xs text-white/50 py-2">Sem custos cadastrados no período.</p>
               ) : (
                 <div className="space-y-2.5">
                   <div className="flex justify-between items-baseline">
-                    <span className="text-xs text-white/50">PE necessário</span>
+                    <span className="text-xs text-white/70">PE necessário</span>
                     <span className="text-sm font-bold tabular-nums text-white">{formatCurrency(peReal)}</span>
                   </div>
                   <div className="flex justify-between items-baseline">
-                    <span className="text-xs text-white/50">Equivale a</span>
+                    <span className="text-xs text-white/70">Equivale a</span>
                     <span className="text-sm tabular-nums text-white/60">{formatPercent(peRealPct)} do fat. atual</span>
                   </div>
                   <StatusBadge
@@ -335,21 +335,21 @@ export function DRE() {
 
             {/* Necessidade de Caixa Mínimo */}
             <Card>
-              <p className="text-[10px] font-bold uppercase tracking-widest text-white/30 mb-4">Necessidade de Caixa Mínimo</p>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-white/50 mb-4">Necessidade de Caixa Mínimo</p>
               <div className="space-y-2.5">
                 <div className="flex justify-between items-baseline">
-                  <span className="text-xs text-white/50">Caixa mínimo (2,5× fixos)</span>
+                  <span className="text-xs text-white/70">Caixa mínimo (2,5× fixos)</span>
                   <span className="text-sm font-bold tabular-nums text-white">{formatCurrency(caixaMinimo)}</span>
                 </div>
                 <div className="flex justify-between items-baseline">
-                  <span className="text-xs text-white/50">Caixa atual do mês</span>
+                  <span className="text-xs text-white/70">Caixa atual do mês</span>
                   <span className={`text-sm tabular-nums font-medium ${saldoAtual >= 0 ? 'text-white/70' : 'text-red-400'}`}>
                     {formatCurrency(saldoAtual)}
                   </span>
                 </div>
                 <div className="flex justify-between items-baseline">
-                  <span className="text-xs text-white/50">Diferença</span>
-                  <span className={`text-sm tabular-nums font-semibold ${gapCaixa >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                  <span className="text-xs text-white/70">Diferença</span>
+                  <span className={`text-sm tabular-nums font-semibold ${gapCaixa >= 0 ? 'text-brand-green' : 'text-red-400'}`}>
                     {gapCaixa >= 0 ? '+' : ''}{formatCurrency(gapCaixa)}
                   </span>
                 </div>
@@ -367,15 +367,15 @@ export function DRE() {
 
         {/* Runway — largura total */}
         <Card>
-          <p className="text-[10px] font-bold uppercase tracking-widest text-white/30 mb-3">Runway — Meses de Sobrevivência</p>
+          <p className="text-[10px] font-bold uppercase tracking-widest text-white/50 mb-3">Runway — Meses de Sobrevivência</p>
           <div className="flex items-center gap-12 flex-wrap">
             <div className="flex items-baseline gap-2">
               <span className={`text-4xl font-bold tabular-nums ${runwayColor}`}>
                 {runway !== null ? (runway < 1 ? Math.round(runway * 30) : runway.toFixed(1)) : '—'}
               </span>
-              <span className="text-sm text-white/40">{runway !== null && runway < 1 ? 'dias' : 'meses'}</span>
+              <span className="text-sm text-white/60">{runway !== null && runway < 1 ? 'dias' : 'meses'}</span>
             </div>
-            <p className="text-xs text-white/40 leading-relaxed">
+            <p className="text-xs text-white/60 leading-relaxed">
               Com o caixa atual, o negócio sobrevive{' '}
               <span className={`font-semibold ${runwayColor}`}>{runwayDisplay}</span>{' '}
               sem faturar.
