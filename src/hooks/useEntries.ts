@@ -42,7 +42,7 @@ export function useEntries(filters: Filters = {}) {
         return {
           ...entry,
           competence_date: addMonths(entry.competence_date, i),
-          payment_date: addMonths(entry.payment_date, i),
+          payment_date: entry.payment_date ? addMonths(entry.payment_date, i) : null,
         }
       })
       const { error } = await supabase.from('entries').insert(rows)

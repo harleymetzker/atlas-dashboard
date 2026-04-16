@@ -7,8 +7,8 @@ export interface Entry {
   category: string
   description: string
   amount: number
-  competence_date: string   // Data de Competência → DRE
-  payment_date: string      // Data de Pagamento/Recebimento → Fluxo de Caixa
+  competence_date: string    // Data de Competência → DRE
+  payment_date: string | null // Data de Pagamento/Recebimento → Fluxo de Caixa (null = sem data)
   created_at: string
   recurrence_id?: string | null
 }
@@ -82,6 +82,9 @@ export interface User {
   role?: string
 }
 
+// Receitas que não entram na DRE — apenas no fluxo de caixa
+export const ANTECIPACAO_CATEGORY = 'Antecipação de Vendas'
+
 // ── Receita ────────────────────────────────────────────────────────────────
 export const REVENUE_CATEGORIES = [
   'Vendas',
@@ -89,6 +92,7 @@ export const REVENUE_CATEGORIES = [
   'Consultoria',
   'Assinaturas',
   'Outras Receitas',
+  ANTECIPACAO_CATEGORY,
 ]
 
 // ── Impostos & CMV ─────────────────────────────────────────────────────────

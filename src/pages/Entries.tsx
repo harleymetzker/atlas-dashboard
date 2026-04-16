@@ -3,7 +3,7 @@ import { format, startOfMonth } from 'date-fns'
 import { Plus, Trash2, Pencil } from 'lucide-react'
 import { useEntries } from '../hooks/useEntries'
 import type { Entry, EntryType } from '../types'
-import { REVENUE_CATEGORIES, EXPENSE_CATEGORY_GROUPS } from '../types'
+import { REVENUE_CATEGORIES, EXPENSE_CATEGORY_GROUPS, ANTECIPACAO_CATEGORY } from '../types'
 import { formatCurrency } from '../lib/calculations'
 import { DateFilter } from '../components/layout/DateFilter'
 import { Button } from '../components/ui/Button'
@@ -65,6 +65,7 @@ const defaultForm = {
   payment_date: todayStr,
   recorrente: false,
   mesesRecorrencia: 2,
+  semDataRecebimento: false,
 }
 
 export function Entries() {
@@ -100,30 +101,49 @@ export function Entries() {
       description: entry.description,
       amount: String(entry.amount),
       competence_date: entry.competence_date,
-      payment_date: entry.payment_date,
+      payment_date: entry.payment_date ?? '',
       recorrente: false,
       mesesRecorrencia: 2,
+      semDataRecebimento: entry.payment_date === null,
     })
     setFormError('')
     setModalOpen(true)
   }
 
   function handleTypeChange(type: EntryType) {
-    setForm(f => ({ ...f, type, category: firstCategory(type) }))
+    setForm(f => ({ ...f, type, category: firstCategory(type), semDataRecebimento: false }))
   }
 
   async function handleSubmit() {
+    const isAntecipacao = form.category === ANTECIPACAO_CATEGORY
     if (!form.amount || isNaN(Number(form.amount)) || Number(form.amount) <= 0) {
       setFormError('Informe um valor válido maior que zero.')
       return
     }
-    if (!form.competence_date) { setFormError('Informe a data de competência.'); return }
-    if (!form.payment_date) { setFormError('Informe a data de pagamento/recebimento.'); return }
+    if (!isAntecipacao && !form.competence_date) {
+      setFormError('Informe a data de competência.')
+      return
+    }
+    if (!form.semDataRecebimento && !isAntecipacao && !form.payment_date) {
+      setFormError('Informe a data de pagamento/recebimento.')
+      return
+    }
+    if (isAntecipacao && !form.payment_date) {
+      setFormError('Informe a data de recebimento.')
+      return
+    }
     setSubmitting(true)
     setFormError('')
     try {
-      const { recorrente, mesesRecorrencia, ...rest } = form
-      const payload = { ...rest, amount: Number(form.amount) }
+      const { recorrente, mesesRecorrencia, semDataRecebimento, ...rest } = form
+      const payload = {
+        ...rest,
+        amount: Number(form.amount),
+        // Antecipação: competence_date = payment_date (não entra na DRE)
+        competence_date: isAntecipacao ? (form.payment_date || todayStr) : form.competence_date,
+        // Sem data de recebimento: payment_date = null
+        payment_date: semDataRecebimento ? null : (form.payment_date || null),
+      }
       if (editEntry) {
         await updateEntry(editEntry.id, payload)
       } else if (recorrente) {
@@ -146,6 +166,7 @@ export function Entries() {
 
   const categoryGroups   = getCategoryGroups(form.type)
   const categoryOptions  = getCategoryOptions(form.type)
+  const isAntecipacao    = form.category === ANTECIPACAO_CATEGORY
 
   return (
     <div className="p-8 space-y-8">
@@ -191,7 +212,7 @@ export function Entries() {
                 {entries.map(entry => (
                   <tr key={entry.id} className="group text-white/80">
                     <td className="py-3 text-white/80 tabular-nums">{entry.competence_date}</td>
-                    <td className="py-3 text-white/70 tabular-nums">{entry.payment_date}</td>
+                    <td className="py-3 text-white/70 tabular-nums">{entry.payment_date ?? <span className="text-white/30">—</span>}</td>
                     <td className="py-3">
                       <span className={`text-xs px-2 py-1 rounded-lg ${TYPE_COLORS[entry.type]}`}>
                         {TYPE_LABELS[entry.type]}
@@ -262,22 +283,51 @@ export function Entries() {
             onChange={v => setForm(f => ({ ...f, amount: v }))}
           />
           <div className="grid grid-cols-2 gap-3">
-            <Input
-              label="Data de Competência"
-              type="date"
-              value={form.competence_date}
-              onChange={e => setForm(f => ({ ...f, competence_date: e.target.value }))}
-              required
-            />
-            <Input
-              label="Data de Pagamento/Recebimento"
-              type="date"
-              value={form.payment_date}
-              onChange={e => setForm(f => ({ ...f, payment_date: e.target.value }))}
-              required
-            />
+            {!isAntecipacao && (
+              <Input
+                label="Data de Competência"
+                type="date"
+                value={form.competence_date}
+                onChange={e => setForm(f => ({ ...f, competence_date: e.target.value }))}
+                required
+              />
+            )}
+            {!form.semDataRecebimento && (
+              <Input
+                label={isAntecipacao ? 'Data de Recebimento' : 'Data de Pagamento/Recebimento'}
+                type="date"
+                value={form.payment_date}
+                onChange={e => setForm(f => ({ ...f, payment_date: e.target.value }))}
+                required
+                className={isAntecipacao ? 'col-span-2' : ''}
+              />
+            )}
           </div>
-          {!editEntry && (
+          {/* Toggle: Sem data de recebimento (não disponível para antecipação) */}
+          {!isAntecipacao && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 4 }}>
+              <button
+                type="button"
+                onClick={() => setForm(f => ({ ...f, semDataRecebimento: !f.semDataRecebimento, payment_date: f.semDataRecebimento ? todayStr : '' }))}
+                style={{
+                  width: 40, height: 22, borderRadius: 11,
+                  background: form.semDataRecebimento ? '#00EF61' : '#333',
+                  border: 'none', cursor: 'pointer', position: 'relative', transition: 'background 0.2s',
+                  flexShrink: 0,
+                }}
+              >
+                <span style={{
+                  position: 'absolute', top: 3,
+                  left: form.semDataRecebimento ? 20 : 3,
+                  width: 16, height: 16, borderRadius: '50%',
+                  background: form.semDataRecebimento ? '#000' : '#888',
+                  transition: 'left 0.2s',
+                }} />
+              </button>
+              <span style={{ fontSize: 13, color: '#aaa' }}>Sem data de recebimento</span>
+            </div>
+          )}
+          {!editEntry && !isAntecipacao && (
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 4 }}>
                 <button

@@ -4,6 +4,7 @@ import {
   FIXED_RH_CATEGORIES,
   FIXED_OCUPACAO_CATEGORIES,
   FIXED_ADMIN_CATEGORIES,
+  ANTECIPACAO_CATEGORY,
 } from '../types'
 import { format, addDays } from 'date-fns'
 
@@ -14,6 +15,12 @@ function sumByCategory(entries: Entry[], categories: string[]): number {
 }
 
 export function calcDRE(entries: Entry[]): DRE {
+  // Antecipação de Vendas entra apenas no fluxo de caixa, não na DRE
+  const dreEntries = entries.filter(e => e.category !== ANTECIPACAO_CATEGORY)
+  return _calcDRE(dreEntries)
+}
+
+function _calcDRE(entries: Entry[]): DRE {
   const faturamentoBruto = entries.filter(e => e.type === 'revenue').reduce((s, e) => s + e.amount, 0)
   const retiradas        = entries.filter(e => e.type === 'withdrawal').reduce((s, e) => s + e.amount, 0)
 
@@ -63,8 +70,8 @@ export function calcDRE(entries: Entry[]): DRE {
 
 export function calcCashFlow(entries: Entry[], openingBalance = 0): CashFlowEntry[] {
   const byDate: Record<string, { revenue: number; costs: number; withdrawals: number }> = {}
-  for (const e of entries) {
-    const key = e.payment_date
+  for (const e of entries.filter(e => e.payment_date)) {
+    const key = e.payment_date as string
     if (!byDate[key]) byDate[key] = { revenue: 0, costs: 0, withdrawals: 0 }
     if (e.type === 'revenue') byDate[key].revenue += e.amount
     else if (e.type === 'withdrawal') byDate[key].withdrawals += e.amount
@@ -82,7 +89,9 @@ export function calcCashFlow(entries: Entry[], openingBalance = 0): CashFlowEntr
 export function calcMonthlyData(entries: Entry[], dateField: 'competence_date' | 'payment_date' = 'competence_date'): MonthlyData[] {
   const byMonth: Record<string, MonthlyData> = {}
   for (const e of entries) {
-    const month = e[dateField].slice(0, 7)
+    const dateVal = e[dateField]
+    if (!dateVal) continue
+    const month = dateVal.slice(0, 7)
     if (!byMonth[month]) byMonth[month] = { month, revenue: 0, fixedCosts: 0, variableCosts: 0, withdrawals: 0, profit: 0 }
     if (e.type === 'revenue') {
       byMonth[month].revenue += e.amount
@@ -124,9 +133,10 @@ export function calcProjected90Days(allEntries: Entry[]): ProjectedCashFlow[] {
     }
   })
 
-  for (const e of allEntries.filter(e => e.payment_date > todayStr)) {
+  for (const e of allEntries.filter(e => e.payment_date && e.payment_date > todayStr)) {
+    const pd = e.payment_date as string
     for (const b of buckets) {
-      if (e.payment_date >= b.start && e.payment_date <= b.end) {
+      if (pd >= b.start && pd <= b.end) {
         if (e.type === 'revenue')       b.revenue     += e.amount
         else if (e.type === 'withdrawal') b.withdrawals += e.amount
         else                              b.costs       += e.amount
