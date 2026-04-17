@@ -140,6 +140,9 @@ export function Overview() {
 
   // Alerts
   const alerts: { text: string; severity: 'red' | 'yellow' }[] = []
+  if (dre.lucro < 0) {
+    alerts.push({ text: 'Lucro negativo — a operação está consumindo caixa.', severity: 'red' })
+  }
   const currVarExp = dre.impostos + dre.cmv + dre.totalDespesasVariaveis
   const prevVarExp = prevDre.impostos + prevDre.cmv + prevDre.totalDespesasVariaveis
   if (prevVarExp > 0 && ((currVarExp - prevVarExp) / prevVarExp) > 0.2) {
@@ -243,7 +246,7 @@ export function Overview() {
             <div className="flex-1">
               <p className={`text-lg font-bold ${statusConfig.text}`}>{statusConfig.label}</p>
               <p className="text-sm text-white/60 mt-0.5">
-                Margem líquida {formatPercent(dre.lucroMargin)}
+                Margem líquida {dre.faturamentoBruto > 0 ? formatPercent(dre.lucroMargin) : '—'}
                 {' · '}
                 Runway {runwayDisplay}
                 {peReal > 0 && ` · PE Real ${dre.faturamentoBruto >= peReal ? 'atingido' : 'não atingido'}`}
@@ -261,20 +264,20 @@ export function Overview() {
             <BigMetricCard
               label="Lucro Líquido"
               value={formatCurrency(dre.lucro)}
-              sub={`${formatPercent((dre.lucro / (dre.faturamentoBruto || 1)) * 100)} do fat. bruto`}
+              sub={dre.faturamentoBruto > 0 ? `${formatPercent((dre.lucro / dre.faturamentoBruto) * 100)} do fat. bruto` : undefined}
               positive={dre.lucro > 0}
               negative={dre.lucro <= 0}
             />
             <BigMetricCard
               label="Margem EBITDA"
-              value={formatPercent(dre.ebitdaMargin)}
+              value={dre.faturamentoBruto > 0 ? formatPercent(dre.ebitdaMargin) : '—'}
               sub={formatCurrency(dre.ebitda)}
               positive={dre.ebitdaMargin > 0}
               negative={dre.ebitdaMargin <= 0}
             />
             <BigMetricCard
               label="Margem de Contribuição"
-              value={formatPercent(dre.margemContribuicaoMargin)}
+              value={dre.faturamentoBruto > 0 ? formatPercent(dre.margemContribuicaoMargin) : '—'}
               sub={formatCurrency(dre.margemContribuicao)}
               positive={dre.margemContribuicaoMargin > 0}
               negative={dre.margemContribuicaoMargin <= 0}
@@ -289,7 +292,7 @@ export function Overview() {
             <BigMetricCard
               label="Retiradas de Sócios"
               value={formatCurrency(dre.retiradas)}
-              sub={`${formatPercent((dre.retiradas / (dre.faturamentoBruto || 1)) * 100)} do fat. bruto`}
+              sub={dre.faturamentoBruto > 0 ? `${formatPercent((dre.retiradas / dre.faturamentoBruto) * 100)} do fat. bruto` : undefined}
               negative={dre.retiradas > 0}
             />
           </div>
@@ -385,7 +388,7 @@ export function Overview() {
                     <p className="text-xs text-white/50 mt-0.5">
                       {goalReached
                         ? 'Meta atingida com o faturamento atual'
-                        : `Precisa crescer ${formatPercent(((requiredRevenue - dre.faturamentoBruto) / (dre.faturamentoBruto || 1)) * 100)}`}
+                        : dre.faturamentoBruto > 0 ? `Precisa crescer ${formatPercent(((requiredRevenue - dre.faturamentoBruto) / dre.faturamentoBruto) * 100)}` : 'Sem faturamento no período'}
                     </p>
                   </div>
                   <div className={`flex items-center gap-2 rounded-lg px-3 py-2 self-end ${goalReached ? 'bg-brand-green/10' : 'bg-red-500/10'}`}>
