@@ -30,7 +30,7 @@ export function DateFilter({ startDate, endDate, onChange }: DateFilterProps) {
   }
 
   return (
-    <div className="flex flex-wrap items-end gap-3">
+    <div style={{ display: 'flex', alignItems: 'flex-end', gap: 12, flexWrap: 'wrap' }}>
       <Input
         label="De"
         type="date"
