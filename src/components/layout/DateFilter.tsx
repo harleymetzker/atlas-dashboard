@@ -1,6 +1,10 @@
-import { format, startOfMonth, endOfMonth, subMonths } from 'date-fns'
+import { format, startOfMonth, endOfMonth, parseISO } from 'date-fns'
 import { Input } from '../ui/Input'
-import { Button } from '../ui/Button'
+
+const MONTHS = [
+  'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+  'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro',
+]
 
 interface DateFilterProps {
   startDate: string
@@ -9,11 +13,17 @@ interface DateFilterProps {
 }
 
 export function DateFilter({ startDate, endDate, onChange }: DateFilterProps) {
-  const setPreset = (months: number) => {
-    const today = new Date()
-    const end = endOfMonth(today)
-    const start = months === 0 ? startOfMonth(today) : startOfMonth(subMonths(today, months - 1))
-    onChange(format(start, 'yyyy-MM-dd'), format(end, 'yyyy-MM-dd'))
+  function handleMonthSelect(e: React.ChangeEvent<HTMLSelectElement>) {
+    const monthIndex = Number(e.target.value)
+    if (isNaN(monthIndex)) return
+    const year = endDate ? parseISO(endDate).getFullYear() : new Date().getFullYear()
+    const ref = new Date(year, monthIndex, 1)
+    onChange(
+      format(startOfMonth(ref), 'yyyy-MM-dd'),
+      format(endOfMonth(ref), 'yyyy-MM-dd'),
+    )
+    // Reset select to placeholder
+    e.target.value = ''
   }
 
   return (
@@ -32,11 +42,18 @@ export function DateFilter({ startDate, endDate, onChange }: DateFilterProps) {
         onChange={e => onChange(startDate, e.target.value)}
         className="w-40"
       />
-      <div className="flex gap-2">
-        <Button variant="ghost" size="sm" onClick={() => setPreset(0)}>Este mês</Button>
-        <Button variant="ghost" size="sm" onClick={() => setPreset(3)}>3 meses</Button>
-        <Button variant="ghost" size="sm" onClick={() => setPreset(6)}>6 meses</Button>
-        <Button variant="ghost" size="sm" onClick={() => setPreset(12)}>12 meses</Button>
+      <div className="flex flex-col gap-1.5">
+        <label className="text-xs text-white/70 uppercase tracking-widest">Mês</label>
+        <select
+          defaultValue=""
+          onChange={handleMonthSelect}
+          className="bg-white/5 border border-white/15 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-white/50 transition-colors"
+        >
+          <option value="" disabled className="bg-[#111] text-white/40">Selecionar mês</option>
+          {MONTHS.map((name, i) => (
+            <option key={i} value={i} className="bg-[#111] text-white">{name}</option>
+          ))}
+        </select>
       </div>
     </div>
   )
