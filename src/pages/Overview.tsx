@@ -10,6 +10,7 @@ import { useAuth } from '../context/AuthContext'
 import { useEntries } from '../hooks/useEntries'
 import { calcDRE, calcMonthlyData, formatCurrency, formatPercent } from '../lib/calculations'
 import { Card } from '../components/ui/Card'
+import { CurrencyInput } from '../components/ui/CurrencyInput'
 
 // ── helpers ────────────────────────────────────────────────────────────────
 
@@ -173,8 +174,9 @@ export function Overview() {
     setWithdrawalGoalState(val)
     if (user) saveWithdrawalGoal(user.id, val)
   }
+  const hasValidMargin  = dre.faturamentoBruto > 0 && dre.lucroMargin > 0
   const goalAmount      = parseFloat(withdrawalGoal) || 0
-  const requiredRevenue = dre.lucroMargin > 0 && goalAmount > 0
+  const requiredRevenue = hasValidMargin && goalAmount > 0
     ? goalAmount / (dre.lucroMargin / 100) : 0
   const revenueGap      = requiredRevenue > 0 ? dre.faturamentoBruto - requiredRevenue : 0
   const goalReached     = revenueGap >= 0
@@ -358,43 +360,44 @@ export function Overview() {
           <Card>
             <p className="text-[10px] font-bold uppercase tracking-widest text-white/50 mb-4">Meta de Retirada Mensal</p>
             <div className="flex flex-wrap items-end gap-6">
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs text-white/70 uppercase tracking-widest">Quero retirar por mês</label>
-                <input
-                  type="number"
-                  value={withdrawalGoal}
-                  onChange={e => handleWithdrawalGoal(e.target.value)}
-                  placeholder="R$ 0,00"
-                  min="0"
-                  step="100"
-                  className="bg-white/5 border border-white/15 rounded-xl px-4 py-2.5 text-sm text-white w-52 focus:outline-none focus:border-white/50"
-                />
-              </div>
+              <CurrencyInput
+                label="Quero retirar por mês"
+                value={withdrawalGoal}
+                onChange={handleWithdrawalGoal}
+              />
 
               {goalAmount > 0 && (
                 <div className="flex flex-wrap gap-6 items-end">
                   <div>
                     <p className="text-xs text-white/60 uppercase tracking-widest mb-1">Faturamento necessário</p>
-                    <p className="text-lg font-bold tabular-nums text-white">{formatCurrency(requiredRevenue)}</p>
-                    <p className="text-xs text-white/50 mt-0.5">baseado na margem líquida atual ({formatPercent(dre.lucroMargin)})</p>
+                    <p className="text-lg font-bold tabular-nums text-white">
+                      {hasValidMargin ? formatCurrency(requiredRevenue) : '—'}
+                    </p>
+                    <p className="text-xs text-white/50 mt-0.5">
+                      {hasValidMargin
+                        ? `baseado na margem líquida atual (${formatPercent(dre.lucroMargin)})`
+                        : 'Insira lançamentos para calcular'}
+                    </p>
                   </div>
                   <div>
                     <p className="text-xs text-white/60 uppercase tracking-widest mb-1">
                       {goalReached ? 'Faturamento excedente' : 'Faturamento que falta'}
                     </p>
-                    <p className={`text-lg font-bold tabular-nums ${goalReached ? 'text-brand-green' : 'text-red-400'}`}>
-                      {goalReached ? '+' : '-'}{formatCurrency(Math.abs(revenueGap))}
+                    <p className={`text-lg font-bold tabular-nums ${hasValidMargin ? (goalReached ? 'text-brand-green' : 'text-red-400') : 'text-white/40'}`}>
+                      {hasValidMargin ? `${goalReached ? '+' : '-'}${formatCurrency(Math.abs(revenueGap))}` : '—'}
                     </p>
                     <p className="text-xs text-white/50 mt-0.5">
-                      {goalReached
-                        ? 'Meta atingida com o faturamento atual'
-                        : dre.faturamentoBruto > 0 ? `Precisa crescer ${formatPercent(((requiredRevenue - dre.faturamentoBruto) / dre.faturamentoBruto) * 100)}` : 'Sem faturamento no período'}
+                      {hasValidMargin
+                        ? goalReached
+                          ? 'Meta atingida com o faturamento atual'
+                          : `Precisa crescer ${formatPercent(((requiredRevenue - dre.faturamentoBruto) / dre.faturamentoBruto) * 100)}`
+                        : ''}
                     </p>
                   </div>
-                  <div className={`flex items-center gap-2 rounded-lg px-3 py-2 self-end ${goalReached ? 'bg-brand-green/10' : 'bg-red-500/10'}`}>
-                    <div className={`w-1.5 h-1.5 rounded-full ${goalReached ? 'bg-brand-green' : 'bg-red-400'}`} />
-                    <span className={`text-xs font-medium ${goalReached ? 'text-brand-green' : 'text-red-400'}`}>
-                      {goalReached ? 'Meta atingida' : 'Abaixo da meta'}
+                  <div className={`flex items-center gap-2 rounded-lg px-3 py-2 self-end ${hasValidMargin ? (goalReached ? 'bg-brand-green/10' : 'bg-red-500/10') : 'bg-white/5'}`}>
+                    <div className={`w-1.5 h-1.5 rounded-full ${hasValidMargin ? (goalReached ? 'bg-brand-green' : 'bg-red-400') : 'bg-white/30'}`} />
+                    <span className={`text-xs font-medium ${hasValidMargin ? (goalReached ? 'text-brand-green' : 'text-red-400') : 'text-white/40'}`}>
+                      {hasValidMargin ? (goalReached ? 'Meta atingida' : 'Abaixo da meta') : 'Sem dados suficientes'}
                     </span>
                   </div>
                 </div>
