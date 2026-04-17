@@ -72,7 +72,7 @@ function calcSim(f: SimForm): SimCalc {
   const despesasAdmin = n(f.despesasAdmin)
   const ebitda = margemContribuicao - despesasRH - despesasOcupacao - despesasAdmin
   const retiradas = n(f.retiradas)
-  const lucro = ebitda - retiradas
+  const lucro = ebitda
   return { faturamentoBruto: fat, impostos, faturamentoLiquido: liq, cmv, lucroBruto, comissoes, marketing, taxasCartao, margemContribuicao, despesasRH, despesasOcupacao, despesasAdmin, ebitda, retiradas, lucro }
 }
 
@@ -372,13 +372,6 @@ export function SimuladorCenarios() {
             simValue={formatCurrency(sim.ebitda)}
             delta={<Delta actual={dre.ebitda} simulated={sim.ebitda} />}
           />
-          <Row indent
-            label="(-) Retiradas"
-            actual={formatCurrency(dre.retiradas)}
-            simNode={<SimCurrencyInput value={form.retiradas} onChange={set('retiradas')} />}
-            delta={<Delta actual={dre.retiradas} simulated={sim.retiradas} positive={false} />}
-          />
-
           {/* Lucro — destaque */}
           <div className="grid grid-cols-[1fr_160px_200px_130px] items-center px-6 py-4 bg-white/5 border-t border-white/15">
             <span className="text-sm font-bold text-white">(=) Lucro</span>
