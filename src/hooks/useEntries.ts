@@ -41,7 +41,7 @@ export function useEntries(filters: Filters = {}) {
         }
         return {
           ...entry,
-          competence_date: addMonths(entry.competence_date, i),
+          competence_date: entry.competence_date ? addMonths(entry.competence_date, i) : null,
           payment_date: entry.payment_date ? addMonths(entry.payment_date, i) : null,
         }
       })

@@ -7,8 +7,8 @@ export interface Entry {
   category: string
   description: string
   amount: number
-  competence_date: string    // Data de Competência → DRE
-  payment_date: string | null // Data de Pagamento/Recebimento → Fluxo de Caixa (null = sem data)
+  competence_date: string | null // Data de Competência → DRE (null = sem competência, não entra na DRE)
+  payment_date: string | null   // Data de Pagamento/Recebimento → Fluxo de Caixa (null = sem data)
   created_at: string
   recurrence_id?: string | null
 }

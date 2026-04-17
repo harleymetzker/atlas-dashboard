@@ -95,16 +95,20 @@ export function Entries() {
 
   function openEdit(entry: Entry) {
     setEditEntry(entry)
+    // For revenue: toggle means no payment_date. For expense/withdrawal: toggle means no competence_date.
+    const semData = entry.type === 'revenue'
+      ? entry.payment_date === null
+      : entry.competence_date === null
     setForm({
       type: entry.type,
       category: entry.category,
       description: entry.description,
       amount: String(entry.amount),
-      competence_date: entry.competence_date,
+      competence_date: entry.competence_date ?? '',
       payment_date: entry.payment_date ?? '',
       recorrente: false,
       mesesRecorrencia: 2,
-      semDataRecebimento: entry.payment_date === null,
+      semDataRecebimento: semData,
     })
     setFormError('')
     setModalOpen(true)
@@ -115,21 +119,22 @@ export function Entries() {
   }
 
   async function handleSubmit() {
-    const isAntecipacao = form.category === ANTECIPACAO_CATEGORY
+    const isAntecipacao   = form.category === ANTECIPACAO_CATEGORY
+    const isRevenueToggle = form.semDataRecebimento && form.type === 'revenue'
+    const isExpenseToggle = form.semDataRecebimento && form.type !== 'revenue' && !isAntecipacao
+
     if (!form.amount || isNaN(Number(form.amount)) || Number(form.amount) <= 0) {
       setFormError('Informe um valor válido maior que zero.')
       return
     }
-    if (!isAntecipacao && !form.competence_date) {
+    // competence_date required unless: antecipacao, or expense toggle (no competence)
+    if (!isAntecipacao && !isExpenseToggle && !form.competence_date) {
       setFormError('Informe a data de competência.')
       return
     }
-    if (!form.semDataRecebimento && !isAntecipacao && !form.payment_date) {
+    // payment_date required unless: revenue toggle (no payment)
+    if (!isRevenueToggle && !form.payment_date) {
       setFormError('Informe a data de pagamento/recebimento.')
-      return
-    }
-    if (isAntecipacao && !form.payment_date) {
-      setFormError('Informe a data de recebimento.')
       return
     }
     setSubmitting(true)
@@ -139,10 +144,14 @@ export function Entries() {
       const payload = {
         ...rest,
         amount: Number(form.amount),
-        // Antecipação: competence_date = payment_date (não entra na DRE)
-        competence_date: isAntecipacao ? (form.payment_date || todayStr) : form.competence_date,
-        // Sem data de recebimento: payment_date = null
-        payment_date: semDataRecebimento ? null : (form.payment_date || null),
+        // Antecipação: competence_date = payment_date (não entra na DRE por filtro de data)
+        // Expense toggle: competence_date = null (não entra na DRE)
+        competence_date: isAntecipacao
+          ? (form.payment_date || todayStr)
+          : isExpenseToggle ? null
+          : form.competence_date || null,
+        // Revenue toggle: payment_date = null (não entra no fluxo de caixa)
+        payment_date: isRevenueToggle ? null : (form.payment_date || null),
       }
       if (editEntry) {
         await updateEntry(editEntry.id, payload)
@@ -164,9 +173,14 @@ export function Entries() {
     await deleteEntry(id)
   }
 
-  const categoryGroups   = getCategoryGroups(form.type)
-  const categoryOptions  = getCategoryOptions(form.type)
-  const isAntecipacao    = form.category === ANTECIPACAO_CATEGORY
+  const categoryGroups    = getCategoryGroups(form.type)
+  const categoryOptions   = getCategoryOptions(form.type)
+  const isAntecipacao     = form.category === ANTECIPACAO_CATEGORY
+  const isRevenueToggle   = form.semDataRecebimento && form.type === 'revenue'
+  const isExpenseToggle   = form.semDataRecebimento && form.type !== 'revenue' && !isAntecipacao
+  const toggleLabel       = form.type === 'revenue' ? 'Sem data de recebimento' : 'Sem data de competência'
+  const showCompetence    = !isAntecipacao && !isExpenseToggle
+  const showPayment       = !isAntecipacao && !isRevenueToggle
 
   return (
     <div className="p-8 space-y-8">
@@ -211,7 +225,7 @@ export function Entries() {
               <tbody className="divide-y divide-white/5">
                 {entries.map(entry => (
                   <tr key={entry.id} className="group text-white/80">
-                    <td className="py-3 text-white/80 tabular-nums">{entry.competence_date}</td>
+                    <td className="py-3 text-white/80 tabular-nums">{entry.competence_date ?? <span className="text-white/30">—</span>}</td>
                     <td className="py-3 text-white/70 tabular-nums">{entry.payment_date ?? <span className="text-white/30">—</span>}</td>
                     <td className="py-3">
                       <span className={`text-xs px-2 py-1 rounded-lg ${TYPE_COLORS[entry.type]}`}>
@@ -283,32 +297,33 @@ export function Entries() {
             onChange={v => setForm(f => ({ ...f, amount: v }))}
           />
           <div className="grid grid-cols-2 gap-3">
-            {!isAntecipacao && (
+            {showCompetence && (
               <Input
                 label="Data de Competência"
                 type="date"
                 value={form.competence_date}
                 onChange={e => setForm(f => ({ ...f, competence_date: e.target.value }))}
                 required
+                className={!showPayment ? 'col-span-2' : ''}
               />
             )}
-            {!form.semDataRecebimento && (
+            {showPayment && (
               <Input
                 label={isAntecipacao ? 'Data de Recebimento' : 'Data de Pagamento/Recebimento'}
                 type="date"
                 value={form.payment_date}
                 onChange={e => setForm(f => ({ ...f, payment_date: e.target.value }))}
                 required
-                className={isAntecipacao ? 'col-span-2' : ''}
+                className={isAntecipacao || !showCompetence ? 'col-span-2' : ''}
               />
             )}
           </div>
-          {/* Toggle: Sem data de recebimento (não disponível para antecipação) */}
+          {/* Toggle: Sem data (não disponível para antecipação) */}
           {!isAntecipacao && (
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 4 }}>
               <button
                 type="button"
-                onClick={() => setForm(f => ({ ...f, semDataRecebimento: !f.semDataRecebimento, payment_date: f.semDataRecebimento ? todayStr : '' }))}
+                onClick={() => setForm(f => ({ ...f, semDataRecebimento: !f.semDataRecebimento, payment_date: f.semDataRecebimento ? todayStr : f.payment_date, competence_date: f.semDataRecebimento ? todayStr : f.competence_date }))}
                 style={{
                   width: 40, height: 22, borderRadius: 11,
                   background: form.semDataRecebimento ? '#00EF61' : '#333',
@@ -324,7 +339,7 @@ export function Entries() {
                   transition: 'left 0.2s',
                 }} />
               </button>
-              <span style={{ fontSize: 13, color: '#aaa' }}>Sem data de recebimento</span>
+              <span style={{ fontSize: 13, color: '#aaa' }}>{toggleLabel}</span>
             </div>
           )}
           {!editEntry && !isAntecipacao && (

@@ -90,7 +90,7 @@ export function Overview() {
   const yearOptions = useMemo(() => {
     const set = new Set<number>()
     set.add(today.getFullYear())
-    for (const e of allEntries) set.add(Number(e.competence_date.slice(0, 4)))
+    for (const e of allEntries) if (e.competence_date) set.add(Number(e.competence_date.slice(0, 4)))
     return Array.from(set).sort((a, b) => b - a)
   }, [allEntries])
 
