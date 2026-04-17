@@ -154,7 +154,7 @@ export function SimuladorCenarios() {
       const { data } = await supabase.from('entries').select('competence_date')
       if (!data || data.length === 0) { setLoadingMonths(false); return }
 
-      const monthSet = new Set(data.map((e: { competence_date: string }) => e.competence_date.slice(0, 7)))
+      const monthSet = new Set(data.filter((e: { competence_date: string | null }) => e.competence_date).map((e: { competence_date: string | null }) => e.competence_date!.slice(0, 7)))
       const months = Array.from(monthSet).sort().reverse() as string[]
       const formatted = months.map(m => ({
         value: m,
