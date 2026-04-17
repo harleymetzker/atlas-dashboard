@@ -39,7 +39,7 @@ function _calcDRE(entries: Entry[]): DRE {
   const margemContribuicao    = lucroBruto - totalDespesasVariaveis
   const totalDespesasFixas    = despesasRH + despesasOcupacao + despesasAdmin
   const ebitda                = margemContribuicao - totalDespesasFixas
-  const lucro                 = ebitda - retiradas
+  const lucro                 = ebitda  // retiradas são informativas, não deduzidas do lucro
 
   const baseLiquido = faturamentoLiquido || 1
 
