@@ -85,18 +85,18 @@ export function PrecificacaoProduto() {
 
   const dreBadge = defaults.hasData ? defaults.referenciaMes : undefined
 
-  // Pre-fill DRE defaults when loaded
+  // Pre-fill DRE defaults when loaded — only if field is truly empty
   useEffect(() => {
     if (!defaults.hasData || loadingDefaults) return
     setForm(f => ({
       ...f,
-      impostos: f.impostos || defaults.impostos.toFixed(2),
-      taxas_cartao: f.taxas_cartao || defaults.taxas_cartao.toFixed(2),
-      marketing: f.marketing || defaults.marketing.toFixed(2),
-      comissoes: f.comissoes || defaults.comissoes.toFixed(2),
-      rh: f.rh || defaults.rh.toFixed(2),
-      ocupacao: f.ocupacao || defaults.ocupacao.toFixed(2),
-      administrativo: f.administrativo || defaults.administrativo.toFixed(2),
+      impostos:      f.impostos      === '' ? defaults.impostos.toFixed(2)      : f.impostos,
+      taxas_cartao:  f.taxas_cartao  === '' ? defaults.taxas_cartao.toFixed(2)  : f.taxas_cartao,
+      marketing:     f.marketing     === '' ? defaults.marketing.toFixed(2)     : f.marketing,
+      comissoes:     f.comissoes     === '' ? defaults.comissoes.toFixed(2)     : f.comissoes,
+      rh:            f.rh            === '' ? defaults.rh.toFixed(2)            : f.rh,
+      ocupacao:      f.ocupacao      === '' ? defaults.ocupacao.toFixed(2)      : f.ocupacao,
+      administrativo:f.administrativo=== '' ? defaults.administrativo.toFixed(2): f.administrativo,
     }))
   }, [defaults.hasData, loadingDefaults])
 
@@ -122,7 +122,7 @@ export function PrecificacaoProduto() {
     const metaLucroD = n(form.meta_lucro) / 100
 
     const metaMargemBruta = (metaLucroD + impostos + taxasCartao + marketing + comissoes + logistica + rh + ocupacao + administrativo) * 100
-    const custoExcedeFaturamento = metaMargemBruta >= 100
+const custoExcedeFaturamento = metaMargemBruta >= 100
     const divisor = 1 - metaMargemBruta / 100
     const precoLiquido = !custoExcedeFaturamento && cmv > 0 ? cmv / divisor : 0
     const impostoDivisor = 1 - impostos
