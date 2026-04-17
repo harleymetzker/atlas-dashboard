@@ -74,7 +74,7 @@ const s = {
     paddingRight: 48,
   },
   heroTitle: {
-    fontSize: 'clamp(28px, 3.2vw, 46px)' as unknown as number,
+    fontSize: 'clamp(40px, 5.5vw, 64px)' as unknown as number,
     fontWeight: 900,
     lineHeight: 1.1,
     color: '#fff',
@@ -112,9 +112,9 @@ const s = {
     display: 'block',
   },
   h2: {
-    fontSize: 'clamp(22px, 2.5vw, 30px)' as unknown as number,
+    fontSize: 'clamp(28px, 3.5vw, 40px)' as unknown as number,
     fontWeight: 700,
-    lineHeight: 1.25,
+    lineHeight: 1.2,
     color: '#fff',
     marginTop: 0,
     marginBottom: 28,
@@ -412,7 +412,7 @@ export function Landing() {
 
       {/* TRANSIÇÃO */}
       <div style={s.section} className="lp-section">
-        <h2 style={{ ...s.h2, marginBottom: 0 }}>Vou te mostrar o que isso parece na prática.</h2>
+        <h2 style={s.h2}>Vou te mostrar o que isso parece na prática.</h2>
       </div>
 
       {/* CASO REAL — E-COMMERCE */}
