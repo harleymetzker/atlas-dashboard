@@ -1,11 +1,32 @@
 import { useState } from 'react'
 import { format, startOfMonth, endOfMonth, parseISO } from 'date-fns'
-import { Input } from '../ui/Input'
 
 const MONTHS = [
   'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
   'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro',
 ]
+
+const labelStyle: React.CSSProperties = {
+  display: 'block',
+  fontSize: 10,
+  color: 'rgba(255,255,255,0.7)',
+  textTransform: 'uppercase',
+  letterSpacing: '0.1em',
+  marginBottom: 6,
+}
+
+const inputStyle: React.CSSProperties = {
+  display: 'block',
+  background: 'rgba(255,255,255,0.05)',
+  border: '1px solid rgba(255,255,255,0.15)',
+  borderRadius: 12,
+  padding: '10px 16px',
+  fontSize: 14,
+  color: '#fff',
+  outline: 'none',
+  height: 42,
+  boxSizing: 'border-box',
+}
 
 interface DateFilterProps {
   startDate: string
@@ -31,30 +52,34 @@ export function DateFilter({ startDate, endDate, onChange }: DateFilterProps) {
 
   return (
     <div style={{ display: 'flex', alignItems: 'flex-end', gap: 12, flexWrap: 'wrap' }}>
-      <Input
-        label="De"
-        type="date"
-        value={startDate}
-        onChange={e => onChange(e.target.value, endDate)}
-        className="w-40"
-      />
-      <Input
-        label="Até"
-        type="date"
-        value={endDate}
-        onChange={e => onChange(startDate, e.target.value)}
-        className="w-40"
-      />
-      <div className="flex flex-col gap-1.5">
-        <label className="text-xs text-white/70 uppercase tracking-widest">Mês</label>
+      <div>
+        <label style={labelStyle}>De</label>
+        <input
+          type="date"
+          value={startDate}
+          onChange={e => onChange(e.target.value, endDate)}
+          style={{ ...inputStyle, width: 160 }}
+        />
+      </div>
+      <div>
+        <label style={labelStyle}>Até</label>
+        <input
+          type="date"
+          value={endDate}
+          onChange={e => onChange(startDate, e.target.value)}
+          style={{ ...inputStyle, width: 160 }}
+        />
+      </div>
+      <div>
+        <label style={labelStyle}>Mês</label>
         <select
           value={selectedMonth}
           onChange={handleMonthSelect}
-          className="bg-white/5 border border-white/15 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-white/50 transition-colors"
+          style={{ ...inputStyle, width: 160, cursor: 'pointer' }}
         >
-          <option value="" disabled className="bg-[#111] text-white/40">Selecionar mês</option>
+          <option value="" disabled style={{ background: '#111', color: 'rgba(255,255,255,0.4)' }}>Selecionar mês</option>
           {MONTHS.map((name, i) => (
-            <option key={i} value={i} className="bg-[#111] text-white">{name}</option>
+            <option key={i} value={i} style={{ background: '#111', color: '#fff' }}>{name}</option>
           ))}
         </select>
       </div>
