@@ -122,15 +122,16 @@ export function PrecificacaoProduto() {
     const metaLucroD = n(form.meta_lucro) / 100
 
     const metaMargemBruta = (metaLucroD + impostos + taxasCartao + marketing + comissoes + logistica + rh + ocupacao + administrativo) * 100
+    const custoExcedeFaturamento = metaMargemBruta >= 100
     const divisor = 1 - metaMargemBruta / 100
-    const precoLiquido = divisor > 0 && cmv > 0 ? cmv / divisor : 0
+    const precoLiquido = !custoExcedeFaturamento && cmv > 0 ? cmv / divisor : 0
     const impostoDivisor = 1 - impostos
     const descontoDivisor = desconto > 0 ? 1 - desconto : 1
     const precoSugerido = impostoDivisor > 0 && descontoDivisor > 0 && precoLiquido > 0
       ? precoLiquido / impostoDivisor / descontoDivisor : 0
     const markup = cmv > 0 && precoSugerido > 0 ? precoSugerido / cmv : 0
 
-    return { metaMargemBruta, precoSugerido, markup }
+    return { metaMargemBruta, precoSugerido, markup, custoExcedeFaturamento }
   }, [form])
 
   function setStr(key: keyof typeof defaultForm) {
@@ -284,7 +285,9 @@ export function PrecificacaoProduto() {
             </div>
             <div className="flex justify-between items-center py-4 border-y border-white/15">
               <span className="text-sm font-semibold text-white">Preço Sugerido</span>
-              <span className="text-2xl font-bold text-brand-green tabular-nums">{formatCurrency(calc.precoSugerido)}</span>
+              <span className="text-2xl font-bold text-brand-green tabular-nums">
+                {calc.precoSugerido > 0 ? formatCurrency(calc.precoSugerido) : '—'}
+              </span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-sm text-white/70">Mark-up</span>
@@ -292,6 +295,13 @@ export function PrecificacaoProduto() {
                 {calc.markup > 0 ? `${calc.markup.toFixed(2)}x` : '—'}
               </span>
             </div>
+            {calc.custoExcedeFaturamento && (
+              <div className="flex items-start gap-2 bg-yellow-500/10 border border-yellow-500/20 rounded-xl px-3 py-2.5 mt-2">
+                <span className="text-yellow-400 text-sm leading-relaxed">
+                  ⚠ Seus custos totais excedem o faturamento. Revise a estrutura de custos.
+                </span>
+              </div>
+            )}
           </div>
         </Card>
       </div>
