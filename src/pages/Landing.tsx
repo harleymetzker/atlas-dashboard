@@ -523,12 +523,13 @@ export function Landing() {
 
         <div style={s.llist}>
           {[
-            'Mentoria individual — 1 reunião por mês comigo durante 6 meses. Eu olho seus números, identifico onde você tá perdendo dinheiro e te digo o que fazer.',
-            'Software ATLAS — dashboard financeiro da Black Sheep. DRE, fluxo de caixa, relatórios. Incluído nos 6 meses.',
-            'Suporte — grupo de WhatsApp + comunidade Black Sheep.',
+            { label: 'Mentoria individual', rest: ' — 1 reunião por mês comigo durante 6 meses. Eu olho seus números, identifico onde você tá perdendo dinheiro e te digo o que fazer.' },
+            { label: 'Software ATLAS', rest: ' — dashboard financeiro da Black Sheep. DRE, fluxo de caixa, relatórios. Incluído nos 6 meses.' },
+            { label: 'Suporte', rest: ' — grupo de WhatsApp + comunidade Black Sheep.' },
           ].map((item, i) => (
             <div key={i} style={{ ...s.litem, ...(i === 0 ? s.litemFirst : {}) }}>
-              <span style={{ color: '#444', flexShrink: 0 }}>—</span>{item}
+              <span style={{ color: '#444', flexShrink: 0 }}>—</span>
+              <span><strong style={{ color: '#fff', fontWeight: 700 }}>{item.label}</strong>{item.rest}</span>
             </div>
           ))}
         </div>
