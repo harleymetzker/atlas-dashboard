@@ -699,7 +699,7 @@ export function Landing() {
           style={{ maxWidth: 760, margin: '0 auto', padding: '80px 48px', textAlign: 'center' as const }}
           className="lp-section"
         >
-          <p style={{ fontSize: 'clamp(20px, 2.2vw, 28px)' as unknown as number, fontWeight: 700, color: '#fff', lineHeight: 1.25, marginTop: 0, marginBottom: 40 }}>
+          <p style={{ fontSize: 'clamp(32px, 4vw, 48px)' as unknown as number, fontWeight: 700, color: '#fff', lineHeight: 1.2, marginTop: 0, marginBottom: 40 }}>
             Se você fatura bem e ainda não sabe sua margem real, esse é o programa.
           </p>
           <a href="#aplicar" style={s.btn}>Quero implementar o ATLAS</a>
