@@ -93,7 +93,7 @@ const s = {
     padding: '80px 48px',
   },
   eyebrow: {
-    fontSize: 13,
+    fontSize: 16,
     fontWeight: 700,
     letterSpacing: 2,
     textTransform: 'uppercase' as const,
@@ -103,7 +103,7 @@ const s = {
     display: 'block',
   },
   h2: {
-    fontSize: 'clamp(32px, 4vw, 48px)' as unknown as number,
+    fontSize: 'clamp(36px, 4.5vw, 52px)' as unknown as number,
     fontWeight: 700,
     lineHeight: 1.2,
     color: '#fff',
@@ -129,7 +129,7 @@ const s = {
     borderLeft: `3px solid ${GREEN}`,
   },
   bqText: {
-    fontSize: 'clamp(28px, 3.5vw, 42px)' as unknown as number,
+    fontSize: 'clamp(36px, 4.5vw, 52px)' as unknown as number,
     fontWeight: 700,
     color: '#fff',
     lineHeight: 1.25,
@@ -335,7 +335,7 @@ function Para({ children, style }: { children: React.ReactNode; style?: React.CS
 function Destaque({ children }: { children: React.ReactNode }) {
   return (
     <p style={{
-      fontSize: 'clamp(28px, 3.5vw, 42px)' as unknown as number,
+      fontSize: 'clamp(36px, 4.5vw, 52px)' as unknown as number,
       fontWeight: 700,
       color: '#fff',
       lineHeight: 1.2,
@@ -408,7 +408,7 @@ export function Landing() {
 
         {/* Frase isolada centralizada */}
         <p style={{
-          fontSize: 'clamp(32px, 4vw, 48px)' as unknown as number,
+          fontSize: 'clamp(36px, 4.5vw, 52px)' as unknown as number,
           fontWeight: 700,
           color: '#fff',
           lineHeight: 1.2,
@@ -612,7 +612,7 @@ export function Landing() {
         <div style={{ ...s.pgrid }} className="lp-filtro-grid">
           {/* Coluna positiva — borda top verde */}
           <div style={{ padding: '28px 28px 32px', borderRight: '1px solid #1e1e1e', borderTop: `3px solid ${GREEN}` }}>
-            <p style={{ fontSize: 13, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase' as const, color: GREEN, marginTop: 0, marginBottom: 20 }}>Isso é pra você se:</p>
+            <p style={{ fontSize: 16, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase' as const, color: GREEN, marginTop: 0, marginBottom: 20 }}>Isso é pra você se:</p>
             {[
               'Fatura R$60 mil ou mais por mês e não sabe sua margem real',
               'Escala e o dinheiro some',
@@ -627,7 +627,7 @@ export function Landing() {
           </div>
           {/* Coluna negativa */}
           <div style={{ padding: '28px 28px 32px', borderTop: '1px solid #333' }}>
-            <p style={{ fontSize: 13, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase' as const, color: '#555', marginTop: 0, marginBottom: 20 }}>Isso não é pra você se:</p>
+            <p style={{ fontSize: 16, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase' as const, color: '#555', marginTop: 0, marginBottom: 20 }}>Isso não é pra você se:</p>
             {[
               'Está começando e ainda não fatura consistente',
               'Quer solução mágica sem executar',
@@ -759,7 +759,7 @@ export function Landing() {
           style={{ maxWidth: 760, margin: '0 auto', padding: '80px 48px', textAlign: 'center' as const }}
           className="lp-section"
         >
-          <p style={{ fontSize: 'clamp(32px, 4vw, 48px)' as unknown as number, fontWeight: 700, color: '#fff', lineHeight: 1.2, marginTop: 0, marginBottom: 40 }}>
+          <p style={{ fontSize: 'clamp(36px, 4.5vw, 52px)' as unknown as number, fontWeight: 700, color: '#fff', lineHeight: 1.2, marginTop: 0, marginBottom: 40 }}>
             Se você fatura bem e ainda não sabe sua margem real — você tá perdendo dinheiro agora. Esse é o programa.
           </p>
           <a href="#aplicar" style={s.btn}>Quero implementar o ATLAS</a>
