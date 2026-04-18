@@ -18,7 +18,6 @@ const mq = `
   .lp-hero{padding:80px 24px 48px!important}
   .lp-nav{padding:20px 24px!important}
   .lp-footer-inner{padding:32px 24px!important}
-  .lp-pgrid{grid-template-columns:1fr!important}
   .lp-filtro-grid{grid-template-columns:1fr!important}
 }`
 
@@ -34,7 +33,6 @@ const s = {
     overflowX: 'hidden' as const,
     WebkitFontSmoothing: 'antialiased' as const,
   },
-  // NAV
   navWrap: {
     maxWidth: 760,
     margin: '0 auto',
@@ -51,12 +49,7 @@ const s = {
     textDecoration: 'none',
     marginLeft: 10,
   },
-  navSep: {
-    width: 1,
-    height: 14,
-    background: '#2a2a2a',
-    flexShrink: 0,
-  },
+  navSep: { width: 1, height: 14, background: '#2a2a2a', flexShrink: 0 },
   navBy: {
     fontSize: 10,
     fontWeight: 500,
@@ -64,7 +57,6 @@ const s = {
     textTransform: 'uppercase' as const,
     color: '#666',
   },
-  // HERO
   hero: {
     maxWidth: 760,
     margin: '0 auto',
@@ -95,7 +87,6 @@ const s = {
     margin: '44px 0 0',
     border: 'none',
   },
-  // SECTION
   section: {
     maxWidth: 760,
     margin: '0 auto',
@@ -132,7 +123,6 @@ const s = {
     marginLeft: 'auto',
     marginRight: 'auto',
   },
-  // BLOCKQUOTE
   bq: {
     margin: '48px 0',
     paddingLeft: 28,
@@ -145,25 +135,12 @@ const s = {
     lineHeight: 1.25,
     margin: 0,
   },
-  // PGRID
   pgrid: {
     display: 'grid',
     gridTemplateColumns: 'repeat(2, 1fr)',
     border: '1px solid #1e1e1e',
-    marginTop: 32,
+    marginTop: 0,
   },
-  pcell: {
-    padding: '22px 26px',
-    borderRight: '1px solid #1e1e1e',
-    borderBottom: '1px solid #1e1e1e',
-    fontSize: 15,
-    fontWeight: 300,
-    color: '#aaaaaa',
-    lineHeight: 1.6,
-    display: 'flex',
-    gap: 14,
-  },
-  // JORNADAS
   jornadas: { marginTop: 48 },
   jornada: {
     display: 'grid',
@@ -176,7 +153,7 @@ const s = {
   jnum: {
     fontFamily: "'Arial Black', 'Arial Bold', sans-serif",
     fontSize: 60,
-    color: 'rgba(0, 239, 97, 0.3)',
+    color: 'rgba(0, 239, 97, 0.25)',
     lineHeight: 1,
     marginTop: 4,
   },
@@ -194,7 +171,6 @@ const s = {
     color: '#aaaaaa',
     lineHeight: 1.7,
   },
-  // LISTA SIMPLES
   llist: { marginTop: 28 },
   litem: {
     display: 'flex',
@@ -208,7 +184,6 @@ const s = {
     wordBreak: 'break-word' as const,
   },
   litemFirst: { borderTop: '1px solid #1e1e1e' },
-  // OBJEÇÕES
   objBlock: {
     padding: '32px 0',
     borderTop: '1px solid #1e1e1e',
@@ -228,7 +203,6 @@ const s = {
     maxWidth: 560,
     margin: 0,
   },
-  // STEPS
   step: {
     display: 'grid',
     gridTemplateColumns: '52px 1fr',
@@ -258,13 +232,12 @@ const s = {
     color: '#aaaaaa',
     lineHeight: 1.65,
   },
-  // CTA BUTTON — #9 padding/fontSize updated
   btn: {
     display: 'inline-block',
     fontFamily: 'Arial, Helvetica, sans-serif',
     fontSize: 14,
     fontWeight: 700,
-    letterSpacing: 3,
+    letterSpacing: 2,
     textTransform: 'uppercase' as const,
     color: '#000',
     background: GREEN,
@@ -272,25 +245,7 @@ const s = {
     textDecoration: 'none',
     cursor: 'pointer',
     border: 'none',
-    transition: 'background 0.2s',
   },
-  // CTA OUTLINE (secondary)
-  btnOutline: {
-    display: 'inline-block',
-    fontFamily: 'Arial, Helvetica, sans-serif',
-    fontSize: 13,
-    fontWeight: 700,
-    letterSpacing: 2,
-    textTransform: 'uppercase' as const,
-    color: GREEN,
-    background: 'transparent',
-    border: `1px solid ${GREEN}`,
-    padding: '18px 48px',
-    textDecoration: 'none',
-    cursor: 'pointer',
-    transition: 'background 0.2s',
-  },
-  // FAQ
   faqItem: { borderTop: '1px solid #1e1e1e' },
   faqQ: {
     width: '100%',
@@ -325,7 +280,6 @@ const s = {
     lineHeight: 1.75,
     maxWidth: 560,
   },
-  // INVEST
   invest: {
     maxWidth: 760,
     margin: '0 auto',
@@ -340,7 +294,6 @@ const s = {
     marginBottom: 16,
     display: 'block',
   },
-  // #8 — preço maior
   price: {
     fontSize: 'clamp(36px, 5vw, 56px)' as unknown as number,
     fontWeight: 900,
@@ -356,7 +309,6 @@ const s = {
     lineHeight: 1.8,
     maxWidth: 520,
   },
-  // FOOTER
   footerInner: {
     maxWidth: 760,
     margin: '0 auto',
@@ -375,16 +327,41 @@ const s = {
   },
 }
 
-// #13 — wordBreak em todos os parágrafos
 function Para({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) {
   return <p style={{ fontSize: 16, color: '#aaaaaa', lineHeight: 1.8, marginTop: 0, marginBottom: 20, wordBreak: 'break-word', ...style }}>{children}</p>
 }
 
-// CTA outline intermediário reutilizável
-function CtaOutline() {
+// Frase isolada com impacto visual (tamanho h2)
+function Destaque({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ maxWidth: 760, margin: '0 auto', padding: '40px 48px', textAlign: 'center' as const }}>
-      <a href="#aplicar" style={s.btnOutline}>Quero implementar o ATLAS</a>
+    <p style={{
+      fontSize: 'clamp(28px, 3.5vw, 42px)' as unknown as number,
+      fontWeight: 700,
+      color: '#fff',
+      lineHeight: 1.2,
+      marginTop: 40,
+      marginBottom: 40,
+      wordBreak: 'break-word',
+    }}>
+      {children}
+    </p>
+  )
+}
+
+// Separador verde 48px
+function GreenLine() {
+  return <div style={{ width: 48, height: 2, background: GREEN, marginBottom: 48 }} />
+}
+
+// Bullets "O que fizemos"
+function Bullets({ items }: { items: string[] }) {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column' as const, gap: 8, marginBottom: 20 }}>
+      {items.map((item, i) => (
+        <div key={i} style={{ display: 'flex', gap: 12, fontSize: 16, color: '#aaaaaa', lineHeight: 1.7 }}>
+          <span style={{ color: '#555', flexShrink: 0 }}>—</span>{item}
+        </div>
+      ))}
     </div>
   )
 }
@@ -407,10 +384,10 @@ export function Landing() {
       {/* HERO */}
       <div style={s.hero} className="lp-hero">
         <h1 style={s.heroTitle}>
-          Escale seu negócio digital sem o dinheiro sumir no meio do caminho.
+          Você dobrou o faturamento. Cresceu. E o dinheiro some no final do mês.
         </h1>
         <p style={s.heroSub}>
-          Em 6 meses implemente, dentro da sua empresa, um modelo de gestão que mostra pra onde vai cada real que entra — e garante que seu crescimento vire lucro, não dor de cabeça.
+          Em 6 meses, a gente mostra pra onde vai cada real que entra — e garante que seu crescimento vire lucro.
         </p>
         <div style={s.heroAccentLine} />
       </div>
@@ -424,13 +401,29 @@ export function Landing() {
           <Para>Você fatura. Cresce. Bate meta.</Para>
           <Para>Abre o banco no final do mês.</Para>
           <Para style={{ fontWeight: 600, color: '#fff' }}>Cadê o dinheiro?</Para>
-          <Para>Talvez você viva de lançamento, e cada mês é uma corrida pra encher turma e torcer pro ROI fechar.</Para>
+          <Para>Talvez você viva de lançamento, e cada mês começa do zero.</Para>
           <Para>Talvez o CPA suba todo mês enquanto a margem aperta.</Para>
-          <Para>Talvez as plataformas comam um pedaço da venda que você nem sabe calcular.</Para>
-          <Para>Talvez você tenha escalado rápido — e agora tem mais gente, mais ferramenta, mais custo — e menos dinheiro do que quando faturava a metade.</Para>
-          <Para>Nomes diferentes. Problema igual.</Para>
-          <Para style={{ color: '#fff', fontWeight: 600 }}>Você não sabe quanto realmente lucra.</Para>
-          <Para>E quando não sabe, a única estratégia que sobra é vender mais. Mais tráfego. Mais campanha. Mais esforço.</Para>
+          <Para>Talvez você tenha escalado rápido — mais gente, mais ferramenta, mais custo — e menos dinheiro do que quando faturava a metade.</Para>
+        </div>
+
+        {/* Frase isolada centralizada */}
+        <p style={{
+          fontSize: 'clamp(32px, 4vw, 48px)' as unknown as number,
+          fontWeight: 700,
+          color: '#fff',
+          lineHeight: 1.2,
+          textAlign: 'center' as const,
+          marginTop: 48,
+          marginBottom: 48,
+          wordBreak: 'break-word',
+        }}>
+          Nomes diferentes. Problema igual.
+        </p>
+
+        <div style={{ ...s.body, maxWidth: 620 }}>
+          <Para>Você não sabe quanto realmente lucra.</Para>
+          <Para>E quando não sabe, decide no escuro.</Para>
+          <Para>A única estratégia que sobra é vender mais. Mais tráfego. Mais campanha. Mais esforço.</Para>
           <Para>Até o dia que vender mais não resolve.</Para>
           <Para style={{ marginBottom: 0 }}>Porque nunca resolveu.</Para>
         </div>
@@ -440,80 +433,55 @@ export function Landing() {
 
       {/* TRANSIÇÃO */}
       <div style={{ ...s.section, paddingBottom: 0 }} className="lp-section">
-        <h2 style={{ ...s.h2, color: GREEN }}>Vou te mostrar como é isso na prática...</h2>
+        <h2 style={{ ...s.h2, color: GREEN }}>O padrão é sempre o mesmo.</h2>
       </div>
 
-      {/* #1 — CONTEXTO ANTES DOS CASOS */}
+      {/* CONTEXTO */}
       <div style={{ maxWidth: 760, margin: '0 auto', padding: '24px 48px 0' }}>
         <p style={{ fontSize: 16, color: '#aaaaaa', lineHeight: 1.8, margin: 0, maxWidth: 620, wordBreak: 'break-word' }}>
-          Recentemente, duas empresas do digital chegaram na Black Sheep. O que encontramos lá dentro foi o mesmo padrão das empresas físicas — só que pior. No digital, tudo é mais rápido. O faturamento sobe rápido. O caos também.
+          Duas empresas do digital chegaram na Black Sheep. O que encontramos lá dentro foi o mesmo de sempre — só que pior.
         </p>
       </div>
 
-      {/* #2 — CASO 01 — E-COMMERCE */}
+      {/* CASO 01 */}
       <div style={{ ...s.section, paddingTop: 40 }} className="lp-section" id="_caso1">
         <span style={s.eyebrow}>Caso 01</span>
         <div style={{ ...s.body, maxWidth: 620 }}>
           <Para style={{ color: '#fff', fontWeight: 600 }}>E-commerce de moda feminina. Shein, TikTok Shop, Mercado Livre, Shopee.</Para>
           <Para style={{ color: '#fff' }}>Faturamento: 7 milhões por ano.</Para>
-          <Para>Parece saudável, certo?</Para>
-          <Para>O dono achava que não tinha margem. Nunca sobrava dinheiro. Precisou recorrer a banco mais de uma vez pra cobrir o fluxo de caixa.</Para>
+          <Para>O dono achava que não tinha margem. Nunca sobrava dinheiro. Recorreu a banco mais de uma vez pra cobrir o fluxo de caixa.</Para>
           <Para>Fizemos a auditoria.</Para>
-          <Para>Primeira descoberta: o negócio era extremamente lucrativo. Margem real entre 18% e 23%.</Para>
-          <Para>Segunda descoberta: ele perdia 6% do faturamento inteiro em taxas e campanhas nos marketplaces que nem sabia que existiam.</Para>
-          <Para style={{ color: '#fff', fontWeight: 600 }}>6% de 7 milhões. Faz a conta.</Para>
-          <Para>Não era problema de margem. Era problema de visibilidade. Não enxergava os próprios números.</Para>
-
-          {/* #3 — O que fizemos em bullets */}
-          <p style={{ fontSize: 16, color: '#fff', fontWeight: 700, marginTop: 24, marginBottom: 12 }}>O que fizemos:</p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 20 }}>
-            {[
-              'Saímos de campanhas que queimavam margem',
-              'Reprecificamos linhas de produto com dados reais',
-              'Criamos um plano pra formar capital de giro',
-              'Com capital, planejamos crescimento que mantivesse as margens',
-            ].map((item, i) => (
-              <div key={i} style={{ display: 'flex', gap: 12, fontSize: 16, color: '#aaaaaa', lineHeight: 1.7 }}>
-                <span style={{ color: '#555', flexShrink: 0 }}>—</span>{item}
-              </div>
-            ))}
-          </div>
-
+          <Para>Margem real: entre 18% e 23%. O negócio era extremamente lucrativo.</Para>
+          <Para>Mas ele perdia 6% do faturamento inteiro em taxas e campanhas nos marketplaces que nem sabia que existiam.</Para>
+          <Destaque>6% de 7 milhões. Faz a conta.</Destaque>
+          <p style={{ fontSize: 16, color: '#fff', fontWeight: 700, marginTop: 0, marginBottom: 12 }}>O que fizemos:</p>
+          <Bullets items={[
+            'Saímos de campanhas que queimavam margem',
+            'Reprecificamos linhas de produto com dados reais',
+            'Criamos um plano pra formar capital de giro',
+          ]} />
           <Para>Em 3 a 4 meses, o dinheiro que sempre existiu apareceu.</Para>
-          <Para>Não vendeu mais. Não cortou marketplace. Não demitiu ninguém.</Para>
-          <Para style={{ marginBottom: 0 }}>Parou de perder o que já ganhava.</Para>
+          <Para style={{ marginBottom: 0 }}>Não vendeu mais. Não cortou marketplace. Não demitiu ninguém. Parou de perder o que já ganhava.</Para>
         </div>
       </div>
 
       <hr style={s.hr} />
 
-      {/* #2 — CASO 02 — INFOPRODUTO */}
+      {/* CASO 02 */}
       <div style={s.section} className="lp-section" id="_caso2">
         <span style={s.eyebrow}>Caso 02</span>
         <div style={{ ...s.body, maxWidth: 620 }}>
           <Para style={{ color: '#fff', fontWeight: 600 }}>Mentorias e infoprodutos.</Para>
           <Para>Num mês de escala, bateu R$600 mil de faturamento. Recorde.</Para>
-          <Para>No mês seguinte, precisou de empréstimo pra pagar os cartões que usou pra rodar anúncio.</Para>
-          <Para style={{ color: '#fff', fontWeight: 600 }}>Seiscentos mil de faturamento. E empréstimo pra fechar o mês.</Para>
-          <Para>Margem real: abaixo de 10%.</Para>
-          <Para>CAC sem teto. Retiradas sem critério. Escalou faturamento, escalou o caos junto.</Para>
-
-          {/* #3 — O que fizemos em bullets */}
-          <p style={{ fontSize: 16, color: '#fff', fontWeight: 700, marginTop: 24, marginBottom: 12 }}>O que fizemos:</p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 20 }}>
-            {[
-              'Implementamos gestão financeira que trouxe clareza real sobre a situação',
-              'Definimos teto de retirada baseado em dado',
-              'Estabelecemos CAC máximo por produto',
-              'Criamos metas de margem mínima',
-            ].map((item, i) => (
-              <div key={i} style={{ display: 'flex', gap: 12, fontSize: 16, color: '#aaaaaa', lineHeight: 1.7 }}>
-                <span style={{ color: '#555', flexShrink: 0 }}>—</span>{item}
-              </div>
-            ))}
-          </div>
-
-          <Para>A empresa parou de crescer no escuro.</Para>
+          <Destaque>No mês seguinte, precisou de empréstimo pra fechar o mês.</Destaque>
+          <Para>Margem real: abaixo de 10%. CAC sem teto. Retiradas sem critério.</Para>
+          <p style={{ fontSize: 16, color: '#fff', fontWeight: 700, marginTop: 0, marginBottom: 12 }}>O que fizemos:</p>
+          <Bullets items={[
+            'Gestão financeira que trouxe clareza real',
+            'Teto de retirada baseado em dado',
+            'CAC máximo por produto',
+            'Metas de margem mínima',
+          ]} />
           <Para style={{ marginBottom: 0 }}>Pela primeira vez, o dono sabia — com número na mão — se o mês foi bom ou ruim. Antes de abrir o extrato.</Para>
         </div>
       </div>
@@ -525,6 +493,9 @@ export function Landing() {
         <div style={{ ...s.body, maxWidth: 620 }}>
           <Para>Essas duas empresas tinham tudo. Produto. Audiência. Tráfego. Faturamento.</Para>
           <Para>E estavam quebrando.</Para>
+          <Para style={{ color: '#fff', fontWeight: 600, marginBottom: 4 }}>Não é exceção.</Para>
+          <Para style={{ color: '#fff', fontWeight: 600, marginBottom: 4 }}>É padrão.</Para>
+          <Para style={{ color: '#fff', fontWeight: 600 }}>É assim que empresas quebram faturando alto.</Para>
         </div>
         <div style={s.bq}>
           <p style={s.bqText}>Ninguém no digital ensina a parte que vem depois da venda.</p>
@@ -532,14 +503,9 @@ export function Landing() {
         <div style={{ ...s.body, maxWidth: 620 }}>
           <Para>Todo mundo ensina a vender. Escalar. Lançar. Rodar tráfego.</Para>
           <Para>Ninguém ensina a controlar o que entra.</Para>
-          <Para>O faturamento sobe. Os custos sobem junto. A margem comprime. O dono não enxerga. A "solução" é vender mais.</Para>
-          <Para>Até o dia que o banco liga.</Para>
           <Para style={{ marginBottom: 0 }}>O ATLAS existe porque esse ciclo precisa parar.</Para>
         </div>
       </div>
-
-      {/* #12 — CTA OUTLINE intermediário após O PADRÃO */}
-      <CtaOutline />
 
       <hr style={s.hr} />
 
@@ -549,23 +515,25 @@ export function Landing() {
           <Para>E se, em vez de torcer pro mês fechar positivo, você soubesse — antes do dia 10 — exatamente quanto vai sobrar?</Para>
           <Para>E se você tivesse clareza sobre sua margem por produto, por canal, por campanha?</Para>
           <Para>E se toda decisão de escala fosse baseada em número real?</Para>
-          <Para style={{ marginBottom: 0 }}>E se você não precisasse aprender gestão do zero — porque um sistema faz isso por você e alguém implementa junto?</Para>
+          <Para>E se você não precisasse aprender gestão do zero — porque um sistema faz isso por você e alguém implementa junto?</Para>
         </div>
+        <h2 style={{ ...s.h2, marginTop: 40, marginBottom: 0 }}>É isso que o ATLAS faz.</h2>
       </div>
 
       <hr style={s.hr} />
 
       {/* O PROGRAMA */}
       <div style={s.section} className="lp-section">
+        <GreenLine />
         <span style={s.eyebrow}>O Programa</span>
         <div style={{ ...s.body, maxWidth: 620 }}>
           <Para style={{ color: '#fff', fontWeight: 600 }}>O ATLAS é um programa de 6 meses da Black Sheep.</Para>
           <Para>Eu entro na sua empresa e implemento um modelo de gestão financeira. Pessoalmente.</Para>
+          <Para style={{ color: '#fff', fontWeight: 600 }}>Não é teoria. É implementação.</Para>
           <Para>Você não precisa virar especialista em finanças. Precisa de três coisas:</Para>
           <Para>Preencher dados semanais no sistema — ou colocar alguém do time pra fazer.</Para>
           <Para>Aprender a ler os relatórios.</Para>
           <Para>Tomar decisão com base no que os números mostram.</Para>
-          {/* #4 — destaque na frase final */}
           <Para style={{ color: '#fff', fontWeight: 700, marginTop: 24, marginBottom: 0 }}>O resto, eu faço com você.</Para>
         </div>
       </div>
@@ -583,7 +551,6 @@ export function Landing() {
             { n: '04', t: 'Modelo de Gestão', d: 'Rotina semanal. Indicadores que importam. Decisões com dados. Controle com crescimento.' },
           ].map((j, i) => (
             <div key={j.n} style={{ ...s.jornada, ...(i === 3 ? { borderBottom: '1px solid #1e1e1e' } : {}) }}>
-              {/* #6 — números verdes com opacity */}
               <span style={s.jnum}>{j.n}</span>
               <div>
                 <div style={s.jtitle}>{j.t}</div>
@@ -594,20 +561,34 @@ export function Landing() {
         </div>
 
         <div style={s.llist}>
-          {[
-            { label: 'Mentoria individual', rest: ' — 1 reunião por mês comigo durante 6 meses. Eu olho seus números, identifico onde você tá perdendo dinheiro e te digo o que fazer.' },
-            { label: 'Software ATLAS', rest: ' — dashboard financeiro da Black Sheep. DRE, fluxo de caixa, relatórios. Incluído nos 6 meses.' },
-            { label: 'Suporte', rest: ' — grupo de WhatsApp + comunidade Black Sheep.' },
-          ].map((item, i) => (
-            <div key={i} style={{ ...s.litem, ...(i === 0 ? s.litemFirst : {}) }}>
+          {/* Mentoria */}
+          <div style={{ ...s.litem, ...s.litemFirst, flexDirection: 'column' as const, gap: 4 }}>
+            <div style={{ display: 'flex', gap: 16 }}>
               <span style={{ color: '#444', flexShrink: 0 }}>—</span>
-              <span><strong style={{ color: '#fff', fontWeight: 700 }}>{item.label}</strong>{item.rest}</span>
+              <span><strong style={{ color: '#fff', fontWeight: 700 }}>Mentoria individual</strong> — 1 reunião por mês comigo durante 6 meses. Eu olho seus números, identifico onde você tá perdendo dinheiro e te digo o que fazer.</span>
             </div>
-          ))}
+            <p style={{ margin: '4px 0 0 32px', fontSize: 14, color: '#666', lineHeight: 1.5 }}>Cada call é uma decisão.</p>
+          </div>
+          {/* Software */}
+          <div style={{ ...s.litem, flexDirection: 'column' as const, gap: 4 }}>
+            <div style={{ display: 'flex', gap: 16 }}>
+              <span style={{ color: '#444', flexShrink: 0 }}>—</span>
+              <span><strong style={{ color: '#fff', fontWeight: 700 }}>Software ATLAS</strong> — dashboard financeiro da Black Sheep. DRE, fluxo de caixa, relatórios. Incluído nos 6 meses.</span>
+            </div>
+            <p style={{ margin: '4px 0 0 32px', fontSize: 14, color: GREEN, fontWeight: 600, lineHeight: 1.5 }}>É aqui que você vê onde está perdendo dinheiro.</p>
+          </div>
+          {/* Suporte */}
+          <div style={{ ...s.litem, flexDirection: 'column' as const, gap: 4 }}>
+            <div style={{ display: 'flex', gap: 16 }}>
+              <span style={{ color: '#444', flexShrink: 0 }}>—</span>
+              <span><strong style={{ color: '#fff', fontWeight: 700 }}>Suporte</strong> — grupo de WhatsApp + comunidade Black Sheep.</span>
+            </div>
+            <p style={{ margin: '4px 0 0 32px', fontSize: 14, color: '#666', lineHeight: 1.5 }}>Problema surgiu, resolve rápido.</p>
+          </div>
         </div>
 
-        {/* #5 — Screenshot placeholder */}
-        <div style={{ margin: '48px 0', padding: '24px', border: '1px solid #1e1e1e', textAlign: 'center' as const }}>
+        {/* Screenshot placeholder */}
+        <div style={{ margin: '48px 0 0', padding: '24px', border: '1px solid #1e1e1e', textAlign: 'center' as const }}>
           <img
             src="/atlas-screenshot.png"
             alt="Software ATLAS — Dashboard Financeiro"
@@ -619,23 +600,16 @@ export function Landing() {
           />
           <p style={{ display: 'none', color: '#555', fontSize: 13, margin: 0 }}>Screenshot do Software ATLAS será adicionado aqui</p>
         </div>
-
-        <p style={{ marginTop: 0, fontSize: 15, fontWeight: 300, color: '#aaaaaa', lineHeight: 1.8, maxWidth: 560 }}>
-          Você não precisa montar planilha. Não precisa de ERP. Preenche os dados, lê o relatório, toma decisão. Com dados na mão, foca no que sabe fazer: crescer.
-        </p>
       </div>
-
-      {/* #12 — CTA OUTLINE intermediário após ENTREGA */}
-      <CtaOutline />
 
       <hr style={s.hr} />
 
-      {/* #7 — FILTRO com destaque visual */}
+      {/* FILTRO */}
       <div style={s.section} className="lp-section">
         <span style={s.eyebrow}>Filtro</span>
         <h2 style={s.h2}>Mas esse programa não é pra todo mundo.</h2>
 
-        <div style={{ ...s.pgrid, marginTop: 0, border: '1px solid #1e1e1e' }} className="lp-filtro-grid">
+        <div style={{ ...s.pgrid }} className="lp-filtro-grid">
           {/* Coluna positiva — borda top verde */}
           <div style={{ padding: '28px 28px 32px', borderRight: '1px solid #1e1e1e', borderTop: `3px solid ${GREEN}` }}>
             <p style={{ fontSize: 13, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase' as const, color: GREEN, marginTop: 0, marginBottom: 20 }}>Isso é pra você se:</p>
@@ -651,16 +625,16 @@ export function Landing() {
               </div>
             ))}
           </div>
-          {/* Coluna negativa — borda top cinza escura */}
+          {/* Coluna negativa */}
           <div style={{ padding: '28px 28px 32px', borderTop: '1px solid #333' }}>
-            <p style={{ fontSize: 13, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase' as const, color: '#666', marginTop: 0, marginBottom: 20 }}>Isso não é pra você se:</p>
+            <p style={{ fontSize: 13, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase' as const, color: '#555', marginTop: 0, marginBottom: 20 }}>Isso não é pra você se:</p>
             {[
               'Está começando e ainda não fatura consistente',
               'Quer solução mágica sem executar',
               'Acha que "no digital é diferente" e que gestão é burocracia',
               'Não tem autonomia pra decidir no seu próprio negócio',
             ].map((item, i) => (
-              <div key={i} style={{ display: 'flex', gap: 12, fontSize: 15, fontWeight: 300, color: '#666', lineHeight: 1.6, padding: '10px 0', borderBottom: i < 3 ? '1px solid #1e1e1e' : 'none' }}>
+              <div key={i} style={{ display: 'flex', gap: 12, fontSize: 15, fontWeight: 300, color: '#555', lineHeight: 1.6, padding: '10px 0', borderBottom: i < 3 ? '1px solid #1e1e1e' : 'none' }}>
                 <span style={{ flexShrink: 0 }}>—</span>{item}
               </div>
             ))}
@@ -677,15 +651,15 @@ export function Landing() {
           {[
             {
               q: '"Meu negócio é muito rápido pra parar e organizar."',
-              a: 'Você não para. O ATLAS se implementa enquanto opera. Uma reunião por mês. Dados preenchidos em 30 minutos por semana.',
+              a: 'Você não para. Uma call por mês. 30 minutos por semana. O ATLAS roda enquanto você opera.',
             },
             {
               q: '"Gestão é coisa de empresa grande."',
-              a: 'Empresa enxuta com margem errada quebra mais rápido. Sem colchão, cada real mal gasto pesa mais.',
+              a: 'Empresa enxuta com margem errada quebra mais rápido. Sem colchão.',
             },
             {
               q: '"Eu já uso Conta Azul / ERP."',
-              a: 'ERP organiza nota fiscal. Não mostra margem por produto, não projeta fluxo de caixa e não diz se sua campanha de tráfego dá lucro ou prejuízo.',
+              a: 'ERP organiza nota fiscal. Não te diz se sua campanha dá lucro ou prejuízo.',
             },
           ].map((obj, i) => (
             <div key={i} style={{ ...s.objBlock, ...(i === 2 ? { borderBottom: '1px solid #1e1e1e' } : {}) }}>
@@ -700,22 +674,19 @@ export function Landing() {
 
       {/* INVESTIMENTO */}
       <div style={s.invest} className="lp-invest">
-        <div style={{ width: 48, height: 3, background: GREEN, marginBottom: 48 }} />
+        <GreenLine />
         <span style={s.priceLabel}>Investimento</span>
-        {/* #8 — preço maior */}
         <span style={s.price}>R$14.000</span>
         <p style={s.priceDetail}>
           6 meses. 4 módulos. 6 reuniões individuais comigo. Software ATLAS incluído. Suporte no grupo.
         </p>
         <p style={{ ...s.priceDetail, marginTop: 20 }}>
-          Pra quem fatura R$60 mil por mês, isso é menos de uma semana de receita.
-        </p>
-        <p style={{ ...s.priceDetail, marginTop: 20 }}>
           Nos dois casos dessa página, o dinheiro perdido por falta de gestão era maior que o programa inteiro. Todo mês.
         </p>
-        <p style={{ ...s.priceDetail, marginTop: 20, marginBottom: 0 }}>
+        <p style={{ ...s.priceDetail, marginTop: 20, marginBottom: 48 }}>
           A pergunta não é se R$14 mil é caro. É quanto você tá perdendo por mês sem saber.
         </p>
+        <a href="#aplicar" style={s.btn}>Quero implementar o ATLAS</a>
       </div>
 
       <hr style={s.hr} />
@@ -738,9 +709,7 @@ export function Landing() {
             </div>
           ))}
         </div>
-        <p style={{ fontSize: 14, fontWeight: 300, color: '#666', marginTop: 24, marginBottom: 48 }}>Sem pressão. Sem insistência.</p>
-        {/* #9 — botão maior */}
-        <a href="#aplicar" style={s.btn}>Quero implementar o ATLAS</a>
+        <p style={{ fontSize: 14, fontWeight: 300, color: '#666', marginTop: 24, marginBottom: 0 }}>Sem pressão. Sem insistência.</p>
       </div>
 
       <hr style={s.hr} />
@@ -748,7 +717,6 @@ export function Landing() {
       {/* QUEM VAI IMPLEMENTAR */}
       <div style={s.section} className="lp-section">
         <h2 style={s.h2}>Quem será seu Mentor</h2>
-        {/* #10 — foto 180px, borderRadius 12px */}
         <img
           src="/harley.jpg"
           alt="Harley Metzker"
@@ -792,13 +760,13 @@ export function Landing() {
           className="lp-section"
         >
           <p style={{ fontSize: 'clamp(32px, 4vw, 48px)' as unknown as number, fontWeight: 700, color: '#fff', lineHeight: 1.2, marginTop: 0, marginBottom: 40 }}>
-            Se você fatura bem e ainda não sabe sua margem real, esse é o programa.
+            Se você fatura bem e ainda não sabe sua margem real — você tá perdendo dinheiro agora. Esse é o programa.
           </p>
           <a href="#aplicar" style={s.btn}>Quero implementar o ATLAS</a>
         </div>
       </div>
 
-      {/* #11 — FOOTER com logo + instagram */}
+      {/* FOOTER */}
       <footer style={{ borderTop: '1px solid #1e1e1e' }}>
         <div style={s.footerInner} className="lp-footer-inner">
           <img src="/blacksheep-logo.png" alt="Black Sheep" style={{ height: 36, marginBottom: 8, opacity: 0.6, display: 'block' }} />
