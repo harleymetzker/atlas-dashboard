@@ -331,22 +331,6 @@ function Para({ children, style }: { children: React.ReactNode; style?: React.CS
   return <p style={{ fontSize: 16, color: '#aaaaaa', lineHeight: 1.8, marginTop: 0, marginBottom: 20, wordBreak: 'break-word', ...style }}>{children}</p>
 }
 
-// Frase isolada com impacto visual (tamanho h2)
-function Destaque({ children }: { children: React.ReactNode }) {
-  return (
-    <p style={{
-      fontSize: 'clamp(36px, 4.5vw, 52px)' as unknown as number,
-      fontWeight: 700,
-      color: '#fff',
-      lineHeight: 1.2,
-      marginTop: 40,
-      marginBottom: 40,
-      wordBreak: 'break-word',
-    }}>
-      {children}
-    </p>
-  )
-}
 
 // Separador verde 48px
 function GreenLine() {
