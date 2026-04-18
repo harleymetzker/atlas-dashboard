@@ -145,7 +145,7 @@ const s = {
     lineHeight: 1.25,
     margin: 0,
   },
-  // PGRID (diagnóstico / filtro)
+  // PGRID
   pgrid: {
     display: 'grid',
     gridTemplateColumns: 'repeat(2, 1fr)',
@@ -176,7 +176,7 @@ const s = {
   jnum: {
     fontFamily: "'Arial Black', 'Arial Bold', sans-serif",
     fontSize: 60,
-    color: '#1e1e1e',
+    color: 'rgba(0, 239, 97, 0.3)',
     lineHeight: 1,
     marginTop: 4,
   },
@@ -205,6 +205,7 @@ const s = {
     fontWeight: 300,
     color: '#aaa',
     lineHeight: 1.6,
+    wordBreak: 'break-word' as const,
   },
   litemFirst: { borderTop: '1px solid #1e1e1e' },
   // OBJEÇÕES
@@ -257,20 +258,36 @@ const s = {
     color: '#aaaaaa',
     lineHeight: 1.65,
   },
-  // CTA BUTTON
+  // CTA BUTTON — #9 padding/fontSize updated
   btn: {
     display: 'inline-block',
     fontFamily: 'Arial, Helvetica, sans-serif',
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: 700,
     letterSpacing: 3,
     textTransform: 'uppercase' as const,
     color: '#000',
     background: GREEN,
-    padding: '22px 52px',
+    padding: '22px 56px',
     textDecoration: 'none',
     cursor: 'pointer',
     border: 'none',
+    transition: 'background 0.2s',
+  },
+  // CTA OUTLINE (secondary)
+  btnOutline: {
+    display: 'inline-block',
+    fontFamily: 'Arial, Helvetica, sans-serif',
+    fontSize: 13,
+    fontWeight: 700,
+    letterSpacing: 2,
+    textTransform: 'uppercase' as const,
+    color: GREEN,
+    background: 'transparent',
+    border: `1px solid ${GREEN}`,
+    padding: '18px 48px',
+    textDecoration: 'none',
+    cursor: 'pointer',
     transition: 'background 0.2s',
   },
   // FAQ
@@ -323,11 +340,12 @@ const s = {
     marginBottom: 16,
     display: 'block',
   },
+  // #8 — preço maior
   price: {
-    fontSize: 32,
-    fontWeight: 700,
+    fontSize: 'clamp(36px, 5vw, 56px)' as unknown as number,
+    fontWeight: 900,
     color: '#fff',
-    lineHeight: 1.15,
+    lineHeight: 1.1,
     marginBottom: 24,
     display: 'block',
   },
@@ -344,9 +362,9 @@ const s = {
     margin: '0 auto',
     padding: '40px 48px',
     display: 'flex',
-    alignItems: 'center',
-    gap: 16,
-    flexWrap: 'wrap' as const,
+    flexDirection: 'column' as const,
+    alignItems: 'flex-start',
+    gap: 8,
   },
   footerText: {
     fontSize: 10,
@@ -357,8 +375,18 @@ const s = {
   },
 }
 
+// #13 — wordBreak em todos os parágrafos
 function Para({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) {
-  return <p style={{ fontSize: 16, color: '#aaaaaa', lineHeight: 1.8, marginTop: 0, marginBottom: 20, ...style }}>{children}</p>
+  return <p style={{ fontSize: 16, color: '#aaaaaa', lineHeight: 1.8, marginTop: 0, marginBottom: 20, wordBreak: 'break-word', ...style }}>{children}</p>
+}
+
+// CTA outline intermediário reutilizável
+function CtaOutline() {
+  return (
+    <div style={{ maxWidth: 760, margin: '0 auto', padding: '40px 48px', textAlign: 'center' as const }}>
+      <a href="#aplicar" style={s.btnOutline}>Quero implementar o ATLAS</a>
+    </div>
+  )
 }
 
 export function Landing() {
@@ -415,8 +443,16 @@ export function Landing() {
         <h2 style={{ ...s.h2, color: GREEN }}>Vou te mostrar como é isso na prática...</h2>
       </div>
 
-      {/* CASO REAL — E-COMMERCE */}
-      <div style={{ ...s.section, paddingTop: 24 }} className="lp-section" id="_caso1">
+      {/* #1 — CONTEXTO ANTES DOS CASOS */}
+      <div style={{ maxWidth: 760, margin: '0 auto', padding: '24px 48px 0' }}>
+        <p style={{ fontSize: 16, color: '#aaaaaa', lineHeight: 1.8, margin: 0, maxWidth: 620, wordBreak: 'break-word' }}>
+          Recentemente, duas empresas do digital chegaram na Black Sheep. O que encontramos lá dentro foi o mesmo padrão das empresas físicas — só que pior. No digital, tudo é mais rápido. O faturamento sobe rápido. O caos também.
+        </p>
+      </div>
+
+      {/* #2 — CASO 01 — E-COMMERCE */}
+      <div style={{ ...s.section, paddingTop: 40 }} className="lp-section" id="_caso1">
+        <span style={s.eyebrow}>Caso 01</span>
         <div style={{ ...s.body, maxWidth: 620 }}>
           <Para style={{ color: '#fff', fontWeight: 600 }}>E-commerce de moda feminina. Shein, TikTok Shop, Mercado Livre, Shopee.</Para>
           <Para style={{ color: '#fff' }}>Faturamento: 7 milhões por ano.</Para>
@@ -427,7 +463,22 @@ export function Landing() {
           <Para>Segunda descoberta: ele perdia 6% do faturamento inteiro em taxas e campanhas nos marketplaces que nem sabia que existiam.</Para>
           <Para style={{ color: '#fff', fontWeight: 600 }}>6% de 7 milhões. Faz a conta.</Para>
           <Para>Não era problema de margem. Era problema de visibilidade. Não enxergava os próprios números.</Para>
-          <Para>O que fizemos: saímos de campanhas que queimavam margem, reprecificamos linhas de produto com dados reais, criamos um plano pra formar capital de giro. Com capital, planejamos crescimento que mantivesse as margens.</Para>
+
+          {/* #3 — O que fizemos em bullets */}
+          <p style={{ fontSize: 16, color: '#fff', fontWeight: 700, marginTop: 24, marginBottom: 12 }}>O que fizemos:</p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 20 }}>
+            {[
+              'Saímos de campanhas que queimavam margem',
+              'Reprecificamos linhas de produto com dados reais',
+              'Criamos um plano pra formar capital de giro',
+              'Com capital, planejamos crescimento que mantivesse as margens',
+            ].map((item, i) => (
+              <div key={i} style={{ display: 'flex', gap: 12, fontSize: 16, color: '#aaaaaa', lineHeight: 1.7 }}>
+                <span style={{ color: '#555', flexShrink: 0 }}>—</span>{item}
+              </div>
+            ))}
+          </div>
+
           <Para>Em 3 a 4 meses, o dinheiro que sempre existiu apareceu.</Para>
           <Para>Não vendeu mais. Não cortou marketplace. Não demitiu ninguém.</Para>
           <Para style={{ marginBottom: 0 }}>Parou de perder o que já ganhava.</Para>
@@ -436,16 +487,32 @@ export function Landing() {
 
       <hr style={s.hr} />
 
-      {/* CASO REAL — INFOPRODUTO */}
+      {/* #2 — CASO 02 — INFOPRODUTO */}
       <div style={s.section} className="lp-section" id="_caso2">
+        <span style={s.eyebrow}>Caso 02</span>
         <div style={{ ...s.body, maxWidth: 620 }}>
-          <Para style={{ color: '#fff', fontWeight: 600 }}>Outro caso. Mentorias e infoprodutos.</Para>
+          <Para style={{ color: '#fff', fontWeight: 600 }}>Mentorias e infoprodutos.</Para>
           <Para>Num mês de escala, bateu R$600 mil de faturamento. Recorde.</Para>
           <Para>No mês seguinte, precisou de empréstimo pra pagar os cartões que usou pra rodar anúncio.</Para>
           <Para style={{ color: '#fff', fontWeight: 600 }}>Seiscentos mil de faturamento. E empréstimo pra fechar o mês.</Para>
           <Para>Margem real: abaixo de 10%.</Para>
           <Para>CAC sem teto. Retiradas sem critério. Escalou faturamento, escalou o caos junto.</Para>
-          <Para>O que fizemos: implementamos gestão financeira que trouxe clareza real sobre a situação. Definimos teto de retirada baseado em dado. Estabelecemos CAC máximo por produto. Criamos metas de margem mínima.</Para>
+
+          {/* #3 — O que fizemos em bullets */}
+          <p style={{ fontSize: 16, color: '#fff', fontWeight: 700, marginTop: 24, marginBottom: 12 }}>O que fizemos:</p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 20 }}>
+            {[
+              'Implementamos gestão financeira que trouxe clareza real sobre a situação',
+              'Definimos teto de retirada baseado em dado',
+              'Estabelecemos CAC máximo por produto',
+              'Criamos metas de margem mínima',
+            ].map((item, i) => (
+              <div key={i} style={{ display: 'flex', gap: 12, fontSize: 16, color: '#aaaaaa', lineHeight: 1.7 }}>
+                <span style={{ color: '#555', flexShrink: 0 }}>—</span>{item}
+              </div>
+            ))}
+          </div>
+
           <Para>A empresa parou de crescer no escuro.</Para>
           <Para style={{ marginBottom: 0 }}>Pela primeira vez, o dono sabia — com número na mão — se o mês foi bom ou ruim. Antes de abrir o extrato.</Para>
         </div>
@@ -471,6 +538,9 @@ export function Landing() {
         </div>
       </div>
 
+      {/* #12 — CTA OUTLINE intermediário após O PADRÃO */}
+      <CtaOutline />
+
       <hr style={s.hr} />
 
       {/* VIRADA */}
@@ -495,7 +565,8 @@ export function Landing() {
           <Para>Preencher dados semanais no sistema — ou colocar alguém do time pra fazer.</Para>
           <Para>Aprender a ler os relatórios.</Para>
           <Para>Tomar decisão com base no que os números mostram.</Para>
-          <Para style={{ marginBottom: 0 }}>O resto, eu faço com você.</Para>
+          {/* #4 — destaque na frase final */}
+          <Para style={{ color: '#fff', fontWeight: 700, marginTop: 24, marginBottom: 0 }}>O resto, eu faço com você.</Para>
         </div>
       </div>
 
@@ -512,6 +583,7 @@ export function Landing() {
             { n: '04', t: 'Modelo de Gestão', d: 'Rotina semanal. Indicadores que importam. Decisões com dados. Controle com crescimento.' },
           ].map((j, i) => (
             <div key={j.n} style={{ ...s.jornada, ...(i === 3 ? { borderBottom: '1px solid #1e1e1e' } : {}) }}>
+              {/* #6 — números verdes com opacity */}
               <span style={s.jnum}>{j.n}</span>
               <div>
                 <div style={s.jtitle}>{j.t}</div>
@@ -534,25 +606,39 @@ export function Landing() {
           ))}
         </div>
 
-        <p style={{ marginTop: 32, fontSize: 15, fontWeight: 300, color: '#aaaaaa', lineHeight: 1.8, maxWidth: 560 }}>
+        {/* #5 — Screenshot placeholder */}
+        <div style={{ margin: '48px 0', padding: '24px', border: '1px solid #1e1e1e', textAlign: 'center' as const }}>
+          <img
+            src="/atlas-screenshot.png"
+            alt="Software ATLAS — Dashboard Financeiro"
+            style={{ maxWidth: '100%', borderRadius: 4 }}
+            onError={(e) => {
+              (e.target as HTMLImageElement).style.display = 'none';
+              ((e.target as HTMLImageElement).nextElementSibling as HTMLElement)!.style.display = 'block'
+            }}
+          />
+          <p style={{ display: 'none', color: '#555', fontSize: 13, margin: 0 }}>Screenshot do Software ATLAS será adicionado aqui</p>
+        </div>
+
+        <p style={{ marginTop: 0, fontSize: 15, fontWeight: 300, color: '#aaaaaa', lineHeight: 1.8, maxWidth: 560 }}>
           Você não precisa montar planilha. Não precisa de ERP. Preenche os dados, lê o relatório, toma decisão. Com dados na mão, foca no que sabe fazer: crescer.
         </p>
-
-        <div style={{ marginTop: 40, border: '1px solid #1e1e1e', overflow: 'hidden' }}>
-          <img src="/dashboard-preview.png" alt="Sistema ATLAS" style={{ width: '100%', display: 'block', opacity: 0.85 }} />
-        </div>
       </div>
+
+      {/* #12 — CTA OUTLINE intermediário após ENTREGA */}
+      <CtaOutline />
 
       <hr style={s.hr} />
 
-      {/* FILTRO */}
+      {/* #7 — FILTRO com destaque visual */}
       <div style={s.section} className="lp-section">
         <span style={s.eyebrow}>Filtro</span>
         <h2 style={s.h2}>Mas esse programa não é pra todo mundo.</h2>
 
-        <div style={{ ...s.pgrid, marginTop: 0 }} className="lp-filtro-grid">
-          <div style={{ padding: '28px 28px 32px', borderRight: '1px solid #1e1e1e', borderBottom: 'none' }}>
-            <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: '#fff', marginTop: 0, marginBottom: 20 }}>Isso é pra você se:</p>
+        <div style={{ ...s.pgrid, marginTop: 0, border: '1px solid #1e1e1e' }} className="lp-filtro-grid">
+          {/* Coluna positiva — borda top verde */}
+          <div style={{ padding: '28px 28px 32px', borderRight: '1px solid #1e1e1e', borderTop: `3px solid ${GREEN}` }}>
+            <p style={{ fontSize: 13, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase' as const, color: GREEN, marginTop: 0, marginBottom: 20 }}>Isso é pra você se:</p>
             {[
               'Fatura R$60 mil ou mais por mês e não sabe sua margem real',
               'Escala e o dinheiro some',
@@ -565,8 +651,9 @@ export function Landing() {
               </div>
             ))}
           </div>
-          <div style={{ padding: '28px 28px 32px' }}>
-            <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: '#666', marginTop: 0, marginBottom: 20 }}>Isso não é pra você se:</p>
+          {/* Coluna negativa — borda top cinza escura */}
+          <div style={{ padding: '28px 28px 32px', borderTop: '1px solid #333' }}>
+            <p style={{ fontSize: 13, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase' as const, color: '#666', marginTop: 0, marginBottom: 20 }}>Isso não é pra você se:</p>
             {[
               'Está começando e ainda não fatura consistente',
               'Quer solução mágica sem executar',
@@ -615,6 +702,7 @@ export function Landing() {
       <div style={s.invest} className="lp-invest">
         <div style={{ width: 48, height: 3, background: GREEN, marginBottom: 48 }} />
         <span style={s.priceLabel}>Investimento</span>
+        {/* #8 — preço maior */}
         <span style={s.price}>R$14.000</span>
         <p style={s.priceDetail}>
           6 meses. 4 módulos. 6 reuniões individuais comigo. Software ATLAS incluído. Suporte no grupo.
@@ -651,6 +739,7 @@ export function Landing() {
           ))}
         </div>
         <p style={{ fontSize: 14, fontWeight: 300, color: '#666', marginTop: 24, marginBottom: 48 }}>Sem pressão. Sem insistência.</p>
+        {/* #9 — botão maior */}
         <a href="#aplicar" style={s.btn}>Quero implementar o ATLAS</a>
       </div>
 
@@ -659,10 +748,11 @@ export function Landing() {
       {/* QUEM VAI IMPLEMENTAR */}
       <div style={s.section} className="lp-section">
         <h2 style={s.h2}>Quem será seu Mentor</h2>
+        {/* #10 — foto 180px, borderRadius 12px */}
         <img
           src="/harley.jpg"
           alt="Harley Metzker"
-          style={{ width: 200, height: 200, borderRadius: '50%', objectFit: 'cover', display: 'block', marginBottom: 28 }}
+          style={{ width: 180, height: 180, borderRadius: 12, objectFit: 'cover', display: 'block', marginBottom: 32 }}
         />
         <h3 style={{ fontSize: 32, fontWeight: 700, color: '#fff', marginTop: 0, marginBottom: 20 }}>Harley</h3>
         <div style={{ ...s.body, maxWidth: 580 }}>
@@ -708,11 +798,14 @@ export function Landing() {
         </div>
       </div>
 
-      {/* FOOTER */}
+      {/* #11 — FOOTER com logo + instagram */}
       <footer style={{ borderTop: '1px solid #1e1e1e' }}>
         <div style={s.footerInner} className="lp-footer-inner">
-          <img src="/blacksheep-logo.png" alt="Black Sheep" style={{ height: 28, display: 'block', opacity: 0.4 }} />
+          <img src="/blacksheep-logo.png" alt="Black Sheep" style={{ height: 36, marginBottom: 8, opacity: 0.6, display: 'block' }} />
           <span style={s.footerText}>ATLAS · by Black Sheep · atlasconsultoria.app</span>
+          <div style={{ marginTop: 8 }}>
+            <a href="https://instagram.com/blacksheep" target="_blank" rel="noopener noreferrer" style={{ color: '#555', fontSize: 13, textDecoration: 'none' }}>Instagram</a>
+          </div>
         </div>
       </footer>
     </div>
