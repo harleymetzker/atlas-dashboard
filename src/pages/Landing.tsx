@@ -460,7 +460,7 @@ export function Landing() {
           <Para>E estavam quebrando.</Para>
         </div>
         <div style={s.bq}>
-          <p style={s.bqText}>"Ninguém no digital ensina a parte que vem depois da venda."</p>
+          <p style={s.bqText}>Ninguém no digital ensina a parte que vem depois da venda.</p>
         </div>
         <div style={{ ...s.body, maxWidth: 620 }}>
           <Para>Todo mundo ensina a vender. Escalar. Lançar. Rodar tráfego.</Para>
