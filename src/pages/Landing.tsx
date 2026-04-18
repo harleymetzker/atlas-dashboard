@@ -74,7 +74,7 @@ const s = {
     paddingRight: 48,
   },
   heroTitle: {
-    fontSize: 'clamp(40px, 5.5vw, 64px)' as unknown as number,
+    fontSize: 'clamp(44px, 6vw, 72px)' as unknown as number,
     fontWeight: 900,
     lineHeight: 1.1,
     color: '#fff',
@@ -104,7 +104,7 @@ const s = {
   eyebrow: {
     fontSize: 10,
     fontWeight: 700,
-    letterSpacing: 4,
+    letterSpacing: 2,
     textTransform: 'uppercase' as const,
     color: GREEN,
     marginBottom: 24,
@@ -112,7 +112,7 @@ const s = {
     display: 'block',
   },
   h2: {
-    fontSize: 'clamp(28px, 3.5vw, 40px)' as unknown as number,
+    fontSize: 'clamp(32px, 4vw, 48px)' as unknown as number,
     fontWeight: 700,
     lineHeight: 1.2,
     color: '#fff',
@@ -139,7 +139,7 @@ const s = {
     borderLeft: `3px solid ${GREEN}`,
   },
   bqText: {
-    fontSize: 'clamp(22px, 2.5vw, 32px)' as unknown as number,
+    fontSize: 'clamp(28px, 3.5vw, 42px)' as unknown as number,
     fontWeight: 700,
     color: '#fff',
     lineHeight: 1.25,
@@ -317,14 +317,14 @@ const s = {
   priceLabel: {
     fontSize: 10,
     fontWeight: 700,
-    letterSpacing: 4,
+    letterSpacing: 2,
     textTransform: 'uppercase' as const,
     color: '#666',
     marginBottom: 16,
     display: 'block',
   },
   price: {
-    fontSize: 'clamp(28px, 3vw, 40px)' as unknown as number,
+    fontSize: 32,
     fontWeight: 700,
     color: '#fff',
     lineHeight: 1.15,
@@ -551,7 +551,7 @@ export function Landing() {
 
         <div style={{ ...s.pgrid, marginTop: 0 }} className="lp-filtro-grid">
           <div style={{ padding: '28px 28px 32px', borderRight: '1px solid #1e1e1e', borderBottom: 'none' }}>
-            <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: 3, textTransform: 'uppercase', color: '#fff', marginTop: 0, marginBottom: 20 }}>Isso é pra você se:</p>
+            <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: '#fff', marginTop: 0, marginBottom: 20 }}>Isso é pra você se:</p>
             {[
               'Fatura R$60 mil ou mais por mês e não sabe sua margem real',
               'Escala e o dinheiro some',
@@ -565,7 +565,7 @@ export function Landing() {
             ))}
           </div>
           <div style={{ padding: '28px 28px 32px' }}>
-            <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: 3, textTransform: 'uppercase', color: '#666', marginTop: 0, marginBottom: 20 }}>Isso não é pra você se:</p>
+            <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: '#666', marginTop: 0, marginBottom: 20 }}>Isso não é pra você se:</p>
             {[
               'Está começando e ainda não fatura consistente',
               'Quer solução mágica sem executar',
@@ -660,9 +660,9 @@ export function Landing() {
         <img
           src="/harley.jpg"
           alt="Harley Metzker"
-          style={{ width: 120, height: 120, borderRadius: '50%', objectFit: 'cover', display: 'block', marginBottom: 28 }}
+          style={{ width: 200, height: 200, borderRadius: '50%', objectFit: 'cover', display: 'block', marginBottom: 28 }}
         />
-        <h3 style={{ fontSize: 20, fontWeight: 700, color: '#fff', marginTop: 0, marginBottom: 6 }}>Harley Metzker.</h3>
+        <h3 style={{ fontSize: 32, fontWeight: 700, color: '#fff', marginTop: 0, marginBottom: 6 }}>Harley Metzker.</h3>
         <div style={{ ...s.body, maxWidth: 580 }}>
           <Para>Filho de empresários. Cresci dentro de fábrica, vendo decisão difícil ser tomada todo dia.</Para>
           <Para>17 anos em operações reais. Mais de 20 negócios como sócio, investidor ou conselheiro. Conselheiro de uma multinacional.</Para>
