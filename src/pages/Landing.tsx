@@ -547,7 +547,7 @@ export function Landing() {
       {/* FILTRO */}
       <div style={s.section} className="lp-section">
         <span style={s.eyebrow}>Filtro</span>
-        <h2 style={s.h2}>Esse programa não é pra todo mundo.</h2>
+        <h2 style={s.h2}>Mas esse programa não é pra todo mundo.</h2>
 
         <div style={{ ...s.pgrid, marginTop: 0 }} className="lp-filtro-grid">
           <div style={{ padding: '28px 28px 32px', borderRight: '1px solid #1e1e1e', borderBottom: 'none' }}>
