@@ -411,8 +411,8 @@ export function Landing() {
       <hr style={s.hr} />
 
       {/* TRANSIÇÃO */}
-      <div style={s.section} className="lp-section">
-        <h2 style={s.h2}>Vou te mostrar o que isso parece na prática.</h2>
+      <div style={{ ...s.section, paddingBottom: 40 }} className="lp-section">
+        <h2 style={{ ...s.h2, color: GREEN }}>Vou te mostrar como é isso na prática...</h2>
       </div>
 
       {/* CASO REAL — E-COMMERCE */}
