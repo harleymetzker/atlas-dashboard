@@ -453,7 +453,7 @@ export function Landing() {
           <Para>Fizemos a auditoria.</Para>
           <Para>Margem real: entre 18% e 23%. O negócio era extremamente lucrativo.</Para>
           <Para>Mas ele perdia 6% do faturamento inteiro em taxas e campanhas nos marketplaces que nem sabia que existiam.</Para>
-          <Destaque>6% de 7 milhões. Faz a conta.</Destaque>
+          <p style={{ fontSize: 'clamp(28px, 3.5vw, 40px)' as unknown as number, fontWeight: 700, color: '#fff', lineHeight: 1.2, marginTop: 40, marginBottom: 40, wordBreak: 'break-word' }}>6% de 7 milhões. Faz a conta.</p>
           <p style={{ fontSize: 16, color: '#fff', fontWeight: 700, marginTop: 0, marginBottom: 12 }}>O que fizemos:</p>
           <Bullets items={[
             'Saímos de campanhas que queimavam margem',
@@ -473,7 +473,7 @@ export function Landing() {
         <div style={{ ...s.body, maxWidth: 620 }}>
           <Para style={{ color: '#fff', fontWeight: 600 }}>Mentorias e infoprodutos.</Para>
           <Para>Num mês de escala, bateu R$600 mil de faturamento. Recorde.</Para>
-          <Destaque>No mês seguinte, precisou de empréstimo pra fechar o mês.</Destaque>
+          <p style={{ fontSize: 'clamp(28px, 3.5vw, 40px)' as unknown as number, fontWeight: 700, color: '#fff', lineHeight: 1.2, marginTop: 40, marginBottom: 40, wordBreak: 'break-word' }}>No mês seguinte, precisou de empréstimo pra fechar o mês.</p>
           <Para>Margem real: abaixo de 10%. CAC sem teto. Retiradas sem critério.</Para>
           <p style={{ fontSize: 16, color: '#fff', fontWeight: 700, marginTop: 0, marginBottom: 12 }}>O que fizemos:</p>
           <Bullets items={[
