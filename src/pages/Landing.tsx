@@ -411,12 +411,12 @@ export function Landing() {
       <hr style={s.hr} />
 
       {/* TRANSIÇÃO */}
-      <div style={{ ...s.section, paddingBottom: 40 }} className="lp-section">
+      <div style={{ ...s.section, paddingBottom: 0 }} className="lp-section">
         <h2 style={{ ...s.h2, color: GREEN }}>Vou te mostrar como é isso na prática...</h2>
       </div>
 
       {/* CASO REAL — E-COMMERCE */}
-      <div style={s.section} className="lp-section" id="_caso1">
+      <div style={{ ...s.section, paddingTop: 24 }} className="lp-section" id="_caso1">
         <div style={{ ...s.body, maxWidth: 620 }}>
           <Para style={{ color: '#fff', fontWeight: 600 }}>E-commerce de moda feminina. Shein, TikTok Shop, Mercado Livre, Shopee.</Para>
           <Para style={{ color: '#fff' }}>Faturamento: 7 milhões por ano.</Para>
