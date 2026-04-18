@@ -658,18 +658,19 @@ export function Landing() {
 
       {/* QUEM VAI IMPLEMENTAR */}
       <div style={s.section} className="lp-section">
+        <h2 style={s.h2}>Quem será seu Mentor</h2>
         <img
           src="/harley.jpg"
           alt="Harley Metzker"
           style={{ width: 200, height: 200, borderRadius: '50%', objectFit: 'cover', display: 'block', marginBottom: 28 }}
         />
-        <h3 style={{ fontSize: 32, fontWeight: 700, color: '#fff', marginTop: 0, marginBottom: 6 }}>Harley Metzker.</h3>
+        <h3 style={{ fontSize: 32, fontWeight: 700, color: '#fff', marginTop: 0, marginBottom: 20 }}>Harley</h3>
         <div style={{ ...s.body, maxWidth: 580 }}>
-          <Para>Filho de empresários. Cresci dentro de fábrica, vendo decisão difícil ser tomada todo dia.</Para>
-          <Para>17 anos em operações reais. Mais de 20 negócios como sócio, investidor ou conselheiro. Conselheiro de uma multinacional.</Para>
-          <Para>Fundador da Black Sheep — consultoria de gestão que já passou por mais de 100 empresas.</Para>
-          <Para>Meu trabalho: entrar na empresa, olhar os números, mostrar onde o dinheiro está indo. Depois, corrigir.</Para>
-          <Para style={{ marginBottom: 0 }}>Não ensino teoria. Implemento gestão.</Para>
+          <Para>Sou filho de empresários. Cresci dentro de fábrica, vendo decisão difícil ser tomada todo dia.</Para>
+          <Para>São 16 anos em operações reais. Mais de 20 negócios como sócio, investidor ou conselheiro.</Para>
+          <Para>Fundador da Black Sheep — consultoria de gestão que já passou em mais de 100 empresas de diversos tamanhos e setores.</Para>
+          <Para>Meu trabalho: entrar na sua empresa, olhar seus números, mostrar onde o dinheiro está vazando. Depois, corrigimos e garantimos <strong style={{ color: GREEN, fontWeight: 700 }}>LUCRO</strong> recorrente.</Para>
+          <Para style={{ marginBottom: 0 }}>Não vou te ensinar teoria. Vamos implementar gestão.</Para>
         </div>
       </div>
 
