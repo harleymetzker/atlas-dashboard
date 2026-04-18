@@ -102,7 +102,7 @@ const s = {
     padding: '80px 48px',
   },
   eyebrow: {
-    fontSize: 10,
+    fontSize: 13,
     fontWeight: 700,
     letterSpacing: 2,
     textTransform: 'uppercase' as const,
