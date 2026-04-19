@@ -1,109 +1,342 @@
-import { useState, useEffect } from 'react'
-import { Trash2, UserPlus } from 'lucide-react'
+import { useState, useEffect, useMemo } from 'react'
+import { Trash2, CheckCircle2, XCircle, Clock } from 'lucide-react'
+import { format, subMonths, startOfMonth } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
+import {
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+} from 'recharts'
 import { supabase } from '../lib/supabase'
-import { Button } from '../components/ui/Button'
-import { Input } from '../components/ui/Input'
-import { Modal } from '../components/ui/Modal'
 import { Card } from '../components/ui/Card'
 
-interface UserRecord {
+const GREEN = '#00EF61'
+
+interface Profile {
   id: string
+  user_id: string
   email: string
+  status: 'pending' | 'active' | 'blocked'
+  mentoria_type: string | null
+  setor: string | null
+  faturamento_medio: string | null
+  num_funcionarios: string | null
+  tempo_empresa: string | null
   created_at: string
+  updated_at: string
 }
 
-export function Admin() {
-  const [users, setUsers] = useState<UserRecord[]>([])
-  const [loading, setLoading] = useState(true)
-  const [modalOpen, setModalOpen] = useState(false)
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [creating, setCreating] = useState(false)
-  const [error, setError] = useState('')
+type Tab = 'resumo' | 'mafia_black_sheep' | 'mentoria_atlas' | 'outras_mentorias' | 'assinante'
 
-  async function fetchUsers() {
-    setLoading(true)
-    const { data, error } = await supabase.functions.invoke('admin-list-users')
-    if (!error && data?.users) setUsers(data.users)
-    setLoading(false)
-  }
+const TABS: { id: Tab; label: string }[] = [
+  { id: 'resumo',           label: 'Resumo Geral' },
+  { id: 'mafia_black_sheep',label: 'MAFIA Black Sheep' },
+  { id: 'mentoria_atlas',   label: 'Mentoria ATLAS' },
+  { id: 'outras_mentorias', label: 'Outras Mentorias' },
+  { id: 'assinante',        label: 'Assinaturas' },
+]
 
-  useEffect(() => { fetchUsers() }, [])
+function StatusBadge({ status }: { status: Profile['status'] }) {
+  if (status === 'active')  return <span style={{ fontSize: 11, padding: '3px 10px', borderRadius: 20, background: `${GREEN}20`, color: GREEN, fontWeight: 600 }}>Ativo</span>
+  if (status === 'pending') return <span style={{ fontSize: 11, padding: '3px 10px', borderRadius: 20, background: 'rgba(234,179,8,0.15)', color: '#eab308', fontWeight: 600 }}>Aguardando</span>
+  return <span style={{ fontSize: 11, padding: '3px 10px', borderRadius: 20, background: 'rgba(239,68,68,0.15)', color: '#ef4444', fontWeight: 600 }}>Bloqueado</span>
+}
 
-  async function createUser() {
-    if (!email || !password) { setError('Preencha email e senha.'); return }
-    if (password.length < 6) { setError('Senha deve ter ao menos 6 caracteres.'); return }
-    setCreating(true)
-    setError('')
-    const { error } = await supabase.functions.invoke('admin-create-user', { body: { email, password } })
-    if (error) setError(error.message)
-    else { setModalOpen(false); setEmail(''); setPassword(''); fetchUsers() }
-    setCreating(false)
-  }
+function UserRow({ profile, onApprove, onBlock, onDelete }: {
+  profile: Profile
+  onApprove: (userId: string) => void
+  onBlock: (userId: string) => void
+  onDelete: (userId: string, email: string) => void
+}) {
+  return (
+    <div style={{ padding: '16px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
+        <div style={{ minWidth: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', marginBottom: 6 }}>
+            <span style={{ fontSize: 14, color: '#fff', fontWeight: 500 }}>{profile.email}</span>
+            <StatusBadge status={profile.status} />
+          </div>
+          <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+            {profile.setor && <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>{profile.setor}</span>}
+            {profile.faturamento_medio && <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>{profile.faturamento_medio}</span>}
+            {profile.num_funcionarios && <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>{profile.num_funcionarios} func.</span>}
+            {profile.tempo_empresa && <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>{profile.tempo_empresa}</span>}
+            <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)' }}>
+              {format(new Date(profile.created_at), "dd/MM/yyyy")}
+            </span>
+          </div>
+        </div>
+        <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
+          {profile.status !== 'active' && (
+            <button
+              onClick={() => onApprove(profile.user_id)}
+              title="Aprovar"
+              style={{ padding: '6px 12px', borderRadius: 8, background: `${GREEN}15`, border: `1px solid ${GREEN}30`, color: GREEN, fontSize: 12, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}
+            >
+              <CheckCircle2 size={13} /> Aprovar
+            </button>
+          )}
+          {profile.status !== 'blocked' && (
+            <button
+              onClick={() => onBlock(profile.user_id)}
+              title="Bloquear"
+              style={{ padding: '6px 12px', borderRadius: 8, background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)', color: '#ef4444', fontSize: 12, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}
+            >
+              <XCircle size={13} /> Bloquear
+            </button>
+          )}
+          <button
+            onClick={() => onDelete(profile.user_id, profile.email)}
+            title="Excluir"
+            style={{ padding: '6px 10px', borderRadius: 8, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.35)', cursor: 'pointer' }}
+          >
+            <Trash2 size={13} />
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
 
-  async function deleteUser(userId: string, userEmail: string) {
-    if (!confirm(`Excluir usuário ${userEmail}? Todos os dados financeiros serão apagados.`)) return
-    await supabase.functions.invoke('admin-delete-user', { body: { userId } })
-    fetchUsers()
+function MentoriaTab({ profiles, onApprove, onBlock, onDelete }: {
+  profiles: Profile[]
+  onApprove: (userId: string) => void
+  onBlock: (userId: string) => void
+  onDelete: (userId: string, email: string) => void
+}) {
+  const pending = profiles.filter(p => p.status === 'pending')
+  const rest    = profiles.filter(p => p.status !== 'pending')
+
+  if (profiles.length === 0) {
+    return <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: 13, textAlign: 'center', padding: '48px 0' }}>Nenhum usuário nesta mentoria.</p>
   }
 
   return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      {pending.length > 0 && (
+        <div style={{ background: 'rgba(234,179,8,0.06)', border: '1px solid rgba(234,179,8,0.2)', borderRadius: 16, padding: '16px 20px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+            <Clock size={14} color="#eab308" />
+            <span style={{ fontSize: 11, color: '#eab308', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1.5 }}>
+              Aguardando Aprovação — {pending.length}
+            </span>
+          </div>
+          {pending.map(p => (
+            <UserRow key={p.user_id} profile={p} onApprove={onApprove} onBlock={onBlock} onDelete={onDelete} />
+          ))}
+        </div>
+      )}
+      {rest.length > 0 && (
+        <Card>
+          {rest.map(p => (
+            <UserRow key={p.user_id} profile={p} onApprove={onApprove} onBlock={onBlock} onDelete={onDelete} />
+          ))}
+        </Card>
+      )}
+    </div>
+  )
+}
+
+export function Admin() {
+  const [profiles, setProfiles] = useState<Profile[]>([])
+  const [loading, setLoading] = useState(true)
+  const [tab, setTab] = useState<Tab>('resumo')
+
+  async function fetchProfiles() {
+    setLoading(true)
+    const { data } = await supabase
+      .from('profiles')
+      .select('*')
+      .order('created_at', { ascending: false })
+    if (data) setProfiles(data as Profile[])
+    setLoading(false)
+  }
+
+  useEffect(() => { fetchProfiles() }, [])
+
+  async function handleApprove(userId: string) {
+    await supabase.from('profiles')
+      .update({ status: 'active', updated_at: new Date().toISOString() })
+      .eq('user_id', userId)
+    setProfiles(prev => prev.map(p => p.user_id === userId ? { ...p, status: 'active' } : p))
+  }
+
+  async function handleBlock(userId: string) {
+    await supabase.from('profiles')
+      .update({ status: 'blocked', updated_at: new Date().toISOString() })
+      .eq('user_id', userId)
+    setProfiles(prev => prev.map(p => p.user_id === userId ? { ...p, status: 'blocked' } : p))
+  }
+
+  async function handleDelete(userId: string, email: string) {
+    if (!confirm(`Excluir usuário ${email}? Todos os dados serão apagados permanentemente.`)) return
+    await supabase.functions.invoke('admin-delete-user', { body: { userId } })
+    setProfiles(prev => prev.filter(p => p.user_id !== userId))
+  }
+
+  // Computed stats
+  const totalActive  = profiles.filter(p => p.status === 'active').length
+  const totalPending = profiles.filter(p => p.status === 'pending').length
+  const totalBlocked = profiles.filter(p => p.status === 'blocked').length
+
+  const setorRanking = useMemo(() => {
+    const counts: Record<string, number> = {}
+    for (const p of profiles) if (p.setor) counts[p.setor] = (counts[p.setor] || 0) + 1
+    const max = Math.max(...Object.values(counts), 1)
+    return Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([name, count]) => ({ name, count, pct: (count / max) * 100 }))
+  }, [profiles])
+
+  const faturRanking = useMemo(() => {
+    const counts: Record<string, number> = {}
+    for (const p of profiles) if (p.faturamento_medio) counts[p.faturamento_medio] = (counts[p.faturamento_medio] || 0) + 1
+    const max = Math.max(...Object.values(counts), 1)
+    return Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([name, count]) => ({ name, count, pct: (count / max) * 100 }))
+  }, [profiles])
+
+  const growthChart = useMemo(() => {
+    const now = new Date()
+    return Array.from({ length: 12 }, (_, i) => {
+      const ref = subMonths(now, 11 - i)
+      const monthStr = format(startOfMonth(ref), 'yyyy-MM')
+      const count = profiles.filter(p => p.status === 'active' && p.created_at.startsWith(monthStr)).length
+      return { mes: format(ref, 'MMM/yy', { locale: ptBR }), ativos: count }
+    })
+  }, [profiles])
+
+  const profilesByMentoria = (mentoria: string) =>
+    profiles.filter(p => p.mentoria_type === mentoria)
+
+  const tabStyle = (id: Tab): React.CSSProperties => ({
+    padding: '10px 20px',
+    borderRadius: 10,
+    fontSize: 13,
+    fontWeight: 500,
+    cursor: 'pointer',
+    border: 'none',
+    background: tab === id ? 'rgba(255,255,255,0.1)' : 'transparent',
+    color: tab === id ? '#fff' : 'rgba(255,255,255,0.4)',
+    transition: 'all 0.15s',
+    whiteSpace: 'nowrap' as const,
+  })
+
+  return (
     <div className="p-8 space-y-8">
-      <div className="flex items-start justify-between gap-6">
-        <div>
-          <h2 className="text-2xl font-bold text-white tracking-tight">Gerenciar Usuários</h2>
-          <p className="text-sm text-white/50 mt-1">Crie e remova acessos ao ATLAS</p>
-        </div>
-        <Button onClick={() => { setModalOpen(true); setError('') }}>
-          <UserPlus size={16} /> Novo Usuário
-        </Button>
+      <div>
+        <h2 className="text-2xl font-bold text-white tracking-tight">Admin — ATLAS</h2>
+        <p className="text-sm text-white/50 mt-1">Gerenciamento de usuários e cadastros</p>
       </div>
 
-      <Card>
-        {loading ? (
-          <div className="text-center py-12 text-white/35">Carregando...</div>
-        ) : users.length === 0 ? (
-          <div className="text-center py-12 text-white/35">Nenhum usuário cadastrado.</div>
-        ) : (
-          <div className="divide-y divide-white/5">
-            {users.map(user => (
-              <div key={user.id} className="group flex items-center justify-between py-4">
-                <div>
-                  <p className="text-sm text-white">{user.email}</p>
-                  <p className="text-xs text-white/40 mt-0.5">
-                    Criado em {new Date(user.created_at).toLocaleDateString('pt-BR')}
-                  </p>
-                </div>
-                <button
-                  onClick={() => deleteUser(user.id, user.email)}
-                  className="opacity-0 group-hover:opacity-100 p-2 rounded-xl text-white/50 hover:text-red-400 hover:bg-red-500/10 transition-all"
-                >
-                  <Trash2 size={15} />
-                </button>
+      {/* Tabs */}
+      <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', background: 'rgba(255,255,255,0.03)', borderRadius: 14, padding: 4 }}>
+        {TABS.map(t => (
+          <button key={t.id} style={tabStyle(t.id)} onClick={() => setTab(t.id)}>
+            {t.label}
+            {t.id !== 'resumo' && (
+              <span style={{ marginLeft: 6, fontSize: 11, color: 'rgba(255,255,255,0.3)' }}>
+                {profiles.filter(p => p.mentoria_type === t.id).length}
+              </span>
+            )}
+          </button>
+        ))}
+      </div>
+
+      {loading ? (
+        <div className="text-center py-16 text-white/35">Carregando...</div>
+      ) : (
+        <>
+          {/* ── TAB: RESUMO ── */}
+          {tab === 'resumo' && (
+            <div className="space-y-6">
+              {/* Cards */}
+              <div className="grid grid-cols-3 gap-4">
+                {[
+                  { label: 'Usuários Ativos', value: totalActive, color: GREEN },
+                  { label: 'Pendentes de Aprovação', value: totalPending, color: '#eab308' },
+                  { label: 'Bloqueados', value: totalBlocked, color: '#ef4444' },
+                ].map(({ label, value, color }) => (
+                  <div key={label} style={{ background: '#0a0a0a', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: '20px 24px' }}>
+                    <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 8 }}>{label}</p>
+                    <p style={{ fontSize: 32, fontWeight: 700, color, lineHeight: 1 }}>{value}</p>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        )}
-      </Card>
 
-      <div className="bg-white/3 border border-white/5 rounded-2xl p-6 max-w-lg">
-        <h3 className="text-xs font-semibold text-white/60 uppercase tracking-widest mb-3">Importante</h3>
-        <p className="text-sm text-white/50 leading-relaxed">
-          O painel admin não tem acesso aos dados financeiros dos usuários. Cada usuário vê apenas seus próprios lançamentos por isolamento via RLS no Supabase.
-        </p>
-      </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Ranking setores */}
+                <Card>
+                  <h3 className="text-xs font-semibold text-white/50 uppercase tracking-widest mb-5">Principais Setores</h3>
+                  {setorRanking.length === 0 ? (
+                    <p className="text-white/30 text-sm text-center py-4">Sem dados</p>
+                  ) : (
+                    <div className="space-y-3">
+                      {setorRanking.map(({ name, count, pct }) => (
+                        <div key={name}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+                            <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.7)' }}>{name}</span>
+                            <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>{count}</span>
+                          </div>
+                          <div style={{ height: 4, background: 'rgba(255,255,255,0.06)', borderRadius: 2 }}>
+                            <div style={{ height: 4, width: `${pct}%`, background: GREEN, borderRadius: 2, transition: 'width 0.5s' }} />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </Card>
 
-      <Modal open={modalOpen} onClose={() => setModalOpen(false)} title="Criar Usuário">
-        <div className="space-y-4">
-          <Input label="Email" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="usuario@empresa.com" />
-          <Input label="Senha" type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Mínimo 6 caracteres" />
-          {error && <p className="text-xs text-red-400">{error}</p>}
-          <div className="flex gap-3 pt-2">
-            <Button variant="secondary" onClick={() => setModalOpen(false)} className="flex-1">Cancelar</Button>
-            <Button onClick={createUser} loading={creating} className="flex-1">Criar Acesso</Button>
-          </div>
-        </div>
-      </Modal>
+                {/* Ranking faturamento */}
+                <Card>
+                  <h3 className="text-xs font-semibold text-white/50 uppercase tracking-widest mb-5">Faturamento Médio</h3>
+                  {faturRanking.length === 0 ? (
+                    <p className="text-white/30 text-sm text-center py-4">Sem dados</p>
+                  ) : (
+                    <div className="space-y-3">
+                      {faturRanking.map(({ name, count, pct }) => (
+                        <div key={name}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+                            <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.7)' }}>{name}</span>
+                            <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>{count}</span>
+                          </div>
+                          <div style={{ height: 4, background: 'rgba(255,255,255,0.06)', borderRadius: 2 }}>
+                            <div style={{ height: 4, width: `${pct}%`, background: '#60a5fa', borderRadius: 2, transition: 'width 0.5s' }} />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </Card>
+              </div>
+
+              {/* Gráfico crescimento */}
+              <Card>
+                <h3 className="text-xs font-semibold text-white/50 uppercase tracking-widest mb-6">Crescimento Mensal — Usuários Ativos</h3>
+                <ResponsiveContainer width="100%" height={220}>
+                  <LineChart data={growthChart} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                    <XAxis dataKey="mes" tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 11 }} axisLine={false} tickLine={false} />
+                    <YAxis tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} />
+                    <Tooltip
+                      contentStyle={{ background: '#111', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 12 }}
+                      labelStyle={{ color: 'rgba(255,255,255,0.6)', fontSize: 12 }}
+                      itemStyle={{ fontSize: 12 }}
+                      formatter={(v) => [v, 'Usuários ativos']}
+                    />
+                    <Line type="monotone" dataKey="ativos" stroke={GREEN} strokeWidth={2} dot={{ fill: GREEN, r: 3 }} activeDot={{ r: 5 }} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </Card>
+            </div>
+          )}
+
+          {/* ── TABS DE MENTORIA ── */}
+          {tab !== 'resumo' && (
+            <MentoriaTab
+              profiles={profilesByMentoria(tab)}
+              onApprove={handleApprove}
+              onBlock={handleBlock}
+              onDelete={handleDelete}
+            />
+          )}
+        </>
+      )}
     </div>
   )
 }

@@ -2,6 +2,10 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import { Sidebar } from './components/layout/Sidebar'
 import { Login } from './pages/Login'
+import { Cadastro } from './pages/Cadastro'
+import { CadastroEnviado } from './pages/CadastroEnviado'
+import { AcessoPendente } from './pages/AcessoPendente'
+import { AcessoBloqueado } from './pages/AcessoBloqueado'
 import { Overview } from './pages/Overview'
 import { DRE } from './pages/DRE'
 import { CashFlow } from './pages/CashFlow'
@@ -17,7 +21,7 @@ import { PontoEquilibrioDash } from './pages/ferramentas/PontoEquilibrioDash'
 import { SimuladorCenarios } from './pages/ferramentas/SimuladorCenarios'
 
 function AppRoutes() {
-  const { session, loading, isAdmin } = useAuth()
+  const { session, loading, isAdmin, profileStatus } = useAuth()
 
   if (loading) {
     return (
@@ -32,6 +36,9 @@ function AppRoutes() {
 
   if (!session) return <Login />
 
+  if (profileStatus === 'pending') return <AcessoPendente />
+  if (profileStatus === 'blocked') return <AcessoBloqueado />
+
   return (
     <div className="flex min-h-screen bg-black">
       <Sidebar />
@@ -41,7 +48,6 @@ function AppRoutes() {
             <>
               <Route path="/admin" element={<Admin />} />
               <Route path="*" element={<Navigate to="/admin" replace />} />
-
             </>
           ) : (
             <>
@@ -70,6 +76,8 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/ponto" element={<PontoEquilibrio />} />
+        <Route path="/cadastro" element={<Cadastro />} />
+        <Route path="/cadastro-enviado" element={<CadastroEnviado />} />
         <Route path="*" element={
           <AuthProvider>
             <AppRoutes />

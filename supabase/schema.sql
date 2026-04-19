@@ -44,7 +44,41 @@ create policy "entries_delete_own"
   using (auth.uid() = user_id);
 
 -- ============================================================
--- 3. OPENING BALANCES TABLE
+-- 3. PROFILES TABLE
+-- ---------------------------------------------------------------
+create table if not exists public.profiles (
+  id              uuid primary key default gen_random_uuid(),
+  user_id         uuid not null references auth.users(id) on delete cascade unique,
+  email           text not null,
+  status          text not null default 'pending' check (status in ('pending', 'active', 'blocked')),
+  mentoria_type   text check (mentoria_type in ('mafia_black_sheep', 'mentoria_atlas', 'outras_mentorias', 'assinante')),
+  setor           text,
+  faturamento_medio text,
+  num_funcionarios  text,
+  tempo_empresa     text,
+  termos_aceitos    boolean default false,
+  created_at      timestamptz default now(),
+  updated_at      timestamptz default now()
+);
+
+alter table public.profiles enable row level security;
+
+create policy "usuario_ve_proprio_perfil" on public.profiles
+  for select using (auth.uid() = user_id);
+
+create policy "usuario_atualiza_proprio_perfil" on public.profiles
+  for update using (auth.uid() = user_id);
+
+create policy "usuario_insere_proprio_perfil" on public.profiles
+  for insert with check (auth.uid() = user_id);
+
+create policy "admin_acesso_total" on public.profiles
+  for all using (
+    auth.jwt() ->> 'email' in ('harley@hmtz.com.br', 'blacksheep@hmtz.com.br')
+  );
+
+-- ============================================================
+-- 4. OPENING BALANCES TABLE
 -- ---------------------------------------------------------------
 create table if not exists public.opening_balances (
   id          uuid primary key default gen_random_uuid(),
