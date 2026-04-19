@@ -720,7 +720,7 @@ export function Landing() {
 
       {/* FAQ */}
       <div style={s.section} className="lp-section">
-        <span style={s.eyebrow}>FAQ</span>
+        <span style={{ ...s.eyebrow, fontSize: 40 }}>FAQ</span>
         <div>
           {FAQ_ITEMS.map((item, i) => (
             <div
@@ -743,7 +743,7 @@ export function Landing() {
           style={{ maxWidth: 760, margin: '0 auto', padding: '80px 48px', textAlign: 'center' as const }}
           className="lp-section"
         >
-          <p style={{ fontSize: 'clamp(36px, 4.5vw, 52px)' as unknown as number, fontWeight: 700, color: '#fff', lineHeight: 1.2, marginTop: 0, marginBottom: 40 }}>
+          <p style={{ fontSize: 'clamp(28px, 3.5vw, 40px)' as unknown as number, fontWeight: 700, color: '#fff', lineHeight: 1.2, marginTop: 0, marginBottom: 40 }}>
             Se você fatura bem e ainda não sabe sua margem real — você tá perdendo dinheiro agora. Esse é o programa.
           </p>
           <a href="#aplicar" style={s.btn}>Quero implementar o ATLAS</a>
