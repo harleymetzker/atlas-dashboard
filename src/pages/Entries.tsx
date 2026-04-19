@@ -180,7 +180,7 @@ export function Entries() {
   const isExpenseToggle   = form.semDataRecebimento && form.type !== 'revenue' && !isAntecipacao
   const toggleLabel       = form.type === 'revenue' ? 'Sem data de recebimento' : 'Sem data de competência'
   const showCompetence    = !isAntecipacao && !isExpenseToggle
-  const showPayment       = !isAntecipacao && !isRevenueToggle
+  const showPayment       = isAntecipacao || (!isRevenueToggle)
 
   return (
     <div className="p-8 space-y-8">
