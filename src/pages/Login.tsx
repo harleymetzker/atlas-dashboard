@@ -26,14 +26,14 @@ export function Login() {
         <div style={{
           background: '#00EF61',
           borderRadius: 12,
-          padding: '24px 40px',
+          padding: '16px 32px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           gap: 16,
           marginBottom: 24,
         }}>
-          <img src="/blacksheep-logo.jpg" alt="Black Sheep" style={{ width: 72, height: 72, borderRadius: 12, objectFit: 'cover' }} />
+          <img src="/blacksheep-logo.jpg" alt="Black Sheep" style={{ width: 80, height: 80, objectFit: 'contain' }} />
           <div style={{ width: 1, height: 32, background: 'rgba(0,0,0,0.2)' }} />
           <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             <span style={{ fontFamily: "'Arial Black', Arial, sans-serif", fontSize: 28, fontWeight: 900, letterSpacing: 6, color: '#000', lineHeight: 1 }}>
