@@ -74,7 +74,7 @@ const s = {
     marginBottom: 28,
   },
   heroSub: {
-    fontSize: 36,
+    fontSize: 20,
     color: '#aaaaaa',
     lineHeight: 1.8,
     maxWidth: 580,
