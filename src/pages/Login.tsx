@@ -25,7 +25,7 @@ export function Login() {
       <div className="w-full max-w-sm">
         <div className="text-center mb-10">
           <div className="mb-8">
-            <img src="/logobranca.png" alt="ATLAS" className="h-32 mx-auto block" />
+            <img src="/logobranca.png" alt="ATLAS" className="w-full block" />
           </div>
         </div>
 
