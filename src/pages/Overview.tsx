@@ -9,7 +9,7 @@ import {
 import { useAuth } from '../context/AuthContext'
 import { useEntries } from '../hooks/useEntries'
 import { useOpeningBalance } from '../hooks/useOpeningBalance'
-import { calcDRE, calcMonthlyData, formatCurrency, formatPercent } from '../lib/calculations'
+import { calcDRE, formatCurrency, formatPercent } from '../lib/calculations'
 import { Card } from '../components/ui/Card'
 import { CurrencyInput } from '../components/ui/CurrencyInput'
 
@@ -178,20 +178,20 @@ export function Overview() {
   const revenueGap      = requiredRevenue > 0 ? dre.faturamentoBruto - requiredRevenue : 0
   const goalReached     = revenueGap >= 0
 
-  // 6-month chart data
+  // 6-month chart data — usa calcDRE por mês (mesma lógica da página DRE)
   const chartMonths = Array.from({ length: 6 }, (_, i) =>
     format(subMonths(parseISO(startDate), 5 - i), 'yyyy-MM')
   )
-  const monthlyHistorical = calcMonthlyData(historicalEntries, 'competence_date')
   const chartData = chartMonths.map(ym => {
-    const found   = monthlyHistorical.find(m => m.month === ym)
-    const revenue = found?.revenue ?? 0
-    const profit  = found?.profit  ?? 0
+    const monthEntries = historicalEntries.filter(e => e.competence_date?.slice(0, 7) === ym)
+    const dre = calcDRE(monthEntries)
     return {
       mes:             format(parseISO(ym + '-02'), 'MMM/yy', { locale: ptBR }),
-      'Faturamento':   revenue,
-      'Lucro Líquido': profit,
-      'Margem %':      revenue > 0 ? parseFloat(((profit / revenue) * 100).toFixed(1)) : 0,
+      'Faturamento':   dre.faturamentoBruto,
+      'Lucro Líquido': dre.lucro,
+      'Margem %':      dre.faturamentoLiquido > 0
+        ? parseFloat(((dre.lucro / dre.faturamentoLiquido) * 100).toFixed(1))
+        : 0,
     }
   })
 
