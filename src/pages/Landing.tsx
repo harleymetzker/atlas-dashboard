@@ -571,18 +571,17 @@ export function Landing() {
           </div>
         </div>
 
-        {/* Screenshot placeholder */}
-        <div style={{ margin: '48px 0 0', padding: '24px', border: '1px solid #1e1e1e', textAlign: 'center' as const }}>
-          <img
-            src="/atlas-screenshot.png"
-            alt="Software ATLAS — Dashboard Financeiro"
-            style={{ maxWidth: '100%', borderRadius: 4 }}
-            onError={(e) => {
-              (e.target as HTMLImageElement).style.display = 'none';
-              ((e.target as HTMLImageElement).nextElementSibling as HTMLElement)!.style.display = 'block'
-            }}
-          />
-          <p style={{ display: 'none', color: '#555', fontSize: 13, margin: 0 }}>Screenshot do Software ATLAS será adicionado aqui</p>
+        {/* Vídeo demo */}
+        <div style={{ marginTop: 48 }}>
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            style={{ width: '100%', borderRadius: 4, border: '1px solid #1e1e1e' }}
+          >
+            <source src="/atlas-demo.mp4" type="video/mp4" />
+          </video>
         </div>
       </div>
 
