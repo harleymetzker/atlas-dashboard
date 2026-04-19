@@ -66,7 +66,7 @@ const s = {
     paddingRight: 48,
   },
   heroTitle: {
-    fontSize: 'clamp(44px, 6vw, 72px)' as unknown as number,
+    fontSize: 45,
     fontWeight: 900,
     lineHeight: 1.1,
     color: '#fff',
@@ -74,7 +74,7 @@ const s = {
     marginBottom: 28,
   },
   heroSub: {
-    fontSize: 16,
+    fontSize: 36,
     color: '#aaaaaa',
     lineHeight: 1.8,
     maxWidth: 580,
@@ -368,10 +368,10 @@ export function Landing() {
       {/* HERO */}
       <div style={s.hero} className="lp-hero">
         <h1 style={s.heroTitle}>
-          Você dobrou o faturamento. Cresceu. E o dinheiro some no final do mês.
+          Saiba exatamente quanto sua empresa lucra e por que você não vê dinheiro no final do mês.
         </h1>
         <p style={s.heroSub}>
-          Em 6 meses, a gente mostra pra onde vai cada real que entra — e garante que seu crescimento vire lucro.
+          Em 6 meses, implemento um modelo de gestão que mostra pra onde vai cada real e garante crescimento com lucro.
         </p>
         <div style={s.heroAccentLine} />
       </div>
