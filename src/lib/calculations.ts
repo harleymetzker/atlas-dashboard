@@ -42,6 +42,7 @@ function _calcDRE(entries: Entry[]): DRE {
   const lucro                 = ebitda  // retiradas são informativas, não deduzidas do lucro
 
   const baseLiquido = faturamentoLiquido || 1
+  const baseBruto   = faturamentoBruto   || 1
 
   return {
     faturamentoBruto,
@@ -64,7 +65,7 @@ function _calcDRE(entries: Entry[]): DRE {
     ebitdaMargin: (ebitda / baseLiquido) * 100,
     retiradas,
     lucro,
-    lucroMargin: (lucro / baseLiquido) * 100,
+    lucroMargin: (lucro / baseBruto) * 100,
   }
 }
 

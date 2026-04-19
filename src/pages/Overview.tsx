@@ -189,8 +189,8 @@ export function Overview() {
       mes:             format(parseISO(ym + '-02'), 'MMM/yy', { locale: ptBR }),
       'Faturamento':   dre.faturamentoBruto,
       'Lucro Líquido': dre.lucro,
-      'Margem %':      dre.faturamentoLiquido > 0
-        ? parseFloat(((dre.lucro / dre.faturamentoLiquido) * 100).toFixed(1))
+      'Margem %':      dre.faturamentoBruto > 0
+        ? parseFloat(((dre.lucro / dre.faturamentoBruto) * 100).toFixed(1))
         : 0,
     }
   })
