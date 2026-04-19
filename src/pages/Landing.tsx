@@ -33,29 +33,34 @@ const s = {
     overflowX: 'hidden' as const,
     WebkitFontSmoothing: 'antialiased' as const,
   },
+  navOuter: {
+    background: GREEN,
+    width: '100%',
+  },
   navWrap: {
     maxWidth: 760,
     margin: '0 auto',
-    padding: '28px 48px',
+    padding: '24px 48px',
     display: 'flex',
+    justifyContent: 'center',
     alignItems: 'center',
     gap: 16,
   },
   navAtlas: {
     fontFamily: "'Arial Black', 'Arial Bold', sans-serif",
     fontSize: 17,
-    color: '#fff',
-    letterSpacing: 5,
-    textDecoration: 'none',
-    marginLeft: 10,
-  },
-  navSep: { width: 1, height: 14, background: '#2a2a2a', flexShrink: 0 },
-  navBy: {
-    fontSize: 10,
-    fontWeight: 500,
+    color: '#000',
+    fontWeight: 900,
     letterSpacing: 3,
+    textDecoration: 'none',
+  },
+  navSep: { width: 1, height: 14, background: 'rgba(0,0,0,0.3)', flexShrink: 0 },
+  navBy: {
+    fontSize: 11,
+    fontWeight: 600,
+    letterSpacing: 2,
     textTransform: 'uppercase' as const,
-    color: '#666',
+    color: '#000',
   },
   hero: {
     maxWidth: 760,
@@ -358,12 +363,14 @@ export function Landing() {
       <style>{mq}</style>
 
       {/* NAV */}
-      <nav style={s.navWrap} className="lp-nav">
-        <img src="/blacksheep-logo.png" alt="Black Sheep" style={{ height: 32, display: 'block' }} />
-        <span style={s.navAtlas}>ATLAS</span>
-        <span style={s.navSep} />
-        <span style={s.navBy}>by Black Sheep</span>
-      </nav>
+      <div style={s.navOuter}>
+        <nav style={s.navWrap} className="lp-nav">
+          <img src="/blacksheep-logo.png" alt="Black Sheep" style={{ height: 48, display: 'block' }} />
+          <span style={s.navAtlas}>ATLAS</span>
+          <span style={s.navSep} />
+          <span style={s.navBy}>by Black Sheep</span>
+        </nav>
+      </div>
 
       {/* HERO */}
       <div style={s.hero} className="lp-hero">
