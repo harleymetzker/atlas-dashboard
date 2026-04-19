@@ -26,7 +26,7 @@ export function Login() {
         <div style={{
           background: '#00EF61',
           borderRadius: 12,
-          padding: '16px 32px',
+          padding: '12px 32px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
