@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
-import { Trash2, CheckCircle2, XCircle, Clock } from 'lucide-react'
+import { Trash2, CheckCircle2, XCircle, Clock, Pencil } from 'lucide-react'
 import { format, subMonths, startOfMonth } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import {
@@ -41,11 +41,75 @@ function StatusBadge({ status }: { status: Profile['status'] }) {
   return <span style={{ fontSize: 11, padding: '3px 10px', borderRadius: 20, background: 'rgba(239,68,68,0.15)', color: '#ef4444', fontWeight: 600 }}>Bloqueado</span>
 }
 
-function UserRow({ profile, onApprove, onBlock, onDelete }: {
+const MENTORIA_OPTIONS = [
+  { value: 'mafia_black_sheep', label: 'MAFIA Black Sheep' },
+  { value: 'mentoria_atlas',    label: 'Mentoria ATLAS' },
+  { value: 'outras_mentorias',  label: 'Outras Mentorias' },
+  { value: 'assinante',         label: 'Assinante' },
+]
+
+function EditMentoriaModal({ profile, onSave, onClose }: {
+  profile: Profile
+  onSave: (userId: string, mentoria: string) => Promise<void>
+  onClose: () => void
+}) {
+  const [selected, setSelected] = useState(profile.mentoria_type ?? '')
+  const [saving, setSaving] = useState(false)
+
+  async function handleSave() {
+    if (!selected) return
+    setSaving(true)
+    await onSave(profile.user_id, selected)
+    setSaving(false)
+    onClose()
+  }
+
+  return (
+    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50, padding: 16 }}>
+      <div style={{ background: '#111', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 20, padding: 32, width: '100%', maxWidth: 380 }}>
+        <h3 style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 4 }}>Editar Mentoria</h3>
+        <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', marginBottom: 24 }}>{profile.email}</p>
+
+        <label style={{ display: 'block', fontSize: 11, color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 8 }}>
+          Mentoria
+        </label>
+        <select
+          value={selected}
+          onChange={e => setSelected(e.target.value)}
+          style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 10, padding: '10px 14px', fontSize: 13, color: '#fff', outline: 'none', appearance: 'none', cursor: 'pointer', marginBottom: 24 }}
+        >
+          <option value="" style={{ background: '#000' }}>Selecione...</option>
+          {MENTORIA_OPTIONS.map(o => (
+            <option key={o.value} value={o.value} style={{ background: '#000' }}>{o.label}</option>
+          ))}
+        </select>
+
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button
+            onClick={onClose}
+            style={{ flex: 1, padding: '10px 0', borderRadius: 10, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.5)', fontSize: 13, cursor: 'pointer' }}
+          >
+            Cancelar
+          </button>
+          <button
+            onClick={handleSave}
+            disabled={!selected || saving}
+            style={{ flex: 1, padding: '10px 0', borderRadius: 10, background: selected ? '#fff' : 'rgba(255,255,255,0.1)', border: 'none', color: '#000', fontSize: 13, fontWeight: 700, cursor: selected ? 'pointer' : 'not-allowed' }}
+          >
+            {saving ? 'Salvando...' : 'Salvar'}
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function UserRow({ profile, onApprove, onBlock, onDelete, onEdit }: {
   profile: Profile
   onApprove: (userId: string) => void
   onBlock: (userId: string) => void
   onDelete: (userId: string, email: string) => void
+  onEdit?: (profile: Profile) => void
 }) {
   return (
     <div style={{ padding: '16px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
@@ -66,6 +130,15 @@ function UserRow({ profile, onApprove, onBlock, onDelete }: {
           </div>
         </div>
         <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
+          {onEdit && (
+            <button
+              onClick={() => onEdit(profile)}
+              title="Editar mentoria"
+              style={{ padding: '6px 12px', borderRadius: 8, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.6)', fontSize: 12, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}
+            >
+              <Pencil size={13} /> Editar
+            </button>
+          )}
           {profile.status !== 'active' && (
             <button
               onClick={() => onApprove(profile.user_id)}
@@ -97,11 +170,12 @@ function UserRow({ profile, onApprove, onBlock, onDelete }: {
   )
 }
 
-function MentoriaTab({ profiles, onApprove, onBlock, onDelete }: {
+function MentoriaTab({ profiles, onApprove, onBlock, onDelete, onEdit }: {
   profiles: Profile[]
   onApprove: (userId: string) => void
   onBlock: (userId: string) => void
   onDelete: (userId: string, email: string) => void
+  onEdit?: (profile: Profile) => void
 }) {
   const pending = profiles.filter(p => p.status === 'pending')
   const rest    = profiles.filter(p => p.status !== 'pending')
@@ -121,14 +195,14 @@ function MentoriaTab({ profiles, onApprove, onBlock, onDelete }: {
             </span>
           </div>
           {pending.map(p => (
-            <UserRow key={p.user_id} profile={p} onApprove={onApprove} onBlock={onBlock} onDelete={onDelete} />
+            <UserRow key={p.user_id} profile={p} onApprove={onApprove} onBlock={onBlock} onDelete={onDelete} onEdit={onEdit} />
           ))}
         </div>
       )}
       {rest.length > 0 && (
         <Card>
           {rest.map(p => (
-            <UserRow key={p.user_id} profile={p} onApprove={onApprove} onBlock={onBlock} onDelete={onDelete} />
+            <UserRow key={p.user_id} profile={p} onApprove={onApprove} onBlock={onBlock} onDelete={onDelete} onEdit={onEdit} />
           ))}
         </Card>
       )}
@@ -140,6 +214,7 @@ export function Admin() {
   const [profiles, setProfiles] = useState<Profile[]>([])
   const [loading, setLoading] = useState(true)
   const [tab, setTab] = useState<Tab>('resumo')
+  const [editingProfile, setEditingProfile] = useState<Profile | null>(null)
 
   async function fetchProfiles() {
     setLoading(true)
@@ -165,6 +240,13 @@ export function Admin() {
       .update({ status: 'blocked', updated_at: new Date().toISOString() })
       .eq('user_id', userId)
     setProfiles(prev => prev.map(p => p.user_id === userId ? { ...p, status: 'blocked' } : p))
+  }
+
+  async function handleEditMentoria(userId: string, mentoria: string) {
+    await supabase.from('profiles')
+      .update({ mentoria_type: mentoria, updated_at: new Date().toISOString() })
+      .eq('user_id', userId)
+    setProfiles(prev => prev.map(p => p.user_id === userId ? { ...p, mentoria_type: mentoria } : p))
   }
 
   async function handleDelete(userId: string, email: string) {
@@ -338,6 +420,16 @@ export function Admin() {
               onApprove={handleApprove}
               onBlock={handleBlock}
               onDelete={handleDelete}
+              onEdit={tab === 'sem_categoria' ? setEditingProfile : undefined}
+            />
+          )}
+
+          {/* Modal editar mentoria */}
+          {editingProfile && (
+            <EditMentoriaModal
+              profile={editingProfile}
+              onSave={handleEditMentoria}
+              onClose={() => setEditingProfile(null)}
             />
           )}
         </>
