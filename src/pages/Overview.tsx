@@ -8,16 +8,13 @@ import {
 } from 'recharts'
 import { useAuth } from '../context/AuthContext'
 import { useEntries } from '../hooks/useEntries'
+import { useOpeningBalance } from '../hooks/useOpeningBalance'
 import { calcDRE, calcMonthlyData, formatCurrency, formatPercent } from '../lib/calculations'
 import { Card } from '../components/ui/Card'
 import { CurrencyInput } from '../components/ui/CurrencyInput'
 
 // ── helpers ────────────────────────────────────────────────────────────────
 
-function loadBalance(userId: string, yearMonth: string): number {
-  const v = localStorage.getItem(`atlas_ob_${userId}_${yearMonth}`)
-  return v !== null ? parseFloat(v) : 0
-}
 
 function loadWithdrawalGoal(userId: string): string {
   return localStorage.getItem(`atlas_wgoal_${userId}`) ?? ''
@@ -99,7 +96,7 @@ export function Overview() {
   const prevDre = calcDRE(prevEntries)
 
   // Cash flow / runway
-  const openingBalance = user ? loadBalance(user.id, yearMonth) : 0
+  const { balance: openingBalance } = useOpeningBalance(user?.id, yearMonth)
   const totalIn  = cfEntries.filter(e => e.type === 'revenue').reduce((s, e) => s + e.amount, 0)
   const totalOut = cfEntries.filter(e => e.type !== 'revenue').reduce((s, e) => s + e.amount, 0)
   const saldoAtual = openingBalance + totalIn - totalOut

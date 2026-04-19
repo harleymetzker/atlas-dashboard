@@ -44,6 +44,34 @@ create policy "entries_delete_own"
   using (auth.uid() = user_id);
 
 -- ============================================================
+-- 3. OPENING BALANCES TABLE
+-- ---------------------------------------------------------------
+create table if not exists public.opening_balances (
+  id          uuid primary key default gen_random_uuid(),
+  user_id     uuid not null references auth.users(id) on delete cascade,
+  year_month  text not null,
+  amount      numeric(14, 2) not null default 0,
+  created_at  timestamptz default now(),
+  updated_at  timestamptz default now(),
+  unique (user_id, year_month)
+);
+
+alter table public.opening_balances enable row level security;
+
+create policy "ob_select_own"
+  on public.opening_balances for select
+  using (auth.uid() = user_id);
+
+create policy "ob_insert_own"
+  on public.opening_balances for insert
+  with check (auth.uid() = user_id);
+
+create policy "ob_update_own"
+  on public.opening_balances for update
+  using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);
+
+-- ============================================================
 -- ADMIN EDGE FUNCTIONS (deploy via Supabase CLI)
 -- See: supabase/functions/ directory
 -- ============================================================

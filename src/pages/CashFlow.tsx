@@ -1,28 +1,15 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { format, startOfMonth } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { useAuth } from '../context/AuthContext'
 import { useEntries } from '../hooks/useEntries'
+import { useOpeningBalance } from '../hooks/useOpeningBalance'
 import { calcCashFlow, calcProjected90Days, formatCurrency, formatPercent } from '../lib/calculations'
 import { DateFilter } from '../components/layout/DateFilter'
 import { Card } from '../components/ui/Card'
 import { StatCard } from '../components/ui/StatCard'
 import { CurrencyInput } from '../components/ui/CurrencyInput'
 import { CashFlowLineChart } from '../components/charts/CashFlowLineChart'
-
-// Persiste saldo inicial por mês (chave: userId + YYYY-MM) no localStorage
-function balanceKey(userId: string, yearMonth: string) {
-  return `atlas_ob_${userId}_${yearMonth}`
-}
-
-function loadBalance(userId: string, yearMonth: string): number {
-  const v = localStorage.getItem(balanceKey(userId, yearMonth))
-  return v !== null ? parseFloat(v) : 0
-}
-
-function saveBalance(userId: string, yearMonth: string, value: number) {
-  localStorage.setItem(balanceKey(userId, yearMonth), String(value))
-}
 
 export function CashFlow() {
   const { user } = useAuth()
@@ -34,18 +21,10 @@ export function CashFlow() {
   // Mês-chave derivado do mês inicial do período selecionado
   const yearMonth = startDate.slice(0, 7)
 
-  const [openingBalance, setOpeningBalance] = useState(() =>
-    user ? loadBalance(user.id, yearMonth) : 0
-  )
-
-  // Quando o período muda, carrega o saldo do mês correspondente
-  useEffect(() => {
-    if (user) setOpeningBalance(loadBalance(user.id, yearMonth))
-  }, [yearMonth, user])
+  const { balance: openingBalance, setBalance: saveOpeningBalance } = useOpeningBalance(user?.id, yearMonth)
 
   function handleBalanceChange(value: number) {
-    setOpeningBalance(value)
-    if (user) saveBalance(user.id, yearMonth, value)
+    saveOpeningBalance(value)
   }
 
   // Histórico filtrado por payment_date

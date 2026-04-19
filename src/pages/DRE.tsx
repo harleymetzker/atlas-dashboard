@@ -2,15 +2,9 @@ import { useState, useMemo } from 'react'
 import { format, parseISO, endOfMonth } from 'date-fns'
 import { useAuth } from '../context/AuthContext'
 import { useEntries } from '../hooks/useEntries'
+import { useOpeningBalance } from '../hooks/useOpeningBalance'
 import { calcDRE, formatCurrency, formatPercent } from '../lib/calculations'
 import { Card } from '../components/ui/Card'
-
-// ── helpers ────────────────────────────────────────────────────────────────
-
-function loadBalance(userId: string, yearMonth: string): number {
-  const v = localStorage.getItem(`atlas_ob_${userId}_${yearMonth}`)
-  return v !== null ? parseFloat(v) : 0
-}
 
 // ── sub-components ─────────────────────────────────────────────────────────
 
@@ -123,8 +117,8 @@ export function DRE() {
   // Margem Bruta % = Lucro Bruto / Faturamento Bruto
   const margemBrutaPct = (dre.lucroBruto / baseBruto) * 100
 
-  // Saldo atual do caixa: opening balance (localStorage) + entradas - saídas do mês
-  const openingBalance = user ? loadBalance(user.id, yearMonth) : 0
+  // Saldo atual do caixa: opening balance (Supabase) + entradas - saídas do mês
+  const { balance: openingBalance } = useOpeningBalance(user?.id, yearMonth)
   const totalEntradas  = cfEntries.filter(e => e.type === 'revenue').reduce((s, e) => s + e.amount, 0)
   const totalSaidas    = cfEntries.filter(e => e.type !== 'revenue').reduce((s, e) => s + e.amount, 0)
   const saldoAtual     = openingBalance + totalEntradas - totalSaidas
