@@ -47,7 +47,7 @@ const s = {
     gap: 16,
   },
   navAtlas: {
-    fontFamily: "'Arial Black', 'Arial Bold', sans-serif",
+    fontFamily: "'Arial Black', 'Helvetica Neue', Arial, sans-serif",
     fontSize: 17,
     color: '#000',
     fontWeight: 900,
