@@ -26,17 +26,17 @@ export function Login() {
         <div style={{
           background: '#00EF61',
           borderRadius: 12,
-          padding: '16px 32px',
+          padding: '24px 40px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           gap: 16,
           marginBottom: 24,
         }}>
-          <img src="/blacksheep-logo.jpg" alt="Black Sheep" style={{ width: 48, height: 48, borderRadius: 8, objectFit: 'cover' }} />
+          <img src="/blacksheep-logo.jpg" alt="Black Sheep" style={{ width: 72, height: 72, borderRadius: 12, objectFit: 'cover' }} />
           <div style={{ width: 1, height: 32, background: 'rgba(0,0,0,0.2)' }} />
           <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            <span style={{ fontFamily: "'Arial Black', Arial, sans-serif", fontSize: 22, fontWeight: 900, letterSpacing: 5, color: '#000', lineHeight: 1 }}>
+            <span style={{ fontFamily: "'Arial Black', Arial, sans-serif", fontSize: 28, fontWeight: 900, letterSpacing: 6, color: '#000', lineHeight: 1 }}>
               ATLAS
             </span>
             <span style={{ fontSize: 10, letterSpacing: 2, color: 'rgba(0,0,0,0.5)', lineHeight: 1 }}>
