@@ -71,7 +71,7 @@ const s = {
     paddingRight: 48,
   },
   heroTitle: {
-    fontSize: 45,
+    fontSize: 'clamp(28px, 5vw, 45px)' as unknown as number,
     fontWeight: 900,
     lineHeight: 1.1,
     color: '#fff',
@@ -79,7 +79,7 @@ const s = {
     marginBottom: 28,
   },
   heroSub: {
-    fontSize: 20,
+    fontSize: 'clamp(16px, 2.5vw, 20px)' as unknown as number,
     color: '#aaaaaa',
     lineHeight: 1.8,
     maxWidth: 580,
