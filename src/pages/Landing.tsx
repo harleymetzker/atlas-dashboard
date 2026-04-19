@@ -670,7 +670,6 @@ export function Landing() {
         <p style={{ ...s.priceDetail, marginTop: 20, marginBottom: 48 }}>
           A pergunta não é se R$14 mil é caro. É quanto você tá perdendo por mês sem saber.
         </p>
-        <a href="#aplicar" style={s.btn}>Quero implementar o ATLAS</a>
       </div>
 
       <hr style={s.hr} />
@@ -693,7 +692,8 @@ export function Landing() {
             </div>
           ))}
         </div>
-        <p style={{ fontSize: 14, fontWeight: 300, color: '#666', marginTop: 24, marginBottom: 0 }}>Sem pressão. Sem insistência.</p>
+        <p style={{ fontSize: 14, fontWeight: 300, color: '#666', marginTop: 24, marginBottom: 48 }}>Sem pressão. Sem insistência.</p>
+        <a href="#aplicar" style={s.btn}>Quero implementar o ATLAS</a>
       </div>
 
       <hr style={s.hr} />
