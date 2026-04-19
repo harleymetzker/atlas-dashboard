@@ -24,7 +24,7 @@ interface Profile {
   updated_at: string
 }
 
-type Tab = 'resumo' | 'mafia_black_sheep' | 'mentoria_atlas' | 'outras_mentorias' | 'assinante'
+type Tab = 'resumo' | 'mafia_black_sheep' | 'mentoria_atlas' | 'outras_mentorias' | 'assinante' | 'sem_categoria'
 
 const TABS: { id: Tab; label: string }[] = [
   { id: 'resumo',           label: 'Resumo Geral' },
@@ -32,6 +32,7 @@ const TABS: { id: Tab; label: string }[] = [
   { id: 'mentoria_atlas',   label: 'Mentoria ATLAS' },
   { id: 'outras_mentorias', label: 'Outras Mentorias' },
   { id: 'assinante',        label: 'Assinaturas' },
+  { id: 'sem_categoria',    label: 'Sem Categoria' },
 ]
 
 function StatusBadge({ status }: { status: Profile['status'] }) {
@@ -202,7 +203,9 @@ export function Admin() {
   }, [profiles])
 
   const profilesByMentoria = (mentoria: string) =>
-    profiles.filter(p => p.mentoria_type === mentoria)
+    mentoria === 'sem_categoria'
+      ? profiles.filter(p => !p.mentoria_type)
+      : profiles.filter(p => p.mentoria_type === mentoria)
 
   const tabStyle = (id: Tab): React.CSSProperties => ({
     padding: '10px 20px',
@@ -231,7 +234,9 @@ export function Admin() {
             {t.label}
             {t.id !== 'resumo' && (
               <span style={{ marginLeft: 6, fontSize: 11, color: 'rgba(255,255,255,0.3)' }}>
-                {profiles.filter(p => p.mentoria_type === t.id).length}
+                {t.id === 'sem_categoria'
+                  ? profiles.filter(p => !p.mentoria_type).length
+                  : profiles.filter(p => p.mentoria_type === t.id).length}
               </span>
             )}
           </button>
