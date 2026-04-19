@@ -23,10 +23,8 @@ export function Login() {
   return (
     <div className="min-h-screen bg-black flex items-center justify-center p-4">
       <div className="w-full max-w-sm">
-        <div className="text-center mb-6">
-          <div className="mb-6">
-            <img src="/logobranca.png" alt="ATLAS" className="w-full block" />
-          </div>
+        <div className="text-center" style={{ marginBottom: 20 }}>
+          <img src="/logobranca.png" alt="ATLAS" className="w-full block" />
         </div>
 
         <div className="bg-[#0a0a0a] border border-white/15 rounded-2xl p-8">
