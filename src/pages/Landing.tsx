@@ -365,7 +365,7 @@ export function Landing() {
       {/* NAV */}
       <div style={s.navOuter}>
         <nav style={s.navWrap} className="lp-nav">
-          <img src="/blacksheep-logo.png" alt="Black Sheep" style={{ height: 48, display: 'block' }} />
+          <img src="/blacksheep-logo.png" alt="Black Sheep" style={{ height: 58, display: 'block' }} />
           <span style={s.navAtlas}>ATLAS</span>
           <span style={s.navSep} />
           <span style={s.navBy}>by Black Sheep</span>
