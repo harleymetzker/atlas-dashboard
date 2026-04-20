@@ -3,7 +3,7 @@ import { X, Check, ChevronDown } from 'lucide-react'
 import { format } from 'date-fns'
 import type { RawRow } from '../../lib/parseExtrato'
 import type { EntryType } from '../../types'
-import { REVENUE_CATEGORIES, EXPENSE_CATEGORY_GROUPS, ANTECIPACAO_CATEGORY } from '../../types'
+import { REVENUE_CATEGORIES, EXPENSE_CATEGORY_GROUPS } from '../../types'
 
 export interface ImportRow {
   id: string
@@ -30,10 +30,8 @@ const TYPE_OPTIONS: { value: EntryType; label: string }[] = [
   { value: 'withdrawal', label: 'Retirada' },
 ]
 
-const ALL_REVENUE_CATEGORIES = REVENUE_CATEGORIES.filter(c => c !== ANTECIPACAO_CATEGORY)
-
 function firstCategory(type: EntryType): string {
-  if (type === 'revenue') return ALL_REVENUE_CATEGORIES[0]
+  if (type === 'revenue') return REVENUE_CATEGORIES[0]
   if (type === 'withdrawal') return 'Retirada de Sócio'
   return EXPENSE_CATEGORY_GROUPS[0].categories[0]
 }
@@ -115,7 +113,7 @@ function CategorySelect({
   }
 
   const options = type === 'revenue'
-    ? ALL_REVENUE_CATEGORIES.map(c => ({ value: c, label: c }))
+    ? REVENUE_CATEGORIES.map(c => ({ value: c, label: c }))
     : [{ value: 'Retirada de Sócio', label: 'Retirada de Sócio' }]
 
   return (
