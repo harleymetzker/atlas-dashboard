@@ -183,13 +183,16 @@ export function Entries() {
     for (const row of rows) {
       const amount = Number(row.amount)
       if (isNaN(amount) || amount <= 0) continue
+      const isAntecipacao = row.category === ANTECIPACAO_CATEGORY
+      const paymentDate = row.semPayment ? null : (row.payment_date || null)
       await addEntry({
         type: row.type,
         category: row.category,
         description: row.description,
         amount,
-        competence_date: row.semCompetence ? null : (row.competence_date || null),
-        payment_date: row.semPayment ? null : (row.payment_date || null),
+        // Antecipação: competence_date = payment_date (mesma lógica do form manual)
+        competence_date: isAntecipacao ? paymentDate : row.semCompetence ? null : (row.competence_date || null),
+        payment_date: paymentDate,
       })
     }
     setImportRows(null)

@@ -3,7 +3,7 @@ import { X, Check, ChevronDown } from 'lucide-react'
 import { format } from 'date-fns'
 import type { RawRow } from '../../lib/parseExtrato'
 import type { EntryType } from '../../types'
-import { REVENUE_CATEGORIES, EXPENSE_CATEGORY_GROUPS } from '../../types'
+import { REVENUE_CATEGORIES, EXPENSE_CATEGORY_GROUPS, ANTECIPACAO_CATEGORY } from '../../types'
 
 export interface ImportRow {
   id: string
@@ -278,7 +278,11 @@ export function ImportCategorizacao({ rows, onImport, onClose }: ImportCategoriz
 
                 {/* Competence date + toggle */}
                 <td className="py-1 pr-2">
-                  {row.semCompetence ? (
+                  {row.category === ANTECIPACAO_CATEGORY ? (
+                    <div className="bg-white/5 border border-white/10 rounded-lg px-2.5 py-1.5 text-xs text-white/30 tabular-nums">
+                      = pagamento
+                    </div>
+                  ) : row.semCompetence ? (
                     <div className="bg-white/5 border border-white/10 rounded-lg px-2.5 py-1.5 text-xs text-white/30 tabular-nums">
                       —
                     </div>
@@ -291,14 +295,16 @@ export function ImportCategorizacao({ rows, onImport, onClose }: ImportCategoriz
                       className="w-full bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none focus:border-white/30 disabled:cursor-not-allowed"
                     />
                   )}
-                  <div className="flex items-center gap-1.5 mt-1 ml-0.5">
-                    <MiniToggle
-                      on={row.semCompetence}
-                      onToggle={() => toggleSemCompetence(row)}
-                      disabled={!row.include}
-                    />
-                    <span className="text-[10px] text-white/30 leading-none">sem competência</span>
-                  </div>
+                  {row.category !== ANTECIPACAO_CATEGORY && (
+                    <div className="flex items-center gap-1.5 mt-1 ml-0.5">
+                      <MiniToggle
+                        on={row.semCompetence}
+                        onToggle={() => toggleSemCompetence(row)}
+                        disabled={!row.include}
+                      />
+                      <span className="text-[10px] text-white/30 leading-none">sem competência</span>
+                    </div>
+                  )}
                 </td>
 
                 {/* Payment date + toggle */}
