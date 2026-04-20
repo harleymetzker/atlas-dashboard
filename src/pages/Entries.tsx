@@ -188,8 +188,8 @@ export function Entries() {
         category: row.category,
         description: row.description,
         amount,
-        competence_date: row.competence_date || null,
-        payment_date: row.payment_date || null,
+        competence_date: row.semCompetence ? null : (row.competence_date || null),
+        payment_date: row.semPayment ? null : (row.payment_date || null),
       })
     }
     setImportRows(null)

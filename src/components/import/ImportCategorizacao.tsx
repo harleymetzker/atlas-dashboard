@@ -12,8 +12,10 @@ export interface ImportRow {
   category: string
   description: string
   amount: string
-  competence_date: string
-  payment_date: string
+  competence_date: string   // '' means null (sem competência)
+  payment_date: string      // '' means null (sem pagamento)
+  semCompetence: boolean
+  semPayment: boolean
 }
 
 interface ImportCategorizacaoProps {
@@ -28,19 +30,12 @@ const TYPE_OPTIONS: { value: EntryType; label: string }[] = [
   { value: 'withdrawal', label: 'Retirada' },
 ]
 
-const ALL_EXPENSE_CATEGORIES = EXPENSE_CATEGORY_GROUPS.flatMap(g => g.categories)
 const ALL_REVENUE_CATEGORIES = REVENUE_CATEGORIES.filter(c => c !== ANTECIPACAO_CATEGORY)
 
 function firstCategory(type: EntryType): string {
   if (type === 'revenue') return ALL_REVENUE_CATEGORIES[0]
   if (type === 'withdrawal') return 'Retirada de Sócio'
-  return ALL_EXPENSE_CATEGORIES[0]
-}
-
-function getCategoryOptions(type: EntryType): { value: string; label: string }[] {
-  if (type === 'revenue') return ALL_REVENUE_CATEGORIES.map(c => ({ value: c, label: c }))
-  if (type === 'withdrawal') return [{ value: 'Retirada de Sócio', label: 'Retirada de Sócio' }]
-  return ALL_EXPENSE_CATEGORIES.map(c => ({ value: c, label: c }))
+  return EXPENSE_CATEGORY_GROUPS[0].categories[0]
 }
 
 function rawToImportRow(raw: RawRow): ImportRow {
@@ -55,10 +50,85 @@ function rawToImportRow(raw: RawRow): ImportRow {
     amount: absAmount.toFixed(2),
     competence_date: raw.date,
     payment_date: raw.date,
+    semCompetence: false,
+    semPayment: false,
   }
 }
 
 const todayStr = format(new Date(), 'yyyy-MM-dd')
+
+// Inline toggle — same visual as the form manual
+function MiniToggle({ on, onToggle, disabled }: { on: boolean; onToggle: () => void; disabled?: boolean }) {
+  return (
+    <button
+      type="button"
+      onClick={onToggle}
+      disabled={disabled}
+      style={{
+        width: 28, height: 16, borderRadius: 8,
+        background: on ? '#00EF61' : '#333',
+        border: 'none', cursor: disabled ? 'not-allowed' : 'pointer',
+        position: 'relative', transition: 'background 0.2s',
+        flexShrink: 0, opacity: disabled ? 0.4 : 1,
+      }}
+    >
+      <span style={{
+        position: 'absolute', top: 2,
+        left: on ? 13 : 2,
+        width: 12, height: 12, borderRadius: '50%',
+        background: on ? '#000' : '#888',
+        transition: 'left 0.2s',
+      }} />
+    </button>
+  )
+}
+
+// Category select with optgroups for expense, flat for revenue/withdrawal
+function CategorySelect({
+  type,
+  value,
+  onChange,
+  disabled,
+}: {
+  type: EntryType
+  value: string
+  onChange: (v: string) => void
+  disabled?: boolean
+}) {
+  const cls = "w-full appearance-none bg-white/5 border border-white/10 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-white/30 disabled:cursor-not-allowed pr-6"
+
+  if (type === 'expense') {
+    return (
+      <div className="relative">
+        <select value={value} onChange={e => onChange(e.target.value)} disabled={disabled} className={cls}>
+          {EXPENSE_CATEGORY_GROUPS.map(g => (
+            <optgroup key={g.group} label={g.group} className="bg-[#111] text-white/50">
+              {g.categories.map(c => (
+                <option key={c} value={c} className="bg-[#111] text-white">{c}</option>
+              ))}
+            </optgroup>
+          ))}
+        </select>
+        <ChevronDown size={10} className="absolute right-2 top-1/2 -translate-y-1/2 text-white/30 pointer-events-none" />
+      </div>
+    )
+  }
+
+  const options = type === 'revenue'
+    ? ALL_REVENUE_CATEGORIES.map(c => ({ value: c, label: c }))
+    : [{ value: 'Retirada de Sócio', label: 'Retirada de Sócio' }]
+
+  return (
+    <div className="relative">
+      <select value={value} onChange={e => onChange(e.target.value)} disabled={disabled} className={cls}>
+        {options.map(o => (
+          <option key={o.value} value={o.value} className="bg-[#111]">{o.label}</option>
+        ))}
+      </select>
+      <ChevronDown size={10} className="absolute right-2 top-1/2 -translate-y-1/2 text-white/30 pointer-events-none" />
+    </div>
+  )
+}
 
 export function ImportCategorizacao({ rows, onImport, onClose }: ImportCategorizacaoProps) {
   const [importRows, setImportRows] = useState<ImportRow[]>(() => rows.map(rawToImportRow))
@@ -73,6 +143,22 @@ export function ImportCategorizacao({ rows, onImport, onClose }: ImportCategoriz
 
   function handleTypeChange(id: string, type: EntryType) {
     updateRow(id, { type, category: firstCategory(type) })
+  }
+
+  function toggleSemCompetence(row: ImportRow) {
+    const next = !row.semCompetence
+    updateRow(row.id, {
+      semCompetence: next,
+      competence_date: next ? '' : todayStr,
+    })
+  }
+
+  function toggleSemPayment(row: ImportRow) {
+    const next = !row.semPayment
+    updateRow(row.id, {
+      semPayment: next,
+      payment_date: next ? '' : todayStr,
+    })
   }
 
   function toggleAll(include: boolean) {
@@ -95,7 +181,7 @@ export function ImportCategorizacao({ rows, onImport, onClose }: ImportCategoriz
     }
   }
 
-  const allSelected = importRows.every(r => r.include)
+  const allSelected = importRows.length > 0 && importRows.every(r => r.include)
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-[#050505]">
@@ -127,12 +213,11 @@ export function ImportCategorizacao({ rows, onImport, onClose }: ImportCategoriz
                   {allSelected && <Check size={10} className="text-black" strokeWidth={3} />}
                 </button>
               </th>
-              <th className="text-left pb-3 w-28">Data</th>
-              <th className="text-left pb-3 w-32">Tipo</th>
+              <th className="text-left pb-3 w-28">Tipo</th>
               <th className="text-left pb-3 w-52">Categoria</th>
               <th className="text-left pb-3">Descrição</th>
-              <th className="text-left pb-3 w-28">Competência</th>
-              <th className="text-left pb-3 w-28">Pagamento</th>
+              <th className="text-left pb-3 w-36">Competência</th>
+              <th className="text-left pb-3 w-36">Pagamento</th>
               <th className="text-right pb-3 w-28">Valor (R$)</th>
             </tr>
           </thead>
@@ -140,10 +225,10 @@ export function ImportCategorizacao({ rows, onImport, onClose }: ImportCategoriz
             {importRows.map(row => (
               <tr
                 key={row.id}
-                className={`transition-opacity ${row.include ? 'opacity-100' : 'opacity-30'}`}
+                className={`align-top transition-opacity ${row.include ? 'opacity-100' : 'opacity-30'}`}
               >
                 {/* Checkbox */}
-                <td className="py-1.5 pr-2">
+                <td className="pt-2 pr-2">
                   <button
                     onClick={() => updateRow(row.id, { include: !row.include })}
                     className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${
@@ -154,13 +239,8 @@ export function ImportCategorizacao({ rows, onImport, onClose }: ImportCategoriz
                   </button>
                 </td>
 
-                {/* Original date (read-only hint) */}
-                <td className="py-1.5 pr-2">
-                  <span className="text-white/40 tabular-nums text-xs">{row.payment_date}</span>
-                </td>
-
                 {/* Type */}
-                <td className="py-1.5 pr-2">
+                <td className="py-1 pr-2">
                   <div className="relative">
                     <select
                       value={row.type}
@@ -176,25 +256,18 @@ export function ImportCategorizacao({ rows, onImport, onClose }: ImportCategoriz
                   </div>
                 </td>
 
-                {/* Category */}
-                <td className="py-1.5 pr-2">
-                  <div className="relative">
-                    <select
-                      value={row.category}
-                      onChange={e => updateRow(row.id, { category: e.target.value })}
-                      disabled={!row.include}
-                      className="w-full appearance-none bg-white/5 border border-white/10 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-white/30 disabled:cursor-not-allowed pr-6"
-                    >
-                      {getCategoryOptions(row.type).map(o => (
-                        <option key={o.value} value={o.value} className="bg-[#111]">{o.label}</option>
-                      ))}
-                    </select>
-                    <ChevronDown size={10} className="absolute right-2 top-1/2 -translate-y-1/2 text-white/30 pointer-events-none" />
-                  </div>
+                {/* Category — grouped for expense */}
+                <td className="py-1 pr-2">
+                  <CategorySelect
+                    type={row.type}
+                    value={row.category}
+                    onChange={v => updateRow(row.id, { category: v })}
+                    disabled={!row.include}
+                  />
                 </td>
 
                 {/* Description */}
-                <td className="py-1.5 pr-2">
+                <td className="py-1 pr-2">
                   <input
                     type="text"
                     value={row.description}
@@ -205,30 +278,58 @@ export function ImportCategorizacao({ rows, onImport, onClose }: ImportCategoriz
                   />
                 </td>
 
-                {/* Competence date */}
-                <td className="py-1.5 pr-2">
-                  <input
-                    type="date"
-                    value={row.competence_date}
-                    onChange={e => updateRow(row.id, { competence_date: e.target.value || todayStr })}
-                    disabled={!row.include}
-                    className="w-full bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none focus:border-white/30 disabled:cursor-not-allowed"
-                  />
+                {/* Competence date + toggle */}
+                <td className="py-1 pr-2">
+                  {row.semCompetence ? (
+                    <div className="bg-white/5 border border-white/10 rounded-lg px-2.5 py-1.5 text-xs text-white/30 tabular-nums">
+                      —
+                    </div>
+                  ) : (
+                    <input
+                      type="date"
+                      value={row.competence_date}
+                      onChange={e => updateRow(row.id, { competence_date: e.target.value || todayStr })}
+                      disabled={!row.include}
+                      className="w-full bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none focus:border-white/30 disabled:cursor-not-allowed"
+                    />
+                  )}
+                  <div className="flex items-center gap-1.5 mt-1 ml-0.5">
+                    <MiniToggle
+                      on={row.semCompetence}
+                      onToggle={() => toggleSemCompetence(row)}
+                      disabled={!row.include}
+                    />
+                    <span className="text-[10px] text-white/30 leading-none">sem competência</span>
+                  </div>
                 </td>
 
-                {/* Payment date */}
-                <td className="py-1.5 pr-2">
-                  <input
-                    type="date"
-                    value={row.payment_date}
-                    onChange={e => updateRow(row.id, { payment_date: e.target.value || todayStr })}
-                    disabled={!row.include}
-                    className="w-full bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none focus:border-white/30 disabled:cursor-not-allowed"
-                  />
+                {/* Payment date + toggle */}
+                <td className="py-1 pr-2">
+                  {row.semPayment ? (
+                    <div className="bg-white/5 border border-white/10 rounded-lg px-2.5 py-1.5 text-xs text-white/30 tabular-nums">
+                      —
+                    </div>
+                  ) : (
+                    <input
+                      type="date"
+                      value={row.payment_date}
+                      onChange={e => updateRow(row.id, { payment_date: e.target.value || todayStr })}
+                      disabled={!row.include}
+                      className="w-full bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none focus:border-white/30 disabled:cursor-not-allowed"
+                    />
+                  )}
+                  <div className="flex items-center gap-1.5 mt-1 ml-0.5">
+                    <MiniToggle
+                      on={row.semPayment}
+                      onToggle={() => toggleSemPayment(row)}
+                      disabled={!row.include}
+                    />
+                    <span className="text-[10px] text-white/30 leading-none">sem pagamento</span>
+                  </div>
                 </td>
 
                 {/* Amount */}
-                <td className="py-1.5">
+                <td className="py-1">
                   <input
                     type="number"
                     value={row.amount}
