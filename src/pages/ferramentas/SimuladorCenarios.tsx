@@ -97,16 +97,16 @@ function calcSim(f: SimForm): SimCalc {
   const despesasAdmin   = n(f.despesasAdmin)
   const totalDespesasFixas = despesasRH + despesasOcupacao + despesasAdmin
   const ebitda = margemContribuicao - totalDespesasFixas
+  const lucro = ebitda
   const retiradas = n(f.retiradas)
-  const lucro = ebitda - retiradas           // req 4: Lucro = EBITDA - Retiradas
   const parcelamentos = n(f.parcelamentos)
-  const lucroAposDividas = lucro - parcelamentos
+  const saldoFinal = lucro - retiradas - parcelamentos
 
   return {
     faturamentoBruto: fat, impostos, faturamentoLiquido: liq, cmv, lucroBruto,
     comissoes, marketing, taxasCartao, outrasDespesasVariaveis, totalDespesasVariaveis,
     margemContribuicao, despesasRH, despesasOcupacao, despesasAdmin, totalDespesasFixas,
-    ebitda, retiradas, lucro, parcelamentos, lucroAposDividas,
+    ebitda, retiradas, lucro, parcelamentos, lucroAposDividas: saldoFinal,
   }
 }
 
@@ -239,8 +239,7 @@ export function SimuladorCenarios() {
   const liq   = dre.faturamentoLiquido || 1
   const bruto = dre.faturamentoBruto   || 1
 
-  // Req 4: current lucro = ebitda - retiradas (consistent with simulator)
-  const lucroAtual = dre.ebitda - dre.retiradas
+  const lucroAtual = dre.ebitda
   const lucroSim   = sim.lucro
   const lucroDiff  = lucroSim - lucroAtual
   const lucroPct   = lucroAtual !== 0 ? (lucroDiff / Math.abs(lucroAtual)) * 100 : 0
@@ -418,15 +417,7 @@ export function SimuladorCenarios() {
             <div className="text-right"><Delta actual={dre.ebitda} simulated={sim.ebitda} /></div>
           </div>
 
-          {/* req 4: Retiradas de Sócios entre EBITDA e Lucro */}
-          <div className="grid grid-cols-[1fr_200px_220px_130px] items-center px-6 py-3">
-            <span className="text-sm text-white/80 pl-5">(-) Retiradas de Sócios</span>
-            <span className="text-sm text-white/80 tabular-nums text-right pr-4">{formatCurrency(dre.retiradas)}</span>
-            <div><SimCurrencyInput value={form.retiradas} onChange={set('retiradas')} /></div>
-            <div className="text-right"><Delta actual={dre.retiradas} simulated={sim.retiradas} positive={false} /></div>
-          </div>
-
-          {/* Lucro — req 3: com % do fat bruto */}
+          {/* Lucro = EBITDA */}
           <div className="grid grid-cols-[1fr_200px_220px_130px] items-center px-6 py-4 bg-white/5 border-t border-white/15">
             <span className="text-sm font-bold text-white">(=) Lucro</span>
             <span className={`text-sm font-bold tabular-nums text-right pr-4 ${lucroAtual >= 0 ? 'text-brand-green' : 'text-red-400'}`}>
@@ -438,18 +429,25 @@ export function SimuladorCenarios() {
             <div className="text-right"><Delta actual={lucroAtual} simulated={lucroSim} /></div>
           </div>
 
-          {/* req 2: Parcelamentos e Dívidas */}
-          <div className="px-6 py-2 border-t border-white/5 bg-white/[0.01]">
-            <span className="text-[10px] text-white/60 uppercase tracking-widest">Parcelamentos e Dívidas</span>
+          {/* Retiradas de Sócios */}
+          <div className="grid grid-cols-[1fr_200px_220px_130px] items-center px-6 py-3">
+            <span className="text-sm text-white/80 pl-5">(-) Retiradas de Sócios</span>
+            <span className="text-sm text-white/80 tabular-nums text-right pr-4">{formatCurrency(dre.retiradas)}</span>
+            <div><SimCurrencyInput value={form.retiradas} onChange={set('retiradas')} /></div>
+            <div className="text-right"><Delta actual={dre.retiradas} simulated={sim.retiradas} positive={false} /></div>
           </div>
+
+          {/* Parcelamentos e Dívidas */}
           <div className="grid grid-cols-[1fr_200px_220px_130px] items-center px-6 py-3">
             <span className="text-sm text-white/80 pl-5">(-) Parcelamentos e Dívidas</span>
             <span className="text-sm text-white/80 tabular-nums text-right pr-4">—</span>
             <div><SimCurrencyInput value={form.parcelamentos} onChange={set('parcelamentos')} /></div>
             <div className="text-right"><Delta actual={0} simulated={sim.parcelamentos} positive={false} /></div>
           </div>
-          <div className="grid grid-cols-[1fr_200px_220px_130px] items-center px-6 py-3 bg-white/[0.025]">
-            <span className="text-sm font-bold text-white">(=) Lucro após Dívidas</span>
+
+          {/* Saldo Final */}
+          <div className="grid grid-cols-[1fr_200px_220px_130px] items-center px-6 py-4 bg-white/[0.025] border-t border-white/15">
+            <span className="text-sm font-bold text-white">(=) Saldo Final</span>
             <span className="text-sm font-bold text-white/80 tabular-nums text-right pr-4">—</span>
             <span className={`text-sm font-bold tabular-nums text-right pr-2 ${sim.lucroAposDividas >= 0 ? 'text-brand-green' : 'text-red-400'}`}>
               {formatCurrency(sim.lucroAposDividas)}
