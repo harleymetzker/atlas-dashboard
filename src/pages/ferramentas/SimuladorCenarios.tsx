@@ -178,12 +178,25 @@ export function SimuladorCenarios() {
       const ref       = new Date(selectedMonth + '-02')
       const startDate = format(startOfMonth(ref), 'yyyy-MM-dd')
       const endDate   = format(endOfMonth(ref),   'yyyy-MM-dd')
-      const { data }  = await supabase
+
+      // Receitas e despesas: filtradas por competence_date
+      const { data: dreData } = await supabase
         .from('entries').select('*')
+        .neq('type', 'withdrawal')
         .gte('competence_date', startDate)
         .lte('competence_date', endDate)
-      if (data && data.length > 0) {
-        const computed = calcDRE(data as Entry[])
+
+      // Retiradas: filtradas por payment_date (podem ter competence_date nulo)
+      const { data: withdrawalData } = await supabase
+        .from('entries').select('*')
+        .eq('type', 'withdrawal')
+        .gte('payment_date', startDate)
+        .lte('payment_date', endDate)
+
+      const merged = [...(dreData ?? []), ...(withdrawalData ?? [])]
+
+      if (merged.length > 0) {
+        const computed = calcDRE(merged as Entry[])
         setDre(computed)
         setForm(dreToForm(computed))
       } else {
@@ -446,14 +459,24 @@ export function SimuladorCenarios() {
           </div>
 
           {/* Saldo Final */}
-          <div className="grid grid-cols-[1fr_200px_220px_130px] items-center px-6 py-4 bg-white/[0.025] border-t border-white/15">
-            <span className="text-sm font-bold text-white">(=) Saldo Final</span>
-            <span className="text-sm font-bold text-white/80 tabular-nums text-right pr-4">—</span>
-            <span className={`text-sm font-bold tabular-nums text-right pr-2 ${sim.lucroAposDividas >= 0 ? 'text-brand-green' : 'text-red-400'}`}>
-              {formatCurrency(sim.lucroAposDividas)}
-            </span>
-            <div className="text-right" />
-          </div>
+          {(() => {
+            const saldoAtual = dre.ebitda - dre.retiradas
+            const saldoSim   = sim.lucroAposDividas
+            return (
+              <div className="grid grid-cols-[1fr_200px_220px_130px] items-center px-6 py-4 bg-white/[0.025] border-t border-white/15">
+                <span className="text-sm font-bold text-white">(=) Saldo Final</span>
+                <span className={`text-sm font-bold tabular-nums text-right pr-4 ${saldoAtual >= 0 ? 'text-white/80' : 'text-red-400'}`}>
+                  {formatCurrency(saldoAtual)}
+                </span>
+                <span className={`text-sm font-bold tabular-nums text-right pr-2 ${saldoSim >= 0 ? 'text-brand-green' : 'text-red-400'}`}>
+                  {formatCurrency(saldoSim)}
+                </span>
+                <div className="text-right">
+                  <Delta actual={saldoAtual} simulated={saldoSim} />
+                </div>
+              </div>
+            )
+          })()}
         </div>
       </div>
 
