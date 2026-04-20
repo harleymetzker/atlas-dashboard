@@ -21,7 +21,7 @@ import { PontoEquilibrioDash } from './pages/ferramentas/PontoEquilibrioDash'
 import { SimuladorCenarios } from './pages/ferramentas/SimuladorCenarios'
 
 function AppRoutes() {
-  const { session, loading, isAdmin, profileStatus } = useAuth()
+  const { session, loading, isAdmin, isSuperAdmin, profileStatus } = useAuth()
 
   if (loading) {
     return (
@@ -38,6 +38,21 @@ function AppRoutes() {
 
   if (profileStatus === 'pending') return <AcessoPendente />
   if (profileStatus === 'blocked') return <AcessoBloqueado />
+
+  // blacksheep vê apenas o painel admin
+  if (isSuperAdmin) {
+    return (
+      <div className="flex min-h-screen bg-black">
+        <Sidebar />
+        <main className="flex-1 overflow-y-auto">
+          <Routes>
+            <Route path="/admin" element={<Admin />} />
+            <Route path="*" element={<Navigate to="/admin" replace />} />
+          </Routes>
+        </main>
+      </div>
+    )
+  }
 
   return (
     <div className="flex min-h-screen bg-black">

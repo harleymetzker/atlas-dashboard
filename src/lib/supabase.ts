@@ -10,3 +10,6 @@ if (!supabaseUrl || !supabaseAnonKey) {
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 export const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL || ''
+
+// Email com acesso exclusivo ao painel admin (sem dashboard financeiro)
+export const SUPER_ADMIN_EMAIL = 'blacksheep@hmtz.com.br'

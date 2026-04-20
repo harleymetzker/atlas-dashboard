@@ -19,8 +19,11 @@ const ferramentasItems = [
   { to: '/ferramentas/simulador-cenarios', icon: GitCompare, label: 'Simulador de Cenários' },
 ]
 
+const linkClass = ({ isActive }: { isActive: boolean }) =>
+  `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all ${isActive ? 'bg-white text-black font-semibold' : 'text-white/50 hover:text-white hover:bg-white/5'}`
+
 export function Sidebar() {
-  const { signOut, isAdmin, user } = useAuth()
+  const { signOut, isAdmin, isSuperAdmin, user } = useAuth()
   const [ferramentasOpen, setFerramentasOpen] = useState(false)
 
   return (
@@ -31,65 +34,59 @@ export function Sidebar() {
       </div>
 
       <nav className="flex-1 p-3 space-y-0.5 overflow-y-auto">
-        {navItems.map(({ to, icon: Icon, label }) => (
-          <NavLink
-            key={to}
-            to={to}
-            end={to === '/dashboard'}
-            className={({ isActive }) =>
-              `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all ${isActive ? 'bg-white text-black font-semibold' : 'text-white/50 hover:text-white hover:bg-white/5'}`
-            }
-          >
-            <Icon size={16} />
-            {label}
+        {isSuperAdmin ? (
+          /* blacksheep: apenas painel de usuários */
+          <NavLink to="/admin" className={linkClass}>
+            <Users size={16} />
+            Gerenciar Usuários
           </NavLink>
-        ))}
+        ) : (
+          <>
+            {navItems.map(({ to, icon: Icon, label }) => (
+              <NavLink key={to} to={to} end={to === '/dashboard'} className={linkClass}>
+                <Icon size={16} />
+                {label}
+              </NavLink>
+            ))}
 
-        {/* Ferramentas accordion */}
-        <div className="pt-2">
-          <button
-            onClick={() => setFerramentasOpen(o => !o)}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-white/50 hover:text-white hover:bg-white/5 transition-all"
-          >
-            <Wrench size={16} />
-            <span className="flex-1 text-left">Ferramentas</span>
-            <ChevronDown
-              size={14}
-              className={`transition-transform duration-200 ${ferramentasOpen ? 'rotate-180' : ''}`}
-            />
-          </button>
-
-          {ferramentasOpen && (
-            <div className="ml-3 mt-0.5 border-l border-white/5 pl-3 space-y-0.5">
-              {ferramentasItems.map(({ to, icon: Icon, label }) => (
-                <NavLink
-                  key={to}
-                  to={to}
-                  className={({ isActive }) =>
-                    `flex items-center gap-3 px-3 py-2 rounded-xl text-sm transition-all ${isActive ? 'bg-white text-black font-semibold' : 'text-white/40 hover:text-white hover:bg-white/5'}`
-                  }
-                >
-                  <Icon size={14} />
-                  {label}
-                </NavLink>
-              ))}
+            {/* Ferramentas accordion */}
+            <div className="pt-2">
+              <button
+                onClick={() => setFerramentasOpen(o => !o)}
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-white/50 hover:text-white hover:bg-white/5 transition-all"
+              >
+                <Wrench size={16} />
+                <span className="flex-1 text-left">Ferramentas</span>
+                <ChevronDown size={14} className={`transition-transform duration-200 ${ferramentasOpen ? 'rotate-180' : ''}`} />
+              </button>
+              {ferramentasOpen && (
+                <div className="ml-3 mt-0.5 border-l border-white/5 pl-3 space-y-0.5">
+                  {ferramentasItems.map(({ to, icon: Icon, label }) => (
+                    <NavLink
+                      key={to}
+                      to={to}
+                      className={({ isActive }) =>
+                        `flex items-center gap-3 px-3 py-2 rounded-xl text-sm transition-all ${isActive ? 'bg-white text-black font-semibold' : 'text-white/40 hover:text-white hover:bg-white/5'}`
+                      }
+                    >
+                      <Icon size={14} />
+                      {label}
+                    </NavLink>
+                  ))}
+                </div>
+              )}
             </div>
-          )}
-        </div>
 
-        {/* Link Admin — apenas para admins */}
-        {isAdmin && (
-          <div className="pt-2">
-            <NavLink
-              to="/admin"
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all ${isActive ? 'bg-white text-black font-semibold' : 'text-white/50 hover:text-white hover:bg-white/5'}`
-              }
-            >
-              <Users size={16} />
-              Admin
-            </NavLink>
-          </div>
+            {/* Link Admin — harley e outros admins */}
+            {isAdmin && (
+              <div className="pt-2">
+                <NavLink to="/admin" className={linkClass}>
+                  <Users size={16} />
+                  Admin
+                </NavLink>
+              </div>
+            )}
+          </>
         )}
       </nav>
 

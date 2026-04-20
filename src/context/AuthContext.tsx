@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
 import type { Session, User } from '@supabase/supabase-js'
-import { supabase, ADMIN_EMAIL } from '../lib/supabase'
+import { supabase, ADMIN_EMAIL, SUPER_ADMIN_EMAIL } from '../lib/supabase'
 
 type ProfileStatus = 'pending' | 'active' | 'blocked' | null
 
@@ -9,6 +9,7 @@ interface AuthContextType {
   session: Session | null
   user: User | null
   isAdmin: boolean
+  isSuperAdmin: boolean
   loading: boolean
   profileStatus: ProfileStatus
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>
@@ -64,6 +65,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const loading = sessionLoading || profileLoading
   const user = session?.user ?? null
   const isAdmin = ADMIN_EMAILS.includes(user?.email ?? '')
+  const isSuperAdmin = user?.email === SUPER_ADMIN_EMAIL
 
   async function signIn(email: string, password: string) {
     const { error } = await supabase.auth.signInWithPassword({ email, password })
@@ -75,7 +77,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ session, user, isAdmin, loading, profileStatus, signIn, signOut }}>
+    <AuthContext.Provider value={{ session, user, isAdmin, isSuperAdmin, loading, profileStatus, signIn, signOut }}>
       {children}
     </AuthContext.Provider>
   )
