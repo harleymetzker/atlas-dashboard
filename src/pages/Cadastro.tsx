@@ -32,6 +32,7 @@ export function Cadastro() {
   const [error, setError] = useState('')
   const [form, setForm] = useState({
     email: '',
+    nome: '',
     senha: '',
     confirmarSenha: '',
     mentoria_type: '',
@@ -84,6 +85,7 @@ export function Cadastro() {
       const { error: profileError } = await supabase.from('profiles').insert({
         user_id: userId,
         email: form.email,
+        nome: form.nome || null,
         status: 'pending',
         mentoria_type: form.mentoria_type || null,
         setor: form.setor || null,
@@ -151,6 +153,19 @@ export function Cadastro() {
                 placeholder="seu@email.com"
                 style={{ ...selectStyle }}
                 autoComplete="email"
+              />
+            </div>
+
+            <div style={{ marginBottom: 20 }}>
+              <label style={labelStyle}>Nome completo</label>
+              <input
+                type="text"
+                required
+                value={form.nome}
+                onChange={e => set('nome', e.target.value)}
+                placeholder="Seu nome completo"
+                style={{ ...selectStyle }}
+                autoComplete="name"
               />
             </div>
 
