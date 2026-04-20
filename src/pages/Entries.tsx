@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { format, startOfMonth } from 'date-fns'
-import { Plus, Trash2, Pencil } from 'lucide-react'
+import { Plus, Trash2, Pencil, Upload } from 'lucide-react'
 import { useEntries } from '../hooks/useEntries'
 import type { Entry, EntryType } from '../types'
 import { REVENUE_CATEGORIES, EXPENSE_CATEGORY_GROUPS, ANTECIPACAO_CATEGORY } from '../types'
@@ -12,6 +12,10 @@ import { CurrencyInput } from '../components/ui/CurrencyInput'
 import { Select } from '../components/ui/Select'
 import { Modal } from '../components/ui/Modal'
 import { Card } from '../components/ui/Card'
+import { ImportUploadModal } from '../components/import/ImportUploadModal'
+import { ImportCategorizacao } from '../components/import/ImportCategorizacao'
+import type { ImportRow } from '../components/import/ImportCategorizacao'
+import type { RawRow } from '../lib/parseExtrato'
 
 const TYPE_OPTIONS = [
   { value: 'revenue',    label: 'Receita' },
@@ -78,6 +82,8 @@ export function Entries() {
   const [form, setForm] = useState(defaultForm)
   const [submitting, setSubmitting] = useState(false)
   const [formError, setFormError] = useState('')
+  const [importUploadOpen, setImportUploadOpen] = useState(false)
+  const [importRows, setImportRows] = useState<RawRow[] | null>(null)
 
   const { entries, loading, addEntry, deleteEntry, updateEntry } = useEntries({
     startDate,
@@ -173,6 +179,22 @@ export function Entries() {
     await deleteEntry(id)
   }
 
+  async function handleImportRows(rows: ImportRow[]) {
+    for (const row of rows) {
+      const amount = Number(row.amount)
+      if (isNaN(amount) || amount <= 0) continue
+      await addEntry({
+        type: row.type,
+        category: row.category,
+        description: row.description,
+        amount,
+        competence_date: row.competence_date || null,
+        payment_date: row.payment_date || null,
+      })
+    }
+    setImportRows(null)
+  }
+
   const categoryGroups    = getCategoryGroups(form.type)
   const categoryOptions   = getCategoryOptions(form.type)
   const isAntecipacao     = form.category === ANTECIPACAO_CATEGORY
@@ -189,7 +211,12 @@ export function Entries() {
           <h2 className="text-2xl font-bold text-white tracking-tight">Lançamentos</h2>
           <p className="text-sm text-white/50 mt-1">Filtro por data de competência</p>
         </div>
-        <Button onClick={openAdd}><Plus size={16} /> Novo Lançamento</Button>
+        <div className="flex gap-2">
+          <Button variant="secondary" onClick={() => setImportUploadOpen(true)}>
+            <Upload size={16} /> Importar Extrato
+          </Button>
+          <Button onClick={openAdd}><Plus size={16} /> Novo Lançamento</Button>
+        </div>
       </div>
 
       <div className="flex flex-wrap items-end gap-3">
@@ -261,6 +288,20 @@ export function Entries() {
           </div>
         )}
       </Card>
+
+      <ImportUploadModal
+        open={importUploadOpen}
+        onClose={() => setImportUploadOpen(false)}
+        onParsed={rows => { setImportUploadOpen(false); setImportRows(rows) }}
+      />
+
+      {importRows && (
+        <ImportCategorizacao
+          rows={importRows}
+          onImport={handleImportRows}
+          onClose={() => setImportRows(null)}
+        />
+      )}
 
       <Modal open={modalOpen} onClose={() => setModalOpen(false)} title={editEntry ? 'Editar Lançamento' : 'Novo Lançamento'}>
         <div className="space-y-4">
