@@ -44,26 +44,18 @@ function AppRoutes() {
       <Sidebar />
       <main className="flex-1 overflow-y-auto">
         <Routes>
-          {isAdmin ? (
-            <>
-              <Route path="/admin" element={<Admin />} />
-              <Route path="*" element={<Navigate to="/admin" replace />} />
-            </>
-          ) : (
-            <>
-              <Route path="/dashboard" element={<Overview />} />
-              <Route path="/dre" element={<DRE />} />
-              <Route path="/cashflow" element={<CashFlow />} />
-              <Route path="/charts" element={<Charts />} />
-              <Route path="/entries" element={<Entries />} />
-              <Route path="/diagnostico" element={<Diagnostico />} />
-              <Route path="/ferramentas/precificacao-produto" element={<PrecificacaoProduto />} />
-              <Route path="/ferramentas/precificacao-servico" element={<PrecificacaoServico />} />
-              <Route path="/ferramentas/ponto-equilibrio" element={<PontoEquilibrioDash />} />
-              <Route path="/ferramentas/simulador-cenarios" element={<SimuladorCenarios />} />
-              <Route path="*" element={<Navigate to="/dashboard" replace />} />
-            </>
-          )}
+          <Route path="/dashboard" element={<Overview />} />
+          <Route path="/dre" element={<DRE />} />
+          <Route path="/cashflow" element={<CashFlow />} />
+          <Route path="/charts" element={<Charts />} />
+          <Route path="/entries" element={<Entries />} />
+          <Route path="/diagnostico" element={<Diagnostico />} />
+          <Route path="/ferramentas/precificacao-produto" element={<PrecificacaoProduto />} />
+          <Route path="/ferramentas/precificacao-servico" element={<PrecificacaoServico />} />
+          <Route path="/ferramentas/ponto-equilibrio" element={<PontoEquilibrioDash />} />
+          <Route path="/ferramentas/simulador-cenarios" element={<SimuladorCenarios />} />
+          {isAdmin && <Route path="/admin" element={<Admin />} />}
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </main>
     </div>
