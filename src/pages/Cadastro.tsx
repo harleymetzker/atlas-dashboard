@@ -144,19 +144,6 @@ export function Cadastro() {
             <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 24 }}>Acesso</p>
 
             <div style={{ marginBottom: 20 }}>
-              <label style={labelStyle}>Email</label>
-              <input
-                type="email"
-                required
-                value={form.email}
-                onChange={e => set('email', e.target.value)}
-                placeholder="seu@email.com"
-                style={{ ...selectStyle }}
-                autoComplete="email"
-              />
-            </div>
-
-            <div style={{ marginBottom: 20 }}>
               <label style={labelStyle}>Nome completo</label>
               <input
                 type="text"
@@ -166,6 +153,19 @@ export function Cadastro() {
                 placeholder="Seu nome completo"
                 style={{ ...selectStyle }}
                 autoComplete="name"
+              />
+            </div>
+
+            <div style={{ marginBottom: 20 }}>
+              <label style={labelStyle}>Email</label>
+              <input
+                type="email"
+                required
+                value={form.email}
+                onChange={e => set('email', e.target.value)}
+                placeholder="seu@email.com"
+                style={{ ...selectStyle }}
+                autoComplete="email"
               />
             </div>
 
