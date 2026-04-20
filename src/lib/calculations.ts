@@ -26,16 +26,17 @@ function _calcDRE(entries: Entry[]): DRE {
 
   const impostos         = sumByCategory(entries, ['Impostos'])
   const cmv              = sumByCategory(entries, ['CMV'])
-  const comissoesVendas  = sumByCategory(entries, ['Comissões de Venda'])
-  const marketingAds     = sumByCategory(entries, ['Marketing e Anúncios'])
-  const taxasCartao      = sumByCategory(entries, ['Taxas de Cartão'])
-  const despesasRH       = sumByCategory(entries, FIXED_RH_CATEGORIES)
+  const comissoesVendas          = sumByCategory(entries, ['Comissões de Venda'])
+  const marketingAds             = sumByCategory(entries, ['Marketing e Anúncios'])
+  const taxasCartao              = sumByCategory(entries, ['Taxas de Cartão'])
+  const outrasDespesasVariaveis  = sumByCategory(entries, ['Outras Despesas Variáveis'])
+  const despesasRH               = sumByCategory(entries, FIXED_RH_CATEGORIES)
   const despesasOcupacao = sumByCategory(entries, FIXED_OCUPACAO_CATEGORIES)
   const despesasAdmin    = sumByCategory(entries, FIXED_ADMIN_CATEGORIES)
 
   const faturamentoLiquido    = faturamentoBruto - impostos
   const lucroBruto            = faturamentoLiquido - cmv
-  const totalDespesasVariaveis = comissoesVendas + marketingAds + taxasCartao
+  const totalDespesasVariaveis = comissoesVendas + marketingAds + taxasCartao + outrasDespesasVariaveis
   const margemContribuicao    = lucroBruto - totalDespesasVariaveis
   const totalDespesasFixas    = despesasRH + despesasOcupacao + despesasAdmin
   const ebitda                = margemContribuicao - totalDespesasFixas
@@ -54,6 +55,7 @@ function _calcDRE(entries: Entry[]): DRE {
     comissoesVendas,
     marketingAds,
     taxasCartao,
+    outrasDespesasVariaveis,
     totalDespesasVariaveis,
     margemContribuicao,
     margemContribuicaoMargin: (margemContribuicao / baseLiquido) * 100,

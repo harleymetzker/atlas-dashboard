@@ -27,6 +27,7 @@ export interface DRE {
   comissoesVendas: number
   marketingAds: number
   taxasCartao: number
+  outrasDespesasVariaveis: number
   totalDespesasVariaveis: number
   margemContribuicao: number
   margemContribuicaoMargin: number

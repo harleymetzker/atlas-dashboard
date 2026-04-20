@@ -214,8 +214,9 @@ export function DRE() {
               <SectionHeader label="Despesas Variáveis de Venda" />
               <DRERow label="Comissões de Venda"        value={dre.comissoesVendas} pct={dre.comissoesVendas / baseLiquido * 100} negative indent />
               <DRERow label="Marketing e Anúncios"      value={dre.marketingAds}   pct={dre.marketingAds / baseLiquido * 100}    negative indent />
-              <DRERow label="Taxas de Cartão"           value={dre.taxasCartao}    pct={dre.taxasCartao / baseLiquido * 100}     negative indent />
-              <DRERow label="(=) Margem de Contribuição" value={dre.margemContribuicao} pct={dre.margemContribuicaoMargin}       isResult isProfit />
+              <DRERow label="Taxas de Cartão"           value={dre.taxasCartao}              pct={dre.taxasCartao / baseLiquido * 100}              negative indent />
+              <DRERow label="Outras Despesas Variáveis" value={dre.outrasDespesasVariaveis} pct={dre.outrasDespesasVariaveis / baseLiquido * 100}  negative indent />
+              <DRERow label="(=) Margem de Contribuição" value={dre.margemContribuicao} pct={dre.margemContribuicaoMargin}                         isResult isProfit />
 
               <SectionHeader label="Despesas Fixas" />
               <DRERow label="RH (Salários, Pró-labore)" value={dre.despesasRH}       pct={dre.despesasRH / baseLiquido * 100}       negative indent />
