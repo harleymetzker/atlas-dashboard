@@ -14,6 +14,7 @@ interface Profile {
   id: string
   user_id: string
   email: string
+  nome: string | null
   status: 'pending' | 'active' | 'blocked'
   mentoria_type: string | null
   setor: string | null
@@ -116,7 +117,8 @@ function UserRow({ profile, onApprove, onBlock, onDelete, onEdit }: {
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
         <div style={{ minWidth: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', marginBottom: 6 }}>
-            <span style={{ fontSize: 14, color: '#fff', fontWeight: 500 }}>{profile.email}</span>
+            {profile.nome && <span style={{ fontSize: 14, color: '#fff', fontWeight: 600 }}>{profile.nome}</span>}
+            <span style={{ fontSize: 13, color: profile.nome ? 'rgba(255,255,255,0.45)' : '#fff', fontWeight: profile.nome ? 400 : 500 }}>{profile.email}</span>
             <StatusBadge status={profile.status} />
           </div>
           <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
