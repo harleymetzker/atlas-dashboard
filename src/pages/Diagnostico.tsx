@@ -9,7 +9,7 @@ import { supabase } from '../lib/supabase'
 import { Card } from '../components/ui/Card'
 import { formatCurrency } from '../lib/calculations'
 
-const CREDIT_LIMIT = 3
+const CREDIT_LIMIT = 2
 
 interface AnalysisContent {
   diagnostico_geral: string
