@@ -108,7 +108,7 @@ export function Sidebar() {
       <div style={{ padding: '20px 16px 16px', borderBottom: '1px solid #1e1e1e' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <div style={{
-            background: '#00EF61', borderRadius: 8, padding: 6,
+            background: '#00EF61', borderRadius: 8, padding: 2,
             width: 40, height: 40, flexShrink: 0,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             overflow: 'hidden',
@@ -116,7 +116,7 @@ export function Sidebar() {
             <img
               src="/blacksheep-logo.png"
               alt="Black Sheep"
-              style={{ width: 28, height: 28, objectFit: 'contain' }}
+              style={{ width: 36, height: 36, objectFit: 'cover' }}
             />
           </div>
           <div style={{ minWidth: 0 }}>
