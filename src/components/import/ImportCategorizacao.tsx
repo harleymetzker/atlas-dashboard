@@ -282,7 +282,7 @@ export function ImportCategorizacao({ rows, onImport, onClose }: ImportCategoriz
                     <div className="bg-white/5 border border-white/10 rounded-lg px-2.5 py-1.5 text-xs text-white/30 tabular-nums">
                       = pagamento
                     </div>
-                  ) : row.semCompetence ? (
+                  ) : (row.type === 'withdrawal' || row.semCompetence) ? (
                     <div className="bg-white/5 border border-white/10 rounded-lg px-2.5 py-1.5 text-xs text-white/30 tabular-nums">
                       —
                     </div>
@@ -295,7 +295,7 @@ export function ImportCategorizacao({ rows, onImport, onClose }: ImportCategoriz
                       className="w-full bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none focus:border-white/30 disabled:cursor-not-allowed"
                     />
                   )}
-                  {row.category !== ANTECIPACAO_CATEGORY && (
+                  {row.category !== ANTECIPACAO_CATEGORY && row.type !== 'withdrawal' && (
                     <div className="flex items-center gap-1.5 mt-1 ml-0.5">
                       <MiniToggle
                         on={row.semCompetence}

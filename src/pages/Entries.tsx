@@ -147,8 +147,8 @@ export function Entries() {
       setFormError('Informe um valor válido maior que zero.')
       return
     }
-    // competence_date required unless: antecipacao, or expense toggle (no competence)
-    if (!isAntecipacao && !isExpenseToggle && !form.competence_date) {
+    // competence_date required unless: antecipacao, expense toggle, or withdrawal
+    if (!isAntecipacao && !isExpenseToggle && form.type !== 'withdrawal' && !form.competence_date) {
       setFormError('Informe a data de competência.')
       return
     }
@@ -168,7 +168,7 @@ export function Entries() {
         // Expense toggle: competence_date = null (não entra na DRE)
         competence_date: isAntecipacao
           ? (form.payment_date || todayStr)
-          : isExpenseToggle ? null
+          : (isExpenseToggle || form.type === 'withdrawal') ? null
           : form.competence_date || null,
         // Revenue toggle: payment_date = null (não entra no fluxo de caixa)
         payment_date: isRevenueToggle ? null : (form.payment_date || null),
@@ -198,14 +198,15 @@ export function Entries() {
       const amount = Number(row.amount)
       if (isNaN(amount) || amount <= 0) continue
       const isAntecipacao = row.category === ANTECIPACAO_CATEGORY
+      const isRowWithdrawal = row.type === 'withdrawal'
       const paymentDate = row.semPayment ? null : (row.payment_date || null)
       await addEntry({
         type: row.type,
         category: row.category,
         description: row.description,
         amount,
-        // Antecipação: competence_date = payment_date (mesma lógica do form manual)
-        competence_date: isAntecipacao ? paymentDate : row.semCompetence ? null : (row.competence_date || null),
+        // Antecipação: competence_date = payment_date; Retirada: null; sem toggle: null
+        competence_date: isAntecipacao ? paymentDate : (isRowWithdrawal || row.semCompetence) ? null : (row.competence_date || null),
         payment_date: paymentDate,
       })
     }
@@ -238,9 +239,10 @@ export function Entries() {
   const categoryOptions   = getCategoryOptions(form.type)
   const isAntecipacao     = form.category === ANTECIPACAO_CATEGORY
   const isRevenueToggle   = form.semDataRecebimento && form.type === 'revenue'
-  const isExpenseToggle   = form.semDataRecebimento && form.type !== 'revenue' && !isAntecipacao
+  const isWithdrawal      = form.type === 'withdrawal'
+  const isExpenseToggle   = form.semDataRecebimento && form.type !== 'revenue' && !isAntecipacao && !isWithdrawal
   const toggleLabel       = form.type === 'revenue' ? 'Sem data de recebimento' : 'Sem data de competência'
-  const showCompetence    = !isAntecipacao && !isExpenseToggle
+  const showCompetence    = !isAntecipacao && !isExpenseToggle && !isWithdrawal
   const showPayment       = isAntecipacao || (!isRevenueToggle)
 
   const F: React.CSSProperties = {
@@ -498,8 +500,8 @@ export function Entries() {
               />
             )}
           </div>
-          {/* Toggle: Sem data (não disponível para antecipação) */}
-          {!isAntecipacao && (
+          {/* Toggle: Sem data (não disponível para antecipação ou retirada) */}
+          {!isAntecipacao && !isWithdrawal && (
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 4 }}>
               <button
                 type="button"
