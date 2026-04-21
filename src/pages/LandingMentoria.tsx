@@ -64,7 +64,6 @@ const GLOBAL_CSS = `
     .lm-hero-visual { display: none !important; }
     .lm-nav-cta    { display: none !important; }
     .lm-marquee    { display: none !important; }
-    .lm-hero-pill  { display: none !important; }
 
     .lm-module {
       display: flex !important;
@@ -167,10 +166,7 @@ export function LandingMentoria() {
         <Page>
           <div className="lm-hero-inner" style={{ position: 'relative', display: 'grid', gridTemplateColumns: '1.1fr 1fr', gap: 60, alignItems: 'center' }}>
             <div>
-              <div className="lm-hero-pill" style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '8px 14px', borderRadius: 999, border: `1px solid ${C.greenDark}`, background: C.greenSoft, color: C.green, fontFamily: mono, fontSize: 12, letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 28 }}>
-                <span style={{ width: 8, height: 8, borderRadius: '50%', background: C.green, animation: 'lm-pulse 1.6s ease-in-out infinite' }} />
-                Programa 001 · 6 meses · Implementação pessoal
-              </div>
+
               <h2 style={{ fontSize: 'clamp(36px,4.7vw,68px)', lineHeight: 1.05, letterSpacing: '-0.03em', fontWeight: 700, margin: '0 0 24px', fontFamily: sans }}>
                 Sua empresa fatura bem. Mas você não faz ideia de quanto realmente sobra.
               </h2>
