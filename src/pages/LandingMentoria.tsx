@@ -33,7 +33,7 @@ const GLOBAL_CSS = `
   .lm-btn-primary:hover { filter: brightness(1.08); transform: translateY(-1px); }
   .lm-btn-ghost:hover   { background: ${C.bgHover}; border-color: ${C.borderSt}; }
   .lm-nav-a:hover       { color: ${C.text}; }
-  .lm-p-card:hover      { border-color: ${C.borderSt}; transform: translateY(-2px); }
+  .lm-p-card:hover      { transform: translateY(-2px); }
   .lm-module:hover      { border-color: ${C.borderSt}; }
   .lm-footer-link:hover { color: ${C.green}; }
 
@@ -58,6 +58,26 @@ const GLOBAL_CSS = `
     .lm-invest-wrap { padding: 36px !important; }
     .lm-timeline-card { position: static !important; }
     .lm-section { padding: 72px 0 !important; }
+  }
+
+  @media (max-width: 768px) {
+    .lm-hero-visual { display: none !important; }
+    .lm-nav-cta    { display: none !important; }
+    .lm-marquee    { display: none !important; }
+    .lm-hero-pill  { display: none !important; }
+
+    .lm-module {
+      display: flex !important;
+      flex-wrap: wrap !important;
+      gap: 6px 12px !important;
+      align-items: flex-start !important;
+    }
+    .lm-module-id      { order: 0; flex: 0 0 auto; }
+    .lm-module-badge   { order: 1; flex: 0 0 auto; }
+    .lm-module-content { order: 2; flex: 1 1 100%; min-width: 0; }
+
+    .lm-metrics-grid { grid-template-columns: 1fr !important; overflow: visible !important; }
+    .lm-metrics-cell { min-height: 70px; }
   }
 `
 
@@ -84,7 +104,7 @@ function SecHead({ kicker, kickerRed, title, sub, children }: {
 }) {
   return (
     <div style={{ textAlign: 'center', maxWidth: 820, margin: '0 auto 56px' }}>
-      <div style={{ fontFamily: mono, fontSize: 12, letterSpacing: '0.18em', textTransform: 'uppercase', color: kickerRed ? C.red : C.green, marginBottom: 18 }}>
+      <div style={{ fontFamily: sans, fontSize: 12, letterSpacing: '0.18em', textTransform: 'uppercase', color: kickerRed ? C.red : C.green, marginBottom: 18 }}>
         {kicker}
       </div>
       <h2 style={{ fontSize: 'clamp(32px,4vw,52px)', lineHeight: 1.05, letterSpacing: '-0.03em', fontWeight: 700, margin: '0 0 16px', fontFamily: sans }}>
@@ -148,7 +168,7 @@ export function LandingMentoria() {
               <a key={href} href={href} className="lm-nav-a" style={{ color: C.textDim, textDecoration: 'none', fontSize: 14, transition: 'color .15s', fontFamily: sans }}>{label}</a>
             ))}
           </div>
-          <BtnPrimary href="#aplicar">Aplicar <span style={{ fontFamily: mono }}>→</span></BtnPrimary>
+          <span className="lm-nav-cta"><BtnPrimary href="#aplicar">Aplicar <span style={{ fontFamily: mono }}>→</span></BtnPrimary></span>
         </div>
       </nav>
 
@@ -158,7 +178,7 @@ export function LandingMentoria() {
         <Page>
           <div className="lm-hero-inner" style={{ position: 'relative', display: 'grid', gridTemplateColumns: '1.1fr 1fr', gap: 60, alignItems: 'center' }}>
             <div>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '8px 14px', borderRadius: 999, border: `1px solid ${C.greenDark}`, background: C.greenSoft, color: C.green, fontFamily: mono, fontSize: 12, letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 28 }}>
+              <div className="lm-hero-pill" style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '8px 14px', borderRadius: 999, border: `1px solid ${C.greenDark}`, background: C.greenSoft, color: C.green, fontFamily: mono, fontSize: 12, letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 28 }}>
                 <span style={{ width: 8, height: 8, borderRadius: '50%', background: C.green, animation: 'lm-pulse 1.6s ease-in-out infinite' }} />
                 Programa 001 · 6 meses · Implementação pessoal
               </div>
@@ -166,17 +186,17 @@ export function LandingMentoria() {
                 Sua empresa fatura bem. Mas você não faz ideia de quanto realmente sobra.
               </h2>
               <p style={{ fontSize: 19, lineHeight: 1.5, color: C.textDim, maxWidth: 560, margin: '0 0 32px', fontFamily: sans }}>
-                Em 30 dias você tem controle do financeiro da empresa. Você foca em vender e deixa a parte chata dos números com a gente.
+                Em 6 meses, você implementa um modelo de gestão que mostra pra onde vai cada real que entra — e garante que seu crescimento vire lucro.
               </p>
               <div style={{ display: 'flex', gap: 22, flexWrap: 'wrap', fontFamily: mono, fontSize: 12, color: C.textMute, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-                {['Controle em 30 dias', 'Mentoria 1:1 mensal', 'Software próprio incluído', 'Sem precisar aprender finanças'].map(s => (
+                {['Controle em 30 dias', 'Mentoria 1:1 mensal', 'Software ATLAS incluído', 'Lucro previsível em 6 meses'].map(s => (
                   <span key={s} style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
                     <span style={{ color: C.green, fontWeight: 600 }}>✓</span>{s}
                   </span>
                 ))}
               </div>
             </div>
-            <div style={{ position: 'relative' }}>
+            <div className="lm-hero-visual" style={{ position: 'relative' }}>
               <div style={{ fontFamily: mono, fontSize: 10, color: C.textMute, letterSpacing: '0.2em', textTransform: 'uppercase', position: 'absolute', top: 8, left: 0 }}>BS / 001</div>
               <div style={{ fontFamily: mono, fontSize: 10, color: C.textMute, letterSpacing: '0.2em', textTransform: 'uppercase', position: 'absolute', top: 8, right: 0, textAlign: 'right' }}>GESTÃO · FINANÇAS<br />PROCESSOS · LUCRO</div>
               <div style={{ position: 'absolute', inset: '10% 5%', borderRadius: '50%', background: 'radial-gradient(closest-side, rgba(0,239,97,0.30), transparent 70%)', filter: 'blur(30px)' }} />
@@ -187,8 +207,8 @@ export function LandingMentoria() {
       </section>
 
       {/* ── MARQUEE ── */}
-      <div style={{ borderTop: `1px solid ${C.border}`, borderBottom: `1px solid ${C.border}`, background: C.bgRaised, overflow: 'hidden', padding: '18px 0' }}>
-        <div className="lm-marquee-track" style={{ display: 'flex', gap: 48, whiteSpace: 'nowrap', animation: 'lm-scroll 50s linear infinite', fontFamily: mono, fontSize: 13, letterSpacing: '0.12em', textTransform: 'uppercase', color: C.textDim }}>
+      <div className="lm-marquee" style={{ borderTop: `1px solid ${C.border}`, borderBottom: `1px solid ${C.border}`, background: C.bgRaised, overflow: 'hidden', padding: '18px 0' }}>
+        <div className="lm-marquee-track" style={{ display: 'flex', gap: 48, whiteSpace: 'nowrap', animation: 'lm-scroll 25s linear infinite', fontFamily: mono, fontSize: 13, letterSpacing: '0.12em', textTransform: 'uppercase', color: C.textDim }}>
           {[...Array(2)].map((_, ri) => (
             <span key={ri}>
               {['DRE gerencial','Fluxo de caixa projetado','Margem real por produto','CAC por canal','Ponto de equilíbrio','Runway','Teto de retirada','Precificação lucrativa','Auditoria de perda invisível','Decisão com dado real'].map((s, i) => (
@@ -204,7 +224,6 @@ export function LandingMentoria() {
         <Page>
           <SecHead
             kicker="§ 01 · O diagnóstico"
-            kickerRed
             title={<>O padrão é sempre o mesmo — <em style={{ fontStyle: 'normal', color: C.green }}>e você não é exceção.</em></>}
             sub="O modelo de negócio do digital é simples: aumenta faturamento, fica feliz, repete. Ninguém olha pra margem. Ninguém sabe quanto sobra. E quando o caixa aperta, a solução é sempre a mesma — vender mais. Até o dia que vender mais não resolve. Porque nunca resolveu."
           >
@@ -217,21 +236,21 @@ export function LandingMentoria() {
 
           <div className="lm-problem-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 20, marginTop: 56 }}>
             {/* Card 01 — updated copy */}
-            <div className="lm-p-card" style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: C.radius, padding: 28, transition: 'border-color .2s, transform .2s' }}>
+            <div className="lm-p-card" style={{ background: C.bgCard, border: '1px solid rgba(239,68,68,0.2)', borderRadius: C.radius, padding: 28, transition: 'border-color .2s, transform .2s' }}>
               <div style={{ fontFamily: mono, fontSize: 13, color: C.textMute, letterSpacing: '0.1em', marginBottom: 24 }}>01 — Sintoma</div>
               <h3 style={{ fontSize: 22, lineHeight: 1.2, fontWeight: 600, letterSpacing: '-0.015em', margin: '0 0 16px', fontFamily: sans }}>Sempre tem um funil novo. Nunca tem lucro novo.</h3>
               <p style={{ color: C.textDim, fontSize: 14.5, margin: '0 0 20px', fontFamily: sans }}>Novo guru, nova estratégia, novo recorde de faturamento. E o caixa? Continua no mesmo lugar. Você tá cansado disso — mesmo que ainda não admita.</p>
               <span style={{ fontFamily: mono, fontSize: 12, color: C.red, background: C.redSoft, padding: '10px 12px', borderRadius: 8, display: 'inline-block', letterSpacing: '0.06em' }}>FLUXO = 0.00 → INDEFINIDO</span>
             </div>
             {/* Card 02 — unchanged */}
-            <div className="lm-p-card" style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: C.radius, padding: 28, transition: 'border-color .2s, transform .2s' }}>
+            <div className="lm-p-card" style={{ background: C.bgCard, border: '1px solid rgba(239,68,68,0.2)', borderRadius: C.radius, padding: 28, transition: 'border-color .2s, transform .2s' }}>
               <div style={{ fontFamily: mono, fontSize: 13, color: C.textMute, letterSpacing: '0.1em', marginBottom: 24 }}>02 — Sintoma</div>
               <h3 style={{ fontSize: 22, lineHeight: 1.2, fontWeight: 600, letterSpacing: '-0.015em', margin: '0 0 16px', fontFamily: sans }}>CPA sobe todo mês. Margem aperta todo mês.</h3>
               <p style={{ color: C.textDim, fontSize: 14.5, margin: '0 0 20px', fontFamily: sans }}>A conta do tráfego nunca fecha. A solução é sempre "botar mais verba pra ver se melhora" — e a gordura some.</p>
               <span style={{ fontFamily: mono, fontSize: 12, color: C.red, background: C.redSoft, padding: '10px 12px', borderRadius: 8, display: 'inline-block', letterSpacing: '0.06em' }}>MARGEM: ??.??%</span>
             </div>
             {/* Card 03 — updated copy */}
-            <div className="lm-p-card" style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: C.radius, padding: 28, transition: 'border-color .2s, transform .2s' }}>
+            <div className="lm-p-card" style={{ background: C.bgCard, border: '1px solid rgba(239,68,68,0.2)', borderRadius: C.radius, padding: 28, transition: 'border-color .2s, transform .2s' }}>
               <div style={{ fontFamily: mono, fontSize: 13, color: C.textMute, letterSpacing: '0.1em', marginBottom: 24 }}>03 — Sintoma</div>
               <h3 style={{ fontSize: 22, lineHeight: 1.2, fontWeight: 600, letterSpacing: '-0.015em', margin: '0 0 16px', fontFamily: sans }}>Escalou o faturamento. Escalou o caos junto.</h3>
               <p style={{ color: C.textDim, fontSize: 14.5, margin: '0 0 20px', fontFamily: sans }}>Mais gente, mais ferramenta, mais custo. E a margem? Comprimiu. Quanto maior o faturamento, pior a situação financeira. Isso não é crescimento — é uma bomba-relógio.</p>
@@ -242,7 +261,7 @@ export function LandingMentoria() {
           {/* Verdict — updated copy */}
           <div style={{ marginTop: 40, border: `1px solid ${C.greenDark}`, background: 'linear-gradient(180deg,rgba(0,239,97,0.08),rgba(0,239,97,0.02))', padding: 40, borderRadius: C.radiusLg, textAlign: 'center' }}>
             <h3 style={{ fontSize: 28, lineHeight: 1.25, fontWeight: 500, letterSpacing: '-0.02em', margin: 0, fontFamily: sans }}>
-              Enquanto todo mundo te ensina a vender mais, ninguém te ensinou a parar de perder o que já ganha. O ATLAS é o oposto de tudo que você já viu no digital.
+              Enquanto todo mundo te ensina a vender mais, ninguém te ensinou a parar de perder o que já ganha. O ATLAS é o oposto de tudo que o digital te ensinou.
             </h3>
           </div>
         </Page>
@@ -296,9 +315,9 @@ export function LandingMentoria() {
                 </div>
                 <h3 style={{ fontSize: 22, lineHeight: 1.25, fontWeight: 500, letterSpacing: '-0.015em', margin: '0 0 8px', fontFamily: sans }}>{q}</h3>
                 <div style={{ fontFamily: mono, fontSize: 11, color: C.textMute, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 28 }}>{channels}</div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, background: C.border, border: `1px solid ${C.border}`, borderRadius: 10, overflow: 'hidden', marginBottom: 24 }}>
+                <div className="lm-metrics-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, background: C.border, border: `1px solid ${C.border}`, borderRadius: 10, overflow: 'hidden', marginBottom: 24 }}>
                   {metrics.map(m => (
-                    <div key={m.k} style={{ background: C.bg, padding: '18px 20px' }}>
+                    <div key={m.k} className="lm-metrics-cell" style={{ background: C.bg, padding: '18px 20px' }}>
                       <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: '0.16em', textTransform: 'uppercase', color: C.textMute, marginBottom: 8 }}>{m.k}</div>
                       <div style={{ fontSize: 22, fontWeight: 600, letterSpacing: '-0.01em', color: m.color }}>
                         {m.v}
@@ -324,7 +343,7 @@ export function LandingMentoria() {
         <Page>
           <SecHead
             kicker="§ 03 · A promessa"
-            title={<>Em 30 dias, controle total. Em 6 meses, <em style={{ fontStyle: 'normal', color: C.green }}>quatro frases novas.</em></>}
+            title={<>Em 30 dias, controle total. Em 6 meses, <em style={{ fontStyle: 'normal', color: C.green }}>outra empresa.</em></>}
           />
           <div className="lm-promise-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 16, marginTop: 40 }}>
             {[
@@ -333,7 +352,7 @@ export function LandingMentoria() {
               { n: '03', h: <>"Toda decisão de escala <em style={{fontStyle:'normal',color:C.green}}>é baseada em número.</em>"</>, p: 'CAC máximo por produto, teto de retirada, metas de margem. A operação para de girar no feeling.' },
               { n: '04', h: <>"<em style={{fontStyle:'normal',color:C.green}}>Não virei especialista em finanças.</em>"</>, p: 'O software roda por você e eu implemento junto. Você aprende a ler e decidir — não a operar planilha.' },
             ].map(({ n, h, p }) => (
-              <div key={n} style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: C.radius, padding: '28px 30px', display: 'grid', gridTemplateColumns: '48px 1fr', gap: 20 }}>
+              <div key={n} style={{ background: 'rgba(255,255,255,0.02)', border: 'none', borderRadius: C.radius, padding: '28px 30px', display: 'grid', gridTemplateColumns: '48px 1fr', gap: 20 }}>
                 <div style={{ fontFamily: mono, fontSize: 13, color: C.green, letterSpacing: '0.08em', paddingTop: 4 }}>{n}</div>
                 <div>
                   <h4 style={{ fontSize: 19, lineHeight: 1.25, fontWeight: 500, letterSpacing: '-0.01em', margin: '0 0 8px', color: C.text, fontFamily: sans }}>{h}</h4>
@@ -362,13 +381,13 @@ export function LandingMentoria() {
                 { n: 'M·03', h: 'Eficiência & margem', p: 'Precificação lucrativa. O que escalar primeiro. Ajustes que geram caixa rápido. CAC. Corte de custos cirúrgico.', tag: 'Margem' },
                 { n: 'M·04', h: 'Modelo de gestão', p: 'Rotina semanal. Indicadores que importam. Decisões com dados. Controle com crescimento — a empresa rodando no piloto novo.', tag: 'Operação' },
               ].map(({ n, h, p, tag }) => (
-                <div key={n} className="lm-module" style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: C.radius, padding: '24px 28px', display: 'grid', gridTemplateColumns: '56px 1fr auto', gap: 20, alignItems: 'center', transition: 'border-color .15s' }}>
-                  <div style={{ fontFamily: mono, fontSize: 12, color: C.green, letterSpacing: '0.08em' }}>{n}</div>
-                  <div>
+                <div key={n} className="lm-module" style={{ background: 'rgba(255,255,255,0.02)', border: 'none', borderRadius: C.radius, padding: '24px 28px', display: 'grid', gridTemplateColumns: '56px 1fr auto', gap: 20, alignItems: 'center', transition: 'border-color .15s' }}>
+                  <div className="lm-module-id" style={{ fontFamily: mono, fontSize: 12, color: C.green, letterSpacing: '0.08em' }}>{n}</div>
+                  <div className="lm-module-content">
                     <h4 style={{ fontSize: 18, fontWeight: 500, margin: '0 0 4px', letterSpacing: '-0.01em', fontFamily: sans }}>{h}</h4>
                     <p style={{ fontSize: 13.5, color: C.textDim, margin: 0, lineHeight: 1.45, fontFamily: sans }}>{p}</p>
                   </div>
-                  <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: C.green, border: `1px solid ${C.greenDark}`, padding: '4px 9px', borderRadius: 999, whiteSpace: 'nowrap' }}>{tag}</div>
+                  <div className="lm-module-badge" style={{ fontFamily: mono, fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: C.green, border: `1px solid ${C.greenDark}`, padding: '4px 9px', borderRadius: 999, whiteSpace: 'nowrap' }}>{tag}</div>
                 </div>
               ))}
 
@@ -426,7 +445,7 @@ export function LandingMentoria() {
       <section className="lm-section" style={{ padding: '100px 0', borderTop: `1px solid ${C.border}`, borderBottom: `1px solid ${C.border}` }}>
         <Page>
           <SecHead
-            kicker="§ 04.5 · O software"
+            kicker="§ 05 · O software"
             title="O ATLAS faz o trabalho pesado por você."
             sub="Você lança as entradas e saídas da semana. O sistema monta DRE, fluxo de caixa, projeção, ponto de equilíbrio e diagnóstico — tudo automático. Sem planilha. Sem curso de finanças. Sem complicação."
           />
@@ -436,7 +455,7 @@ export function LandingMentoria() {
               { n: '02', h: 'Fluxo de caixa projetado', p: 'Veja 90 dias à frente. Saiba antes se o caixa vai apertar.' },
               { n: '03', h: 'Diagnóstico com IA', p: 'Uma análise mensal que lê seus números e te diz onde está o problema — como um sócio financeiro faria.' },
             ].map(({ n, h, p }) => (
-              <div key={n} className="lm-p-card" style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: C.radius, padding: 28, transition: 'border-color .2s, transform .2s' }}>
+              <div key={n} className="lm-p-card" style={{ background: 'rgba(255,255,255,0.02)', border: 'none', borderRadius: C.radius, padding: 28, transition: 'transform .2s' }}>
                 <div style={{ fontFamily: mono, fontSize: 13, color: C.textMute, letterSpacing: '0.1em', marginBottom: 24 }}>{n}</div>
                 <h3 style={{ fontSize: 22, lineHeight: 1.2, fontWeight: 600, letterSpacing: '-0.015em', margin: '0 0 16px', fontFamily: sans }}>{h}</h3>
                 <p style={{ color: C.textDim, fontSize: 14.5, margin: 0, fontFamily: sans }}>{p}</p>
@@ -461,7 +480,7 @@ export function LandingMentoria() {
       {/* ── FILTRO §05 ── */}
       <section id="filtro" className="lm-section" style={{ padding: '100px 0' }}>
         <Page>
-          <SecHead kicker="§ 05 · Filtro" kickerRed title={<>O ATLAS <em style={{ fontStyle: 'normal', color: C.green }}>não é pra todo mundo.</em></>} />
+          <SecHead kicker="§ 06 · Filtro" title={<>O ATLAS <em style={{ fontStyle: 'normal', color: C.green }}>não é pra todo mundo.</em></>} />
           <div className="lm-filter-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginTop: 40 }}>
             <div style={{ background: `linear-gradient(180deg,rgba(0,239,97,0.04),transparent)`, border: `1px solid ${C.greenDark}`, borderRadius: C.radiusLg, padding: 32 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', paddingBottom: 14, marginBottom: 20, borderBottom: `1px solid ${C.border}` }}>
@@ -497,7 +516,7 @@ export function LandingMentoria() {
       <section className="lm-section" style={{ padding: '100px 0', background: C.bgRaised, borderTop: `1px solid ${C.border}`, borderBottom: `1px solid ${C.border}` }}>
         <Page>
           <div style={{ textAlign: 'center', maxWidth: 820, margin: '0 auto' }}>
-            <div style={{ fontFamily: mono, fontSize: 12, letterSpacing: '0.18em', textTransform: 'uppercase', color: C.red, marginBottom: 18 }}>§ 05.5 · A real</div>
+            <div style={{ fontFamily: sans, fontSize: 12, letterSpacing: '0.18em', textTransform: 'uppercase', color: C.green, marginBottom: 18 }}>§ 07 · A real</div>
             <h2 style={{ fontSize: 'clamp(32px,4vw,52px)', lineHeight: 1.05, letterSpacing: '-0.03em', fontWeight: 700, margin: '0 0 24px', fontFamily: sans }}>
               Sem controle financeiro, um mês ruim de tráfego derruba tudo.
             </h2>
@@ -511,7 +530,7 @@ export function LandingMentoria() {
       {/* ── OBJEÇÕES §06 — 4 items, 2x2 grid ── */}
       <section className="lm-section" style={{ padding: '100px 0' }}>
         <Page>
-          <SecHead kicker="§ 06 · Objeções" title={<>Quatro coisas que <em style={{ fontStyle: 'normal', color: C.green }}>você pode estar pensando agora.</em></>} />
+          <SecHead kicker="§ 08 · Objeções" title={<>Quatro coisas que <em style={{ fontStyle: 'normal', color: C.green }}>você pode estar pensando agora.</em></>} />
           <div className="lm-obj-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 16, marginTop: 40 }}>
             {[
               { q: '"Meu negócio é muito rápido pra parar e organizar."', a: <span>Você não para. <strong style={{ color: C.green, fontWeight: 600, fontStyle: 'normal' }}>Uma call por mês. 30 minutos por semana.</strong> O ATLAS roda enquanto você opera.</span> },
@@ -519,7 +538,7 @@ export function LandingMentoria() {
               { q: '"Eu já uso Conta Azul / ERP."', a: <span>ERP organiza nota fiscal. <strong style={{ color: C.green, fontWeight: 600, fontStyle: 'normal' }}>Não diz se sua campanha dá lucro ou prejuízo.</strong> ATLAS é a camada que falta.</span> },
               { q: '"Não tenho ninguém no time pra lançar os dados."', a: <span>Qualquer pessoa do time consegue. São 30 minutos por semana preenchendo entradas e saídas. O software faz o resto. Se você consegue preencher um extrato, <strong style={{ color: C.green, fontWeight: 600, fontStyle: 'normal' }}>consegue usar o ATLAS.</strong></span> },
             ].map(({ q, a }) => (
-              <div key={q} style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: C.radius, padding: 28 }}>
+              <div key={q} style={{ background: 'rgba(255,255,255,0.02)', border: 'none', borderRadius: C.radius, padding: 28 }}>
                 <p style={{ fontSize: 16, color: C.textMute, fontStyle: 'italic', margin: '0 0 14px', lineHeight: 1.4, fontFamily: sans }}>{q}</p>
                 <p style={{ fontSize: 15.5, color: C.text, lineHeight: 1.55, margin: 0, fontFamily: sans }}>{a}</p>
               </div>
@@ -531,7 +550,7 @@ export function LandingMentoria() {
       {/* ── INVESTIMENTO §07 ── */}
       <section id="investimento" className="lm-section" style={{ padding: '100px 0', background: C.bgRaised }}>
         <Page>
-          <SecHead kicker="§ 07 · Investimento" title={<>Um ticket. <em style={{ fontStyle: 'normal', color: C.green }}>Tudo dentro.</em></>} />
+          <SecHead kicker="§ 09 · Investimento" title={<>Um ticket. <em style={{ fontStyle: 'normal', color: C.green }}>Tudo dentro.</em></>} />
           <div className="lm-invest lm-invest-wrap" style={{ marginTop: 48, border: `1px solid ${C.greenDark}`, background: `radial-gradient(60% 80% at 80% 50%, rgba(0,239,97,0.10), transparent 70%), ${C.bgCard}`, borderRadius: C.radiusLg, padding: 56, display: 'grid', gridTemplateColumns: '1.1fr 1fr', gap: 48, alignItems: 'center' }}>
             <div>
               <div style={{ fontFamily: mono, fontSize: 12, letterSpacing: '0.2em', textTransform: 'uppercase', color: C.green, marginBottom: 12 }}>Programa ATLAS · 6 meses</div>
@@ -541,7 +560,7 @@ export function LandingMentoria() {
               <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                 {[['4 módulos','implementação guiada'],['6 calls 1:1','individuais comigo'],['software','ATLAS incluído'],['suporte','WhatsApp + comunidade']].map(([k, v]) => (
                   <li key={k} style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderTop: `1px solid ${C.border}`, fontSize: 14, color: C.textDim, fontFamily: sans }}>
-                    <span style={{ fontFamily: mono, fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: C.green }}>{k}</span>
+                    <span style={{ fontFamily: sans, fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: C.green }}>{k}</span>
                     <span>{v}</span>
                   </li>
                 ))}
@@ -552,6 +571,11 @@ export function LandingMentoria() {
                 Nos dois cases dessa página, o dinheiro que estava sendo perdido por falta de gestão era maior que o valor do programa. O ATLAS se paga com o dinheiro que você já perde sem saber.
               </p>
             </div>
+          </div>
+          <div style={{ textAlign: 'center', marginTop: 32 }}>
+            <BtnPrimary href="#aplicar" lg>
+              <span style={{ fontFamily: sans }}>Quero implementar o ATLAS <span style={{ fontFamily: mono }}>→</span></span>
+            </BtnPrimary>
           </div>
         </Page>
       </section>
