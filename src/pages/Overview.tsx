@@ -36,7 +36,7 @@ function BigMetricCard({
 }: { label: string; value: string; sub?: string; positive?: boolean; negative?: boolean }) {
   const color = positive ? 'text-brand-green' : negative ? 'text-red-400' : 'text-white'
   return (
-    <div className="bg-[#0a0a0a] border border-white/15 rounded-2xl p-6">
+    <div className="bg-[#111] border border-[#1e1e1e] rounded-2xl p-6">
       <p className="text-xs text-white/60 uppercase tracking-widest mb-3 whitespace-nowrap overflow-hidden text-ellipsis">{label}</p>
       <p className={`text-2xl font-bold tabular-nums tracking-tight leading-tight ${color}`}>{value}</p>
       {sub && <p className="text-xs text-white/70 mt-1.5 leading-snug">{sub}</p>}

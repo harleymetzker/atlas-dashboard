@@ -1,106 +1,239 @@
 import { useState } from 'react'
-import { NavLink } from 'react-router-dom'
-import { LayoutDashboard, TrendingUp, ArrowLeftRight, BarChart3, PlusCircle, BrainCircuit, Users, LogOut, Wrench, ChevronDown, Tag, Clock, Target, GitCompare } from 'lucide-react'
+import { NavLink, useLocation } from 'react-router-dom'
+import type { NavLinkRenderProps } from 'react-router-dom'
+import {
+  Home, FileText, DollarSign, BarChart3, List, Zap,
+  Wrench, Users, LogOut, ChevronDown,
+  Tag, Clock, Target, GitCompare,
+} from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 
+// ── Nav items ────────────────────────────────────────────────────────────────
+
 const navItems = [
-  { to: '/dashboard', icon: LayoutDashboard, label: 'Visão Geral' },
-  { to: '/dre', icon: TrendingUp, label: 'DRE' },
-  { to: '/cashflow', icon: ArrowLeftRight, label: 'Fluxo de Caixa' },
-  { to: '/charts', icon: BarChart3, label: 'Gráficos' },
-  { to: '/entries', icon: PlusCircle, label: 'Lançamentos' },
-  { to: '/diagnostico', icon: BrainCircuit, label: 'Diagnóstico IA' },
+  { to: '/dashboard',   icon: Home,       label: 'Visão Geral',    end: true  },
+  { to: '/dre',         icon: FileText,   label: 'DRE',            end: false },
+  { to: '/cashflow',    icon: DollarSign, label: 'Fluxo de Caixa', end: false },
+  { to: '/charts',      icon: BarChart3,  label: 'Gráficos',       end: false },
+  { to: '/entries',     icon: List,       label: 'Lançamentos',    end: false },
+  { to: '/diagnostico', icon: Zap,        label: 'Diagnóstico IA', end: false, activeBg: '#6710A2', activeColor: '#fff' },
 ]
 
 const ferramentasItems = [
-  { to: '/ferramentas/precificacao-produto', icon: Tag, label: 'Preço de Produto' },
-  { to: '/ferramentas/precificacao-servico', icon: Clock, label: 'Preço de Serviço' },
-  { to: '/ferramentas/ponto-equilibrio', icon: Target, label: 'Ponto de Equilíbrio' },
-  { to: '/ferramentas/simulador-cenarios', icon: GitCompare, label: 'Simulador de Cenários' },
+  { to: '/ferramentas/precificacao-produto',  icon: Tag,       label: 'Preço de Produto' },
+  { to: '/ferramentas/precificacao-servico',  icon: Clock,     label: 'Preço de Serviço' },
+  { to: '/ferramentas/ponto-equilibrio',      icon: Target,    label: 'Ponto de Equilíbrio' },
+  { to: '/ferramentas/simulador-cenarios',    icon: GitCompare,label: 'Simulador' },
 ]
 
-const linkClass = ({ isActive }: { isActive: boolean }) =>
-  `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all ${isActive ? 'bg-white text-black font-semibold' : 'text-white/50 hover:text-white hover:bg-white/5'}`
+// ── NavItem ───────────────────────────────────────────────────────────────────
+
+function navStyle(
+  { isActive }: NavLinkRenderProps,
+  hovered: boolean,
+  activeBg = '#00EF61',
+  activeColor = '#000',
+): React.CSSProperties {
+  return {
+    display: 'flex', alignItems: 'center', gap: 10,
+    padding: '8px 10px', borderRadius: 8, textDecoration: 'none',
+    fontFamily: "'Geist', sans-serif",
+    fontSize: 13, transition: 'all 0.15s',
+    fontWeight: isActive ? 600 : 500,
+    background: isActive ? activeBg : hovered ? 'rgba(255,255,255,0.06)' : 'transparent',
+    color: isActive ? activeColor : hovered ? '#fff' : '#A6A8AB',
+  }
+}
+
+function NavItem({ to, icon: Icon, label, end = false, activeBg, activeColor }: {
+  to: string; icon: React.ElementType; label: string; end?: boolean
+  activeBg?: string; activeColor?: string
+}) {
+  const [hovered, setHovered] = useState(false)
+  return (
+    <NavLink
+      to={to}
+      end={end}
+      style={p => navStyle(p, hovered, activeBg, activeColor)}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <Icon size={15} style={{ flexShrink: 0 }} />
+      <span>{label}</span>
+    </NavLink>
+  )
+}
+
+function SubNavItem({ to, icon: Icon, label }: { to: string; icon: React.ElementType; label: string }) {
+  const [hovered, setHovered] = useState(false)
+  return (
+    <NavLink
+      to={to}
+      style={({ isActive }) => ({
+        display: 'flex', alignItems: 'center', gap: 8,
+        padding: '7px 8px', borderRadius: 6, textDecoration: 'none',
+        fontFamily: "'Geist', sans-serif",
+        fontSize: 12, transition: 'all 0.15s',
+        fontWeight: isActive ? 600 : 500,
+        background: isActive ? '#00EF61' : hovered ? 'rgba(255,255,255,0.06)' : 'transparent',
+        color: isActive ? '#000' : hovered ? '#fff' : '#A6A8AB',
+      })}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <Icon size={13} style={{ flexShrink: 0 }} />
+      <span>{label}</span>
+    </NavLink>
+  )
+}
+
+// ── Component ─────────────────────────────────────────────────────────────────
 
 export function Sidebar() {
   const { signOut, isAdmin, isSuperAdmin, user } = useAuth()
   const [ferramentasOpen, setFerramentasOpen] = useState(false)
+  const location = useLocation()
+  const ferramentasActive = location.pathname.startsWith('/ferramentas')
 
   return (
-    <aside className="w-60 shrink-0 bg-[#050505] border-r border-white/5 flex flex-col h-screen sticky top-0">
-      <div className="p-6 border-b border-white/5">
-        <h1 className="text-xl font-black tracking-[0.2em] text-white">ATLAS</h1>
-        <p className="text-[10px] text-white/20 uppercase tracking-widest mt-0.5">Financial Dashboard</p>
+    <aside style={{
+      width: 220, flexShrink: 0,
+      background: '#000',
+      borderRight: '1px solid #1e1e1e',
+      display: 'flex', flexDirection: 'column',
+      height: '100vh', position: 'sticky', top: 0,
+    }}>
+
+      {/* ── Logo / Header ── */}
+      <div style={{ padding: '20px 16px 16px', borderBottom: '1px solid #1e1e1e' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div style={{
+            background: '#00EF61', borderRadius: 8, padding: 6,
+            width: 40, height: 40, flexShrink: 0,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            overflow: 'hidden',
+          }}>
+            <img
+              src="/blacksheep-logo.png"
+              alt="Black Sheep"
+              style={{ width: 28, height: 28, objectFit: 'contain' }}
+            />
+          </div>
+          <div style={{ minWidth: 0 }}>
+            <div style={{
+              fontFamily: "'Geist', sans-serif",
+              fontWeight: 700, fontSize: 14,
+              color: '#fff', lineHeight: 1.2,
+            }}>
+              Black Sheep
+            </div>
+            <div style={{
+              fontFamily: "'Geist Mono', monospace",
+              fontSize: 9, color: '#666',
+              letterSpacing: '0.08em', textTransform: 'uppercase',
+              lineHeight: 1.4, marginTop: 1,
+            }}>
+              Sistema Financeiro
+            </div>
+          </div>
+        </div>
       </div>
 
-      <nav className="flex-1 p-3 space-y-0.5 overflow-y-auto">
+      {/* ── Nav ── */}
+      <nav style={{ flex: 1, padding: '12px 8px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 2 }}>
         {isSuperAdmin ? (
-          /* blacksheep: apenas painel de usuários */
-          <NavLink to="/admin" className={linkClass}>
-            <Users size={16} />
-            Gerenciar Usuários
-          </NavLink>
+          /* blacksheep: apenas painel admin */
+          <NavItem to="/admin" icon={Users} label="Gerenciar Usuários" />
         ) : (
           <>
-            {navItems.map(({ to, icon: Icon, label }) => (
-              <NavLink key={to} to={to} end={to === '/dashboard'} className={linkClass}>
-                <Icon size={16} />
-                {label}
-              </NavLink>
+            {navItems.map(({ to, icon, label, end, activeBg, activeColor }) => (
+              <NavItem key={to} to={to} icon={icon} label={label} end={end} activeBg={activeBg} activeColor={activeColor} />
             ))}
 
             {/* Ferramentas accordion */}
-            <div className="pt-2">
+            <div style={{ marginTop: 4 }}>
               <button
                 onClick={() => setFerramentasOpen(o => !o)}
-                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-white/50 hover:text-white hover:bg-white/5 transition-all"
+                style={{
+                  width: '100%', display: 'flex', alignItems: 'center', gap: 10,
+                  padding: '8px 10px', borderRadius: 8,
+                  background: ferramentasActive ? 'rgba(0,239,97,0.08)' : 'transparent',
+                  color: ferramentasActive ? '#00EF61' : '#A6A8AB',
+                  fontWeight: 500, fontSize: 13,
+                  border: 'none', cursor: 'pointer',
+                  transition: 'all 0.15s',
+                  fontFamily: "'Geist', sans-serif",
+                }}
+                onMouseEnter={e => {
+                  if (!ferramentasActive) {
+                    e.currentTarget.style.color = '#fff'
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.05)'
+                  }
+                }}
+                onMouseLeave={e => {
+                  if (!ferramentasActive) {
+                    e.currentTarget.style.color = '#A6A8AB'
+                    e.currentTarget.style.background = 'transparent'
+                  }
+                }}
               >
-                <Wrench size={16} />
-                <span className="flex-1 text-left">Ferramentas</span>
-                <ChevronDown size={14} className={`transition-transform duration-200 ${ferramentasOpen ? 'rotate-180' : ''}`} />
+                <Wrench size={15} style={{ flexShrink: 0 }} />
+                <span style={{ flex: 1, textAlign: 'left' }}>Ferramentas</span>
+                <ChevronDown
+                  size={13}
+                  style={{
+                    transition: 'transform 0.2s',
+                    transform: ferramentasOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                  }}
+                />
               </button>
+
               {ferramentasOpen && (
-                <div className="ml-3 mt-0.5 border-l border-white/5 pl-3 space-y-0.5">
+                <div style={{ marginLeft: 10, marginTop: 2, borderLeft: '1px solid #1e1e1e', paddingLeft: 10, display: 'flex', flexDirection: 'column', gap: 2 }}>
                   {ferramentasItems.map(({ to, icon: Icon, label }) => (
-                    <NavLink
-                      key={to}
-                      to={to}
-                      className={({ isActive }) =>
-                        `flex items-center gap-3 px-3 py-2 rounded-xl text-sm transition-all ${isActive ? 'bg-white text-black font-semibold' : 'text-white/40 hover:text-white hover:bg-white/5'}`
-                      }
-                    >
-                      <Icon size={14} />
-                      {label}
-                    </NavLink>
+                    <SubNavItem key={to} to={to} icon={Icon} label={label} />
                   ))}
                 </div>
               )}
             </div>
 
-            {/* Link Admin — harley e outros admins */}
+            {/* Admin */}
             {isAdmin && (
-              <div className="pt-2">
-                <NavLink to="/admin" className={linkClass}>
-                  <Users size={16} />
-                  Admin
-                </NavLink>
+              <div style={{ marginTop: 4 }}>
+                <NavItem to="/admin" icon={Users} label="Admin" />
               </div>
             )}
           </>
         )}
       </nav>
 
-      <div className="p-3 border-t border-white/5">
-        <div className="px-3 py-2 mb-1">
-          <p className="text-xs text-white/30 truncate">{user?.email}</p>
-          {isAdmin && <span className="text-[10px] text-white/20 uppercase tracking-widest">Admin</span>}
+      {/* ── Footer ── */}
+      <div style={{ padding: '10px 8px 14px', borderTop: '1px solid #1e1e1e' }}>
+        <div style={{ padding: '4px 10px 8px' }}>
+          <p style={{
+            fontSize: 11, color: '#666',
+            margin: 0, overflow: 'hidden',
+            textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+            fontFamily: "'Geist Mono', monospace",
+          }}>
+            {user?.email}
+          </p>
         </div>
         <button
           onClick={signOut}
-          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-white/30 hover:text-red-400 hover:bg-red-500/5 transition-all"
+          style={{
+            width: '100%', display: 'flex', alignItems: 'center', gap: 10,
+            padding: '7px 10px', borderRadius: 8,
+            background: 'transparent', color: '#666',
+            fontSize: 12, border: 'none', cursor: 'pointer',
+            transition: 'color 0.15s',
+            fontFamily: "'Geist', sans-serif",
+          }}
+          onMouseEnter={e => { e.currentTarget.style.color = '#EF4444' }}
+          onMouseLeave={e => { e.currentTarget.style.color = '#666' }}
         >
-          <LogOut size={16} />
-          Sair
+          <LogOut size={13} />
+          <span>Sair</span>
         </button>
       </div>
     </aside>

@@ -51,18 +51,18 @@ export function CashFlow() {
     <div className="p-8 space-y-8">
       <div className="flex flex-wrap items-start justify-between gap-6">
         <div>
-          <h2 className="text-2xl font-bold text-white tracking-tight">Fluxo de Caixa</h2>
-          <p className="text-sm text-white/50 mt-1">Por data de pagamento/recebimento</p>
+          <h2 style={{ fontFamily: "'Geist', sans-serif", fontSize: 32, fontWeight: 800, color: '#fff', lineHeight: 1.1 }}>Fluxo de Caixa</h2>
+          <p style={{ fontSize: 14, color: '#666', marginTop: 4 }}>Por data de pagamento/recebimento</p>
         </div>
         <DateFilter startDate={startDate} endDate={endDate} onChange={(s, e) => { setStartDate(s); setEndDate(e) }} />
       </div>
 
       {/* Saldo inicial por mês */}
-      <div className="flex items-center gap-3">
-        <span className="text-xs text-white/60 uppercase tracking-widest whitespace-nowrap">
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+        <span style={{ fontFamily: "'Geist Mono', monospace", fontSize: 11, textTransform: 'uppercase', letterSpacing: 1, color: '#666', whiteSpace: 'nowrap' }}>
           Saldo inicial de {format(new Date(yearMonth + '-02'), 'MMMM/yyyy', { locale: ptBR })}:
         </span>
-        <div className="w-48">
+        <div style={{ width: 192 }}>
           <CurrencyInput
             value={openingBalance === 0 ? '' : String(openingBalance)}
             onChange={v => handleBalanceChange(parseFloat(v) || 0)}
@@ -97,31 +97,31 @@ export function CashFlow() {
 
           {/* Tabela de movimentação diária */}
           <Card>
-            <h3 className="text-sm font-semibold text-white/60 uppercase tracking-widest mb-6">Movimentação Diária</h3>
+            <p style={{ fontFamily: "'Geist Mono', monospace", fontSize: 11, textTransform: 'uppercase', letterSpacing: 1, color: '#666', marginBottom: 20 }}>Movimentação Diária</p>
             {cashFlowEntries.length === 0 ? (
               <p className="text-white/35 text-sm py-8 text-center">Nenhuma movimentação no período.</p>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="text-xs text-white/60 uppercase tracking-widest">
-                      <th className="text-left pb-4">Data Pagamento</th>
-                      <th className="text-right pb-4">Entradas</th>
-                      <th className="text-right pb-4">Saídas</th>
-                      <th className="text-right pb-4">Saldo</th>
+                    <tr style={{ fontFamily: "'Geist Mono', monospace", fontSize: 11, textTransform: 'uppercase', letterSpacing: 1, color: '#666', borderBottom: '1px solid #333' }}>
+                      <th className="text-left py-3 font-medium">Data Pagamento</th>
+                      <th className="text-right py-3 font-medium">Entradas</th>
+                      <th className="text-right py-3 font-medium">Saídas</th>
+                      <th className="text-right py-3 font-medium">Saldo</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-white/5">
+                  <tbody>
                     {cashFlowEntries.map(entry => (
-                      <tr key={entry.date} className="text-white/80">
-                        <td className="py-3 tabular-nums">{entry.date}</td>
-                        <td className="py-3 text-right tabular-nums text-brand-green/80">
+                      <tr key={entry.date} className="hover:bg-[#111] transition-colors" style={{ borderBottom: '1px solid #1e1e1e' }}>
+                        <td className="py-3" style={{ fontFamily: "'Geist Mono', monospace", color: '#A6A8AB' }}>{entry.date}</td>
+                        <td className="py-3 text-right" style={{ fontFamily: "'Geist Mono', monospace", color: entry.revenue > 0 ? '#00EF61' : '#555' }}>
                           {entry.revenue > 0 ? formatCurrency(entry.revenue) : '—'}
                         </td>
-                        <td className="py-3 text-right tabular-nums text-red-400/80">
+                        <td className="py-3 text-right" style={{ fontFamily: "'Geist Mono', monospace", color: (entry.costs + entry.withdrawals) > 0 ? '#EF4444' : '#555' }}>
                           {(entry.costs + entry.withdrawals) > 0 ? formatCurrency(entry.costs + entry.withdrawals) : '—'}
                         </td>
-                        <td className={`py-3 text-right tabular-nums font-semibold ${entry.balance >= 0 ? 'text-white' : 'text-red-400'}`}>
+                        <td className="py-3 text-right" style={{ fontFamily: "'Geist Mono', monospace", fontWeight: 600, color: entry.balance >= 0 ? '#fff' : '#EF4444' }}>
                           {formatCurrency(entry.balance)}
                         </td>
                       </tr>

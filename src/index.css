@@ -1,9 +1,95 @@
 @import "tailwindcss";
 
-@theme {
-  --color-brand-green: #00EF61;
+/* ── Geist Sans ─────────────────────────────────────────────────────────── */
+@font-face {
+  font-family: 'Geist';
+  src: url('/fonts/Geist-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Geist';
+  src: url('/fonts/Geist-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Geist';
+  src: url('/fonts/Geist-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Geist';
+  src: url('/fonts/Geist-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Geist';
+  src: url('/fonts/Geist-Black.woff2') format('woff2');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
 }
 
+/* ── Geist Mono ──────────────────────────────────────────────────────────── */
+@font-face {
+  font-family: 'Geist Mono';
+  src: url('/fonts/GeistMono-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Geist Mono';
+  src: url('/fonts/GeistMono-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Geist Mono';
+  src: url('/fonts/GeistMono-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Geist Mono';
+  src: url('/fonts/GeistMono-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ── Design tokens ───────────────────────────────────────────────────────── */
+@theme {
+  /* Fonts */
+  --font-sans: 'Geist', system-ui, sans-serif;
+  --font-mono: 'Geist Mono', 'Courier New', monospace;
+
+  /* Brand */
+  --color-brand-green:  #00EF61;
+  --color-brand-red:    #EF4444;
+  --color-brand-purple: #6710A2;
+  --color-brand-gold:   #B5A74D;
+
+  /* Text hierarchy */
+  --color-text-primary:   #ffffff;
+  --color-text-secondary: #A6A8AB;
+  --color-text-tertiary:  #666666;
+
+  /* Surfaces */
+  --color-surface-card:   #111111;
+  --color-surface-border: #1e1e1e;
+}
+
+/* ── Base ────────────────────────────────────────────────────────────────── */
 @layer base {
   * {
     box-sizing: border-box;
@@ -15,10 +101,16 @@
 
   body {
     margin: 0;
-    background: #000;
-    color: #fff;
-    font-family: 'Inter', system-ui, sans-serif;
+    background: #000000;
+    color: #ffffff;
+    font-family: 'Geist', system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Números, valores financeiros e labels técnicas → Geist Mono */
+  .tabular-nums {
+    font-family: 'Geist Mono', monospace;
   }
 
   #root {
@@ -31,7 +123,7 @@
   }
 
   ::-webkit-scrollbar-track {
-    background: #0a0a0a;
+    background: #000;
   }
 
   ::-webkit-scrollbar-thumb {

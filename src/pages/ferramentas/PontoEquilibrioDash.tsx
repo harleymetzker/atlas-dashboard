@@ -81,7 +81,7 @@ export function PontoEquilibrioDash() {
       </div>
 
       {/* Custos Variáveis */}
-      <div className="bg-white/[0.03] border border-white/15 rounded-2xl p-6">
+      <div className="bg-[#111] border border-[#1e1e1e] rounded-2xl p-6">
         <h3 className="text-xs font-semibold text-white/60 uppercase tracking-widest mb-5">
           Custos Variáveis <span className="text-white/35">(%)</span>
         </h3>
@@ -105,7 +105,7 @@ export function PontoEquilibrioDash() {
       </div>
 
       {/* Custos Fixos */}
-      <div className="bg-white/[0.03] border border-white/15 rounded-2xl p-6">
+      <div className="bg-[#111] border border-[#1e1e1e] rounded-2xl p-6">
         <h3 className="text-xs font-semibold text-white/60 uppercase tracking-widest mb-5">
           Custos Fixos <span className="text-white/35">(R$/mês)</span>
         </h3>
@@ -121,7 +121,7 @@ export function PontoEquilibrioDash() {
       </div>
 
       {/* Resultado */}
-      <div className="bg-white/[0.03] border border-white/15 rounded-2xl p-8 text-center">
+      <div className="bg-[#111] border border-[#1e1e1e] rounded-2xl p-8 text-center">
         <p className="text-xs text-white/50 uppercase tracking-widest mb-3">Faturamento mínimo mensal</p>
         <p className="text-4xl font-black tabular-nums text-brand-green">
           {pe > 0 ? fmt(pe) : '—'}
@@ -135,7 +135,7 @@ export function PontoEquilibrioDash() {
 
       {/* Simulação */}
       {pe > 0 && (
-        <div className="bg-white/[0.03] border border-white/15 rounded-2xl p-6">
+        <div className="bg-[#111] border border-[#1e1e1e] rounded-2xl p-6">
           <h3 className="text-xs font-semibold text-white/60 uppercase tracking-widest mb-5">Simulação de Cenários</h3>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">

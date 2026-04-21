@@ -1,17 +1,17 @@
 import { useState, useEffect } from 'react'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { BrainCircuit, CheckCircle2, Zap, TrendingUp, AlertCircle, Trash2, ArrowLeftRight } from 'lucide-react'
+import { BrainCircuit, CheckCircle2, Zap, TrendingUp, AlertCircle, Trash2, ArrowLeftRight, ChevronDown } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { useEntries } from '../hooks/useEntries'
 import { calcDRE } from '../lib/calculations'
 import { supabase } from '../lib/supabase'
-import { Card } from '../components/ui/Card'
 import { formatCurrency } from '../lib/calculations'
 
 const CREDIT_LIMIT = 2
 
 interface AnalysisContent {
+  frase_destaque: string
   diagnostico_geral: string
   dre_vs_caixa: string
   pontos_criticos: string[]
@@ -39,102 +39,102 @@ const MONTHS = [
 ]
 
 
+const SECTION_KEY = ['diagnostico_geral', 'dre_vs_caixa', 'tendencia'] as const
+
 function AnalysisResult({ content }: { content: AnalysisContent }) {
+  const [openSection, setOpenSection] = useState<string | null>('diagnostico_geral')
+
+  const quote = content.frase_destaque || content.diagnostico_geral.split(/(?<=[.!?])\s+/)[0]
+
+  const sections = [
+    { key: 'diagnostico_geral', label: 'Diagnóstico Geral',     icon: BrainCircuit,  text: content.diagnostico_geral },
+    { key: 'dre_vs_caixa',     label: 'DRE vs Fluxo de Caixa', icon: ArrowLeftRight, text: content.dre_vs_caixa },
+    { key: 'tendencia',        label: 'Tendência',              icon: TrendingUp,    text: content.tendencia },
+  ]
+
   return (
-    <div className="space-y-4">
-      <Card>
-        <div className="flex items-start gap-3">
-          <BrainCircuit size={18} className="text-white/60 mt-0.5 shrink-0" />
-          <div>
-            <h4 className="text-xs font-semibold text-white/60 uppercase tracking-widest mb-2">Diagnóstico Geral</h4>
-            <p className="text-sm text-white/80 leading-relaxed">{content.diagnostico_geral}</p>
-          </div>
-        </div>
-      </Card>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+      {/* Quote destaque */}
+      <blockquote style={{
+        margin: 0, borderLeft: '3px solid #6710A2', paddingLeft: 20,
+        fontSize: 20, fontWeight: 600, color: '#fff', lineHeight: 1.45,
+      }}>
+        {quote}
+      </blockquote>
 
-      <Card>
-        <div className="flex items-start gap-3">
-          <ArrowLeftRight size={18} className="text-white/60 mt-0.5 shrink-0" />
-          <div>
-            <h4 className="text-xs font-semibold text-white/60 uppercase tracking-widest mb-2">DRE vs Fluxo de Caixa</h4>
-            <p className="text-sm text-white/80 leading-relaxed">{content.dre_vs_caixa}</p>
+      {/* Seções expansíveis */}
+      <div style={{ background: '#111', border: '1px solid #1e1e1e', borderRadius: 8, overflow: 'hidden' }}>
+        {sections.map((s, i) => (
+          <div key={s.key} style={{ borderBottom: i < sections.length - 1 ? '1px solid #1e1e1e' : undefined }}>
+            <button
+              onClick={() => setOpenSection(openSection === s.key ? null : s.key)}
+              style={{
+                width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                padding: '14px 20px', background: 'transparent', border: 'none', cursor: 'pointer',
+              }}
+            >
+              <span style={{ fontFamily: "'Geist Mono', monospace", fontSize: 12, textTransform: 'uppercase', letterSpacing: 1, color: '#00EF61', fontWeight: 600 }}>
+                {s.label}
+              </span>
+              <ChevronDown size={14} style={{ color: '#00EF61', flexShrink: 0, transform: openSection === s.key ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
+            </button>
+            {openSection === s.key && (
+              <div style={{ padding: '0 20px 18px', color: '#A6A8AB', fontSize: 14, lineHeight: 1.7 }}>
+                {s.text}
+              </div>
+            )}
           </div>
-        </div>
-      </Card>
-
-      <Card>
-        <div className="flex items-start gap-3">
-          <TrendingUp size={18} className="text-white/60 mt-0.5 shrink-0" />
-          <div>
-            <h4 className="text-xs font-semibold text-white/60 uppercase tracking-widest mb-2">Tendência</h4>
-            <p className="text-sm text-white/80 leading-relaxed">{content.tendencia}</p>
-          </div>
-        </div>
-      </Card>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Card>
-          <div className="flex items-start gap-3">
-            <AlertCircle size={18} className="text-red-400 mt-0.5 shrink-0" />
-            <div className="flex-1">
-              <h4 className="text-xs font-semibold text-white/60 uppercase tracking-widest mb-3">Pontos Críticos</h4>
-              {content.pontos_criticos.length === 0 ? (
-                <p className="text-xs text-white/50 italic">Nenhum ponto crítico identificado.</p>
-              ) : (
-                <ul className="space-y-2">
-                  {content.pontos_criticos.map((p, i) => (
-                    <li key={i} className="flex items-start gap-2 text-sm text-white/70">
-                      <span className="text-red-400 mt-0.5 shrink-0">•</span>
-                      {p}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          </div>
-        </Card>
-
-        <Card>
-          <div className="flex items-start gap-3">
-            <CheckCircle2 size={18} className="text-brand-green mt-0.5 shrink-0" />
-            <div className="flex-1">
-              <h4 className="text-xs font-semibold text-white/60 uppercase tracking-widest mb-3">Pontos Positivos</h4>
-              {content.pontos_positivos.length === 0 ? (
-                <p className="text-xs text-white/50 italic">Nenhum ponto positivo identificado.</p>
-              ) : (
-                <ul className="space-y-2">
-                  {content.pontos_positivos.map((p, i) => (
-                    <li key={i} className="flex items-start gap-2 text-sm text-white/70">
-                      <span className="text-brand-green mt-0.5 shrink-0">•</span>
-                      {p}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          </div>
-        </Card>
+        ))}
       </div>
 
-      <Card>
-        <div className="flex items-start gap-3">
-          <Zap size={18} className="text-amber-400 mt-0.5 shrink-0" />
-          <div className="flex-1">
-            <h4 className="text-xs font-semibold text-white/60 uppercase tracking-widest mb-3">Ações Prioritárias</h4>
-            <ol className="space-y-2">
-              {content.acoes_prioritarias.map((a, i) => (
-                <li key={i} className="flex items-start gap-3 text-sm text-white/70">
-                  <span className="text-amber-400 font-bold tabular-nums shrink-0">{i + 1}.</span>
-                  {a}
-                </li>
-              ))}
-            </ol>
+      {/* Pontos críticos e positivos */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+        {[
+          { label: 'Pontos Críticos',  items: content.pontos_criticos,  icon: AlertCircle,  color: '#EF4444' },
+          { label: 'Pontos Positivos', items: content.pontos_positivos, icon: CheckCircle2, color: '#00EF61' },
+        ].map(({ label, items, icon: Icon, color }) => (
+          <div key={label} style={{ background: '#111', border: '1px solid #1e1e1e', borderRadius: 8, padding: 20 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
+              <Icon size={15} style={{ color, flexShrink: 0 }} />
+              <span style={{ fontFamily: "'Geist Mono', monospace", fontSize: 11, textTransform: 'uppercase', letterSpacing: 1, color: '#666', fontWeight: 600 }}>{label}</span>
+            </div>
+            {items.length === 0 ? (
+              <p style={{ fontSize: 12, color: '#555', fontStyle: 'italic' }}>Nenhum identificado.</p>
+            ) : (
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {items.map((p, i) => (
+                  <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: 14, color: '#A6A8AB', lineHeight: 1.5 }}>
+                    <span style={{ color, flexShrink: 0, marginTop: 2 }}>•</span>
+                    {p}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
+        ))}
+      </div>
+
+      {/* Ações prioritárias */}
+      <div style={{ background: '#111', border: '1px solid #1e1e1e', borderRadius: 8, padding: 20 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
+          <Zap size={15} style={{ color: '#B5A74D', flexShrink: 0 }} />
+          <span style={{ fontFamily: "'Geist Mono', monospace", fontSize: 11, textTransform: 'uppercase', letterSpacing: 1, color: '#666', fontWeight: 600 }}>Ações Prioritárias</span>
         </div>
-      </Card>
+        <ol style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {content.acoes_prioritarias.map((a, i) => (
+            <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 12, fontSize: 14, color: '#A6A8AB', lineHeight: 1.6 }}>
+              <span style={{ fontFamily: "'Geist Mono', monospace", color: '#B5A74D', fontWeight: 700, flexShrink: 0 }}>{i + 1}.</span>
+              {a}
+            </li>
+          ))}
+        </ol>
+      </div>
     </div>
   )
 }
+
+// Silence unused import warnings
+void SECTION_KEY
 
 export function Diagnostico() {
   const { user } = useAuth()
@@ -162,6 +162,7 @@ export function Diagnostico() {
   const [expandedId, setExpandedId] = useState<string | null>(null)
 
   const [companyProfile, setCompanyProfile] = useState<{
+    nome_empresa: string
     setor: string
     modelo_negocio: string
     tempo_operacao: string
@@ -170,6 +171,7 @@ export function Diagnostico() {
   const [loadingProfile, setLoadingProfile] = useState(true)
   const [showProfileForm, setShowProfileForm] = useState(false)
   const [profileForm, setProfileForm] = useState({
+    nome_empresa: '',
     setor: '',
     modelo_negocio: '',
     tempo_operacao: '',
@@ -188,7 +190,7 @@ export function Diagnostico() {
     setLoadingProfile(true)
     const { data } = await supabase
       .from('company_profiles')
-      .select('setor, modelo_negocio, tempo_operacao, ticket_medio')
+      .select('nome_empresa, setor, modelo_negocio, tempo_operacao, ticket_medio')
       .eq('user_id', user.id)
       .maybeSingle()
     setCompanyProfile(data)
@@ -197,12 +199,12 @@ export function Diagnostico() {
 
   async function handleSaveProfile() {
     if (!user) return
-    if (!profileForm.setor || !profileForm.modelo_negocio || !profileForm.tempo_operacao || !profileForm.ticket_medio) return
+    if (!profileForm.nome_empresa || !profileForm.setor || !profileForm.modelo_negocio || !profileForm.tempo_operacao || !profileForm.ticket_medio) return
 
     const { data, error } = await supabase
       .from('company_profiles')
       .upsert({ user_id: user.id, ...profileForm, updated_at: new Date().toISOString() }, { onConflict: 'user_id' })
-      .select('setor, modelo_negocio, tempo_operacao, ticket_medio')
+      .select('nome_empresa, setor, modelo_negocio, tempo_operacao, ticket_medio')
       .single()
 
     if (!error && data) {
@@ -366,7 +368,7 @@ export function Diagnostico() {
     const selectStyle = "w-full bg-white/5 border border-white/15 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-white/50 appearance-none cursor-pointer"
     const labelStyle = "block text-xs text-white/60 uppercase tracking-widest mb-2"
 
-    const isValid = profileForm.setor && profileForm.modelo_negocio && profileForm.tempo_operacao && profileForm.ticket_medio
+    const isValid = profileForm.nome_empresa && profileForm.setor && profileForm.modelo_negocio && profileForm.tempo_operacao && profileForm.ticket_medio
 
     return (
       <div className="p-8">
@@ -377,6 +379,16 @@ export function Diagnostico() {
           </div>
 
           <div className="space-y-6">
+            <div>
+              <label className={labelStyle}>Nome da empresa</label>
+              <input
+                type="text"
+                className={selectStyle}
+                placeholder="Ex: Black Sheep Burguer"
+                value={profileForm.nome_empresa}
+                onChange={e => setProfileForm(f => ({ ...f, nome_empresa: e.target.value }))}
+              />
+            </div>
             <div>
               <label className={labelStyle}>Setor</label>
               <select className={selectStyle} value={profileForm.setor} onChange={e => setProfileForm(f => ({ ...f, setor: e.target.value }))}>
@@ -427,33 +439,35 @@ export function Diagnostico() {
       {/* Header */}
       <div className="flex flex-wrap items-start justify-between gap-6">
         <div>
-          <h2 className="text-2xl font-bold text-white tracking-tight">Diagnóstico IA</h2>
-          <p className="text-sm text-white/50 mt-1">Análise financeira gerada por inteligência artificial</p>
+          <h2 style={{ fontFamily: "'Geist', sans-serif", fontSize: 32, fontWeight: 800, color: '#fff', lineHeight: 1.1 }}>Diagnóstico</h2>
+          <p style={{ fontSize: 14, color: '#666', marginTop: 4 }}>Análise gerada por IA. Interpretada como um sócio falaria.</p>
           <button
             onClick={() => { setProfileForm(companyProfile!); setShowProfileForm(true) }}
-            className="text-xs text-white/35 hover:text-white/70 transition-colors mt-1"
+            style={{ fontSize: 11, color: '#555', marginTop: 6, background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+            onMouseEnter={e => { e.currentTarget.style.color = '#A6A8AB' }}
+            onMouseLeave={e => { e.currentTarget.style.color = '#555' }}
           >
             {companyProfile?.setor} · Editar perfil
           </button>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <select
             value={month}
             onChange={e => setMonth(Number(e.target.value))}
-            className="bg-white/5 border border-white/15 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-white/50 appearance-none cursor-pointer"
+            style={{ fontFamily: "'Geist Mono', monospace", background: '#111', border: '1px solid #1e1e1e', borderRadius: 6, padding: '8px 14px', color: '#fff', fontSize: 13, outline: 'none', cursor: 'pointer' }}
           >
             {MONTHS.map((m, i) => (
-              <option key={i + 1} value={i + 1} className="bg-black">{m}</option>
+              <option key={i + 1} value={i + 1} style={{ background: '#111' }}>{m}</option>
             ))}
           </select>
           <select
             value={year}
             onChange={e => setYear(Number(e.target.value))}
-            className="bg-white/5 border border-white/15 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-white/50 appearance-none cursor-pointer"
+            style={{ fontFamily: "'Geist Mono', monospace", background: '#111', border: '1px solid #1e1e1e', borderRadius: 6, padding: '8px 14px', color: '#fff', fontSize: 13, outline: 'none', cursor: 'pointer' }}
           >
             {years.map(y => (
-              <option key={y} value={y} className="bg-black">{y}</option>
+              <option key={y} value={y} style={{ background: '#111' }}>{y}</option>
             ))}
           </select>
         </div>
@@ -463,45 +477,64 @@ export function Diagnostico() {
       {!loadingEntries && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
-            { label: 'Faturamento Bruto', value: formatCurrency(dre.faturamentoBruto) },
-            { label: 'Lucro Líquido',     value: formatCurrency(dre.lucro),  colored: true, positive: dre.lucro >= 0 },
-            { label: 'EBITDA',            value: formatCurrency(dre.ebitda), colored: true, positive: dre.ebitda >= 0 },
-            { label: 'Geração de Caixa',  value: formatCurrency(geracao),    colored: true, positive: geracao >= 0 },
-          ].map(({ label, value, colored, positive }) => (
-            <div key={label} className="bg-white/5 border border-white/15 rounded-2xl p-4">
-              <p className="text-xs text-white/50 uppercase tracking-widest mb-1">{label}</p>
-              <p className={`text-lg font-bold tabular-nums ${colored ? (positive ? 'text-brand-green' : 'text-red-400') : 'text-white'}`}>
-                {value}
-              </p>
+            { label: 'Faturamento Bruto', value: formatCurrency(dre.faturamentoBruto), color: '#fff' },
+            { label: 'Lucro Líquido',     value: formatCurrency(dre.lucro),            color: dre.lucro >= 0 ? '#00EF61' : '#EF4444' },
+            { label: 'EBITDA',            value: formatCurrency(dre.ebitda),           color: dre.ebitda >= 0 ? '#00EF61' : '#EF4444' },
+            { label: 'Geração de Caixa',  value: formatCurrency(geracao),              color: geracao >= 0 ? '#00EF61' : '#EF4444' },
+          ].map(({ label, value, color }) => (
+            <div key={label} style={{ background: '#111', border: '1px solid #1e1e1e', borderRadius: 8, padding: 16 }}>
+              <p style={{ fontFamily: "'Geist Mono', monospace", fontSize: 10, textTransform: 'uppercase', letterSpacing: 1, color: '#666', marginBottom: 8 }}>{label}</p>
+              <p style={{ fontFamily: "'Geist Mono', monospace", fontSize: 22, fontWeight: 700, color, lineHeight: 1.2 }}>{value}</p>
+              <p style={{ fontSize: 11, color: '#555', marginTop: 4 }}>{periodLabel}</p>
             </div>
           ))}
         </div>
       )}
 
-      {/* Credit counter */}
-      <div className={`text-sm font-semibold ${hasCredits ? 'text-brand-green' : 'text-red-400'}`}>
-        Créditos disponíveis: {creditsAvailable}/{CREDIT_LIMIT}
-        {!hasCredits && <span className="ml-2 font-normal text-red-400/70">— Você atingiu o limite de {CREDIT_LIMIT} análises este mês.</span>}
+      {/* Generate block */}
+      <div style={{ background: '#111', border: '1px solid #1e1e1e', borderRadius: 8, padding: 24, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 24, flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16, flex: 1, minWidth: 0 }}>
+          <div style={{ width: 40, height: 40, borderRadius: 8, background: 'rgba(103,16,162,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <BrainCircuit size={20} style={{ color: '#6710A2' }} />
+          </div>
+          <div>
+            <p style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 6 }}>Diagnóstico Financeiro</p>
+            <p style={{ fontSize: 14, color: '#A6A8AB', lineHeight: 1.5, marginBottom: 8 }}>
+              Análise completa da sua DRE e fluxo de caixa. Interpretada como um sócio falaria.
+            </p>
+            <p style={{ fontFamily: "'Geist Mono', monospace", fontSize: 11, color: !hasCredits ? '#EF4444' : '#00EF61' }}>
+              {creditsAvailable}/{CREDIT_LIMIT} créditos disponíveis este mês
+              {!hasCredits && ' — limite atingido'}
+            </p>
+          </div>
+        </div>
+        <button
+          onClick={handleGenerate}
+          disabled={generating || loadingEntries || !hasCredits}
+          style={{
+            background: '#6710A2', color: '#fff', borderRadius: 8,
+            fontWeight: 600, fontSize: 14, padding: '12px 24px',
+            border: 'none', cursor: hasCredits && !generating ? 'pointer' : 'not-allowed',
+            opacity: (!hasCredits || generating) ? 0.4 : 1,
+            display: 'flex', alignItems: 'center', gap: 8, whiteSpace: 'nowrap', flexShrink: 0,
+            transition: 'opacity 0.15s',
+          }}
+          onMouseEnter={e => { if (hasCredits && !generating) e.currentTarget.style.opacity = '0.85' }}
+          onMouseLeave={e => { if (hasCredits && !generating) e.currentTarget.style.opacity = '1' }}
+        >
+          {generating ? (
+            <>
+              <div style={{ width: 16, height: 16, border: '2px solid rgba(255,255,255,0.2)', borderTopColor: '#fff', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+              Gerando análise...
+            </>
+          ) : (
+            <>
+              <BrainCircuit size={16} />
+              Gerar diagnóstico
+            </>
+          )}
+        </button>
       </div>
-
-      {/* Generate button */}
-      <button
-        onClick={handleGenerate}
-        disabled={generating || loadingEntries || !hasCredits}
-        className="w-full bg-white text-black font-semibold text-sm rounded-2xl py-4 hover:bg-white/90 disabled:opacity-40 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
-      >
-        {generating ? (
-          <>
-            <div className="w-4 h-4 border-2 border-black/20 border-t-black rounded-full animate-spin" />
-            Gerando análise...
-          </>
-        ) : (
-          <>
-            <BrainCircuit size={16} />
-            Gerar Análise com IA — {periodLabel}
-          </>
-        )}
-      </button>
 
       {/* Error */}
       {error && (
@@ -524,39 +557,48 @@ export function Diagnostico() {
       {/* History */}
       {history.length > 0 && (
         <div>
-          <h3 className="text-xs font-semibold text-white/50 uppercase tracking-widest mb-4">Últimas Análises</h3>
-          <div className="space-y-3">
+          <p style={{ fontFamily: "'Geist Mono', monospace", fontSize: 11, textTransform: 'uppercase', letterSpacing: 1, color: '#666', marginBottom: 16 }}>Últimas Análises</p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             {history.map(item => (
-              <Card key={item.id}>
-                <div className="flex items-center justify-between gap-4">
-                  <div>
-                    <p className="text-sm font-semibold text-white capitalize">{item.period}</p>
-                    <p className="text-xs text-white/50 mt-0.5">
-                      {format(new Date(item.created_at), "dd/MM/yyyy 'às' HH:mm")}
-                    </p>
+              <div key={item.id} style={{ background: '#111', border: '1px solid #1e1e1e', borderRadius: 8, padding: 20 }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
+                    <span style={{ background: 'rgba(0,239,97,0.15)', color: '#00EF61', fontSize: 10, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.5, padding: '3px 7px', borderRadius: 4, flexShrink: 0 }}>
+                      Encerrada
+                    </span>
+                    <div style={{ minWidth: 0 }}>
+                      <p style={{ fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 2 }}>O sócio chato que lê seus números</p>
+                      <p style={{ fontFamily: "'Geist Mono', monospace", fontSize: 12, color: '#555' }}>
+                        {item.period} · {format(new Date(item.created_at), "dd/MM/yyyy 'às' HH:mm")}
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-3">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexShrink: 0 }}>
                     <button
                       onClick={() => setExpandedId(expandedId === item.id ? null : item.id)}
-                      className="text-xs text-white/60 hover:text-white transition-colors whitespace-nowrap"
+                      style={{ fontSize: 12, color: '#666', background: 'none', border: 'none', cursor: 'pointer', whiteSpace: 'nowrap' }}
+                      onMouseEnter={e => { e.currentTarget.style.color = '#fff' }}
+                      onMouseLeave={e => { e.currentTarget.style.color = '#666' }}
                     >
-                      {expandedId === item.id ? 'Fechar' : 'Ver análise completa'}
+                      {expandedId === item.id ? 'Fechar' : 'Ver análise'}
                     </button>
                     <button
                       onClick={() => handleDelete(item.id)}
-                      className="text-white/35 hover:text-red-400 transition-colors"
+                      style={{ color: '#555', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
                       title="Excluir análise"
+                      onMouseEnter={e => { e.currentTarget.style.color = '#EF4444' }}
+                      onMouseLeave={e => { e.currentTarget.style.color = '#555' }}
                     >
                       <Trash2 size={14} />
                     </button>
                   </div>
                 </div>
                 {expandedId === item.id && (
-                  <div className="mt-6 pt-6 border-t border-white/5">
+                  <div style={{ marginTop: 24, paddingTop: 24, borderTop: '1px solid #1e1e1e' }}>
                     <AnalysisResult content={item.content} />
                   </div>
                 )}
-              </Card>
+              </div>
             ))}
           </div>
         </div>

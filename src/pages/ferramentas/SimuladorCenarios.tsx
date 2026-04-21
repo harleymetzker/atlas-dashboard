@@ -311,7 +311,7 @@ export function SimuladorCenarios() {
       </div>
 
       {/* Comparison Table */}
-      <div className="bg-white/[0.03] border border-white/15 rounded-2xl overflow-hidden">
+      <div className="bg-[#111] border border-[#1e1e1e] rounded-2xl overflow-hidden">
         {/* Column headers */}
         <div className="grid grid-cols-[1fr_200px_220px_130px] items-center px-6 py-3 border-b border-white/15">
           <span className="text-xs text-white/60 uppercase tracking-widest">Linha DRE</span>
@@ -481,7 +481,7 @@ export function SimuladorCenarios() {
       </div>
 
       {/* Result summary card */}
-      <div className="bg-white/[0.03] border border-white/15 rounded-2xl p-6">
+      <div className="bg-[#111] border border-[#1e1e1e] rounded-2xl p-6">
         <div className="grid grid-cols-3 gap-6 text-center divide-x divide-white/5">
           <div>
             <p className="text-xs text-white/50 uppercase tracking-widest mb-3">Lucro Atual</p>
@@ -512,7 +512,7 @@ export function SimuladorCenarios() {
       </div>
 
       {/* req 5: Ponto de Equilíbrio Simulado */}
-      <div className="bg-white/[0.03] border border-white/15 rounded-2xl p-6">
+      <div className="bg-[#111] border border-[#1e1e1e] rounded-2xl p-6">
         <p className="text-xs text-white/50 uppercase tracking-widest mb-4">Ponto de Equilíbrio</p>
         <div className="grid grid-cols-2 gap-6 divide-x divide-white/5">
           <div className="text-center">

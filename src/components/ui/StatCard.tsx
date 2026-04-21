@@ -1,5 +1,4 @@
 import type { ReactNode } from 'react'
-import { Card } from './Card'
 
 interface StatCardProps {
   label: string
@@ -11,22 +10,22 @@ interface StatCardProps {
   highlight?: boolean
 }
 
-export function StatCard({ label, value, sub, icon, positive, negative, highlight }: StatCardProps) {
-  const valueColor = positive ? 'text-brand-green' : negative ? 'text-red-400' : highlight ? 'text-white' : 'text-white'
+export function StatCard({ label, value, sub, icon, positive, negative }: StatCardProps) {
+  const valueColor = positive ? '#00EF61' : negative ? '#EF4444' : '#fff'
   return (
-    <Card>
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex-1 min-w-0">
-          <p className="text-xs text-white/60 uppercase tracking-widest mb-3">{label}</p>
-          <p className={`text-2xl font-bold tracking-tight tabular-nums ${valueColor}`}>{value}</p>
-          {sub && <p className="text-xs text-white/60 mt-1">{sub}</p>}
+    <div style={{ background: '#111', border: '1px solid #1e1e1e', borderRadius: 8, padding: 16 }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16 }}>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <p style={{ fontFamily: "'Geist Mono', monospace", fontSize: 10, textTransform: 'uppercase', letterSpacing: 1, color: '#666', marginBottom: 10 }}>{label}</p>
+          <p style={{ fontFamily: "'Geist Mono', monospace", fontSize: 22, fontWeight: 700, color: valueColor, lineHeight: 1.2 }}>{value}</p>
+          {sub && <p style={{ fontSize: 11, color: '#555', marginTop: 5 }}>{sub}</p>}
         </div>
         {icon && (
-          <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-white/60">
+          <div style={{ flexShrink: 0, width: 40, height: 40, borderRadius: 10, background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#666' }}>
             {icon}
           </div>
         )}
       </div>
-    </Card>
+    </div>
   )
 }

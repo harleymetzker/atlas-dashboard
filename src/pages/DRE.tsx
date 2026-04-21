@@ -18,22 +18,42 @@ interface DRERowProps {
   negative?: boolean
 }
 
-function DRERow({ label, value, pct, isResult, isProfit, indent, negative }: DRERowProps) {
-  const profitColor = value >= 0 ? 'text-brand-green' : 'text-red-400'
+function DRERow({ label, value, pct, isResult, isProfit: _isProfit, indent, negative }: DRERowProps) {
+  const valueColor = negative
+    ? '#EF4444'
+    : value >= 0 ? '#00EF61' : '#EF4444'
+
   return (
-    <div className={`flex items-center justify-between py-2.5 ${isResult ? 'border-t border-white/15 mt-0.5 pt-3' : 'border-b border-white/[0.04]'}`}>
-      <span className={`text-sm ${isResult ? 'font-semibold text-white' : indent ? 'text-white/80 pl-4' : 'text-white/80'}`}>
+    <div
+      className={isResult ? '' : 'hover:bg-[#0a0a0a] transition-colors'}
+      style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        padding: isResult ? '10px 10px' : '8px 10px',
+        background: isResult ? '#111' : undefined,
+        // Result rows pull up 1px to cover the previous row's borderBottom with their
+        // own #111 background, so only their borderTop (#333) is visible — no double lines.
+        position: isResult ? 'relative' : undefined,
+        zIndex: isResult ? 1 : undefined,
+        marginTop: isResult ? -1 : undefined,
+        borderTop: isResult ? '1px solid #333' : undefined,
+        borderBottom: '1px solid #1e1e1e',
+      }}
+    >
+      <span style={{
+        fontSize: 13,
+        fontWeight: isResult ? 700 : 400,
+        color: isResult ? '#fff' : '#A6A8AB',
+        paddingLeft: indent ? 14 : 0,
+      }}>
         {label}
       </span>
-      <div className="flex items-center gap-6">
+      <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
         {pct !== undefined
-          ? <span className="text-xs text-white/60 w-14 text-right tabular-nums">{formatPercent(pct)}</span>
-          : <span className="w-14" />
+          ? <span style={{ fontFamily: "'Geist Mono', monospace", fontSize: 12, color: '#555', width: 56, textAlign: 'right' }}>{formatPercent(pct)}</span>
+          : <span style={{ width: 56 }} />
         }
-        <span className={`text-sm tabular-nums font-medium w-36 text-right ${
-          isProfit ? profitColor : negative ? 'text-white/80' : isResult ? 'text-white font-bold' : 'text-white'
-        }`}>
-          {negative && value > 0 ? `(${formatCurrency(value)})` : formatCurrency(value)}
+        <span style={{ fontFamily: "'Geist Mono', monospace", fontSize: 13, fontWeight: isResult ? 700 : 500, color: valueColor, width: 144, textAlign: 'right' }}>
+          {negative && value > 0 ? `-${formatCurrency(value)}` : formatCurrency(value)}
         </span>
       </div>
     </div>
@@ -42,8 +62,8 @@ function DRERow({ label, value, pct, isResult, isProfit, indent, negative }: DRE
 
 function SectionHeader({ label }: { label: string }) {
   return (
-    <div className="pt-5 pb-1">
-      <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">{label}</span>
+    <div style={{ marginTop: 24, padding: '6px 10px', borderBottom: '1px solid #1e1e1e' }}>
+      <span style={{ fontFamily: "'Geist Mono', monospace", fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, color: '#555' }}>{label}</span>
     </div>
   )
 }
@@ -57,22 +77,25 @@ interface IndicCardProps {
 }
 
 function IndicCard({ label, mainValue, subValue, positive, negative }: IndicCardProps) {
-  const color = positive ? 'text-brand-green' : negative ? 'text-red-400' : 'text-white'
-  const subColor = positive ? 'text-brand-green/60' : negative ? 'text-red-400/60' : 'text-white/35'
+  const valueColor = positive ? '#00EF61' : negative ? '#EF4444' : '#fff'
   return (
-    <div className="bg-white/5 rounded-xl p-4">
-      <p className="text-[10px] text-white/60 uppercase tracking-widest mb-2 leading-snug">{label}</p>
-      <p className={`text-base font-bold tabular-nums leading-tight ${color}`}>{mainValue}</p>
-      {subValue && <p className={`text-xs tabular-nums mt-1 ${subColor}`}>{subValue}</p>}
+    <div style={{ background: '#111', border: '1px solid #1e1e1e', borderRadius: 8, padding: 16 }}>
+      <p style={{ fontFamily: "'Geist Mono', monospace", fontSize: 10, textTransform: 'uppercase', letterSpacing: 1, color: '#666', marginBottom: 8, lineHeight: 1.4 }}>{label}</p>
+      <p style={{ fontFamily: "'Geist Mono', monospace", fontSize: 22, fontWeight: 700, color: valueColor, lineHeight: 1.2 }}>{mainValue}</p>
+      {subValue && <p style={{ fontSize: 12, color: '#555', marginTop: 4 }}>{subValue}</p>}
     </div>
   )
 }
 
 function StatusBadge({ ok, text }: { ok: boolean; text: string }) {
   return (
-    <div className={`flex items-center gap-2 rounded-lg px-3 py-2 ${ok ? 'bg-brand-green/10' : 'bg-red-500/10'}`}>
-      <div className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${ok ? 'bg-brand-green' : 'bg-red-400'}`} />
-      <span className={`text-xs font-medium ${ok ? 'text-brand-green' : 'text-red-400'}`}>{text}</span>
+    <div style={{
+      display: 'flex', alignItems: 'center', gap: 8,
+      borderRadius: 6, padding: '8px 12px',
+      borderLeft: `3px solid ${ok ? '#00EF61' : '#EF4444'}`,
+      background: ok ? 'rgba(0,239,97,0.06)' : 'rgba(239,68,68,0.06)',
+    }}>
+      <span style={{ fontSize: 12, fontWeight: 500, color: ok ? '#00EF61' : '#EF4444' }}>{text}</span>
     </div>
   )
 }
@@ -155,31 +178,31 @@ export function DRE() {
       {/* ── Header ── */}
       <div className="flex flex-wrap items-start justify-between gap-6">
         <div>
-          <h2 className="text-2xl font-bold text-white tracking-tight">DRE</h2>
-          <p className="text-sm text-white/50 mt-1">Por data de competência</p>
+          <h2 style={{ fontFamily: "'Geist', sans-serif", fontSize: 32, fontWeight: 800, color: '#fff', lineHeight: 1.1 }}>DRE</h2>
+          <p style={{ fontSize: 14, color: '#666', marginTop: 4 }}>Por data de competência</p>
         </div>
-        <div className="flex items-end gap-2">
-          <div className="flex flex-col gap-1.5">
-            <label className="text-xs text-white/70 uppercase tracking-widest">Mês</label>
+        <div style={{ display: 'flex', alignItems: 'flex-end', gap: 8 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+            <label style={{ fontFamily: "'Geist Mono', monospace", fontSize: 10, textTransform: 'uppercase', letterSpacing: 1, color: '#666' }}>Mês</label>
             <select
               value={selectedMonth}
               onChange={e => setSelectedMonth(Number(e.target.value))}
-              className="bg-white/5 border border-white/15 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-white/50 transition-colors"
+              style={{ fontFamily: "'Geist Mono', monospace", background: '#111', border: '1px solid #1e1e1e', borderRadius: 6, padding: '8px 14px', color: '#fff', fontSize: 13, outline: 'none', cursor: 'pointer' }}
             >
               {MONTHS.map((name, i) => (
-                <option key={i + 1} value={i + 1} className="bg-[#111] text-white">{name}</option>
+                <option key={i + 1} value={i + 1} style={{ background: '#111', color: '#fff' }}>{name}</option>
               ))}
             </select>
           </div>
-          <div className="flex flex-col gap-1.5">
-            <label className="text-xs text-white/70 uppercase tracking-widest">Ano</label>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+            <label style={{ fontFamily: "'Geist Mono', monospace", fontSize: 10, textTransform: 'uppercase', letterSpacing: 1, color: '#666' }}>Ano</label>
             <select
               value={selectedYear}
               onChange={e => setSelectedYear(Number(e.target.value))}
-              className="bg-white/5 border border-white/15 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-white/50 transition-colors"
+              style={{ fontFamily: "'Geist Mono', monospace", background: '#111', border: '1px solid #1e1e1e', borderRadius: 6, padding: '8px 14px', color: '#fff', fontSize: 13, outline: 'none', cursor: 'pointer' }}
             >
               {yearOptions.map(y => (
-                <option key={y} value={y} className="bg-[#111] text-white">{y}</option>
+                <option key={y} value={y} style={{ background: '#111', color: '#fff' }}>{y}</option>
               ))}
             </select>
           </div>
@@ -195,11 +218,11 @@ export function DRE() {
           {/* ── Coluna esquerda: tabela DRE (60%) — sticky para acompanhar scroll da coluna direita ── */}
           <div className="flex-[3] min-w-0 self-start">
             <Card>
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-[10px] text-white/60 uppercase tracking-widest">Descrição</span>
-                <div className="flex items-center gap-6">
-                  <span className="text-[10px] text-white/60 uppercase tracking-widest w-14 text-right">%</span>
-                  <span className="text-[10px] text-white/60 uppercase tracking-widest w-36 text-right">Valor (R$)</span>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8, padding: '0 10px' }}>
+                <span style={{ fontFamily: "'Geist Mono', monospace", fontSize: 11, textTransform: 'uppercase', letterSpacing: 1, color: '#666' }}>Descrição</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
+                  <span style={{ fontFamily: "'Geist Mono', monospace", fontSize: 11, textTransform: 'uppercase', letterSpacing: 1, color: '#666', width: 56, textAlign: 'right' }}>%</span>
+                  <span style={{ fontFamily: "'Geist Mono', monospace", fontSize: 11, textTransform: 'uppercase', letterSpacing: 1, color: '#666', width: 144, textAlign: 'right' }}>Valor</span>
                 </div>
               </div>
 

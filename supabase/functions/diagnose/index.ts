@@ -71,6 +71,7 @@ serve(async (req: Request) => {
 
     const profileContext = companyProfile ? `
 PERFIL DA EMPRESA:
+- Nome: ${companyProfile.nome_empresa || 'não informado'}
 - Setor: ${companyProfile.setor}
 - Modelo de negócio: ${companyProfile.modelo_negocio}
 - Ticket médio: ${companyProfile.ticket_medio}
@@ -83,14 +84,17 @@ Use esses benchmarks para classificar cada indicador como saudável, em alerta o
 
     const systemPrompt = `Você é um consultor financeiro especialista em empresas do mercado brasileiro. Analisa DREs e fluxos de caixa com precisão e linguagem direta, sem rodeios. Sempre responde em JSON com a estrutura exata solicitada. Nunca adiciona campos extras. Usa valores reais fornecidos no contexto. Dá diagnóstico honesto mesmo quando os números são ruins. Quando benchmarks de setor forem fornecidos, use-os para comparar e classificar os indicadores — diga explicitamente se o número está dentro, abaixo ou acima do esperado para o setor. O parâmetro de caixa mínimo saudável é 2,5 vezes os custos fixos mensais.`
 
-    const userPrompt = `Analise os dados financeiros abaixo referentes ao período ${period} e retorne um JSON com exatamente estes campos:
+    const companyName = companyProfile?.nome_empresa || 'a empresa'
+
+    const userPrompt = `Analise os dados financeiros de ${companyName} referentes ao período ${period} e retorne um JSON com exatamente estes campos:
 
 {
-  "diagnostico_geral": "string (2-3 frases resumindo a saúde financeira do negócio, mencionando o setor quando relevante)",
+  "frase_destaque": "string (1-2 frases de resumo INDEPENDENTE sobre o estado geral de ${companyName}. REGRA CRÍTICA: NÃO pode repetir nenhum trecho do campo diagnostico_geral. Deve ser uma conclusão própria, escrita antes de qualquer análise — como se fosse o título de um laudo.)",
+  "diagnostico_geral": "string (2-3 frases resumindo a saúde financeira de ${companyName}, mencionando o setor quando relevante. O texto deve ser diferente da frase_destaque.)",
   "dre_vs_caixa": "string (análise técnica da relação entre lucro da DRE e geração de caixa — divergências, causas prováveis, o que monitorar; tom de CFO, 2-4 frases)",
   "pontos_criticos": ["string"] (2-4 problemas urgentes com referência aos benchmarks do setor quando aplicável, ou lista vazia),
   "pontos_positivos": ["string"] (2-4 pontos fortes com referência aos benchmarks do setor quando aplicável, ou lista vazia),
-  "acoes_prioritarias": ["string"] (3-5 ações concretas e específicas),
+  "acoes_prioritarias": ["string"] (3-5 ações concretas e específicas para ${companyName}),
   "tendencia": "string (2-4 frases sobre tendência do negócio baseada exclusivamente nos números fornecidos)"
 }
 

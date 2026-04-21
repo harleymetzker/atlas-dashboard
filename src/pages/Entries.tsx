@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { format, startOfMonth } from 'date-fns'
 import { Plus, Trash2, Pencil, Upload } from 'lucide-react'
 import { useEntries } from '../hooks/useEntries'
@@ -23,10 +23,10 @@ const TYPE_OPTIONS = [
   { value: 'withdrawal', label: 'Retirada de Sócio' },
 ]
 
-const TYPE_COLORS: Record<EntryType, string> = {
-  revenue:    'text-brand-green bg-brand-green/10',
-  expense:    'text-white/60 bg-white/5',
-  withdrawal: 'text-yellow-400/70 bg-yellow-400/5',
+const TYPE_BADGE_STYLE: Record<EntryType, React.CSSProperties> = {
+  revenue:    { background: 'rgba(0,239,97,0.15)',   color: '#00EF61' },
+  expense:    { background: 'rgba(255,255,255,0.08)', color: '#A6A8AB' },
+  withdrawal: { background: 'rgba(239,68,68,0.15)',  color: '#EF4444' },
 }
 
 const TYPE_LABELS: Record<EntryType, string> = {
@@ -242,37 +242,51 @@ export function Entries() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="text-xs text-white/60 uppercase tracking-widest">
-                  <th className="text-left pb-4">Competência</th>
-                  <th className="text-left pb-4">Pagamento</th>
-                  <th className="text-left pb-4">Tipo</th>
-                  <th className="text-left pb-4">Categoria</th>
-                  <th className="text-left pb-4">Descrição</th>
-                  <th className="text-right pb-4">Valor</th>
-                  <th className="text-right pb-4">Ações</th>
+                <tr style={{ fontFamily: "'Geist Mono', monospace", fontSize: 11, textTransform: 'uppercase', letterSpacing: 1, color: '#666', borderBottom: '1px solid #333' }}>
+                  <th className="text-left py-3 font-medium">Competência</th>
+                  <th className="text-left py-3 font-medium">Pagamento</th>
+                  <th className="text-left py-3 font-medium">Tipo</th>
+                  <th className="text-left py-3 font-medium">Categoria</th>
+                  <th className="text-left py-3 font-medium">Descrição</th>
+                  <th className="text-right py-3 font-medium">Valor</th>
+                  <th className="text-right py-3 font-medium">Ações</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5">
+              <tbody>
                 {entries.map(entry => (
-                  <tr key={entry.id} className="group text-white/80">
-                    <td className="py-3 text-white/80 tabular-nums">{entry.competence_date ?? <span className="text-white/30">—</span>}</td>
-                    <td className="py-3 text-white/70 tabular-nums">{entry.payment_date ?? <span className="text-white/30">—</span>}</td>
+                  <tr key={entry.id} className="group hover:bg-[#111] transition-colors" style={{ borderBottom: '1px solid #1e1e1e' }}>
+                    <td className="py-3" style={{ fontFamily: "'Geist Mono', monospace", color: '#A6A8AB' }}>
+                      {entry.competence_date ?? <span style={{ color: '#333' }}>—</span>}
+                    </td>
+                    <td className="py-3" style={{ fontFamily: "'Geist Mono', monospace", color: '#A6A8AB' }}>
+                      {entry.payment_date ?? <span style={{ color: '#333' }}>—</span>}
+                    </td>
                     <td className="py-3">
-                      <span className={`text-xs px-2 py-1 rounded-lg ${TYPE_COLORS[entry.type]}`}>
+                      <span style={{
+                        ...TYPE_BADGE_STYLE[entry.type],
+                        fontWeight: 600, fontSize: 11,
+                        textTransform: 'uppercase', letterSpacing: 0.5,
+                        padding: '4px 8px', borderRadius: 4,
+                      }}>
                         {TYPE_LABELS[entry.type]}
                       </span>
                     </td>
-                    <td className="py-3">{entry.category}</td>
+                    <td className="py-3 text-white/60">{entry.category}</td>
                     <td className="py-3 max-w-xs truncate text-white/80">
                       {entry.description || '—'}
                       {entry.recurrence_id && (
-                        <span style={{ fontSize: 10, color: '#555', letterSpacing: 1, textTransform: 'uppercase', marginLeft: 8, border: '1px solid #333', padding: '2px 6px', borderRadius: 3 }}>
-                          recorrente
+                        <span style={{
+                          fontSize: 9, color: '#00EF61', letterSpacing: 1,
+                          textTransform: 'uppercase', marginLeft: 8,
+                          background: 'rgba(0,239,97,0.1)',
+                          padding: '2px 6px', borderRadius: 3,
+                        }}>
+                          Recorrente
                         </span>
                       )}
                     </td>
-                    <td className={`py-3 text-right tabular-nums font-medium ${entry.type === 'revenue' ? 'text-brand-green' : 'text-white'}`}>
-                      {entry.type !== 'revenue' ? '(' : ''}{formatCurrency(entry.amount)}{entry.type !== 'revenue' ? ')' : ''}
+                    <td className="py-3 text-right" style={{ fontFamily: "'Geist Mono', monospace", fontWeight: 500, color: entry.type === 'revenue' ? '#00EF61' : '#EF4444' }}>
+                      {entry.type !== 'revenue' ? '-' : ''}{formatCurrency(entry.amount)}
                     </td>
                     <td className="py-3 text-right">
                       <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">

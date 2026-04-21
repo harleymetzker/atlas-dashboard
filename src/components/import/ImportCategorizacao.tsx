@@ -182,7 +182,7 @@ export function ImportCategorizacao({ rows, onImport, onClose }: ImportCategoriz
   const allSelected = importRows.length > 0 && importRows.every(r => r.include)
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-[#050505]">
+    <div className="fixed inset-0 z-50 flex flex-col bg-black">
       {/* Header */}
       <div className="flex items-center justify-between px-8 py-5 border-b border-white/10 shrink-0">
         <div>
