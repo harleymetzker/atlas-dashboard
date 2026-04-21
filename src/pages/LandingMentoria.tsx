@@ -152,25 +152,14 @@ export function LandingMentoria() {
     <div style={{ background: C.bg, color: C.text, fontFamily: sans, fontSize: 16, lineHeight: 1.5, overflowX: 'hidden' }}>
 
       {/* ── NAV ── */}
-      <nav style={{ position: 'sticky', top: 0, zIndex: 50, background: 'rgba(0,0,0,0.72)', backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)', borderBottom: `1px solid ${C.border}` }}>
-        <div className="lm-nav-inner" style={{ maxWidth: 1240, margin: '0 auto', padding: '14px 40px', display: 'grid', gridTemplateColumns: 'auto 1fr auto', gap: 40, alignItems: 'center' }}>
-          <a className="lm-nav-a" href="#" style={{ display: 'flex', alignItems: 'center', gap: 12, textDecoration: 'none', color: C.text }}>
-            <span style={{ width: 36, height: 36, borderRadius: 8, background: C.green, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <img src="/lp/sheep-logo.png" alt="" style={{ width: 26, height: 26 }} />
-            </span>
-            <span style={{ lineHeight: 1.1 }}>
-              <div style={{ fontWeight: 700, letterSpacing: '0.02em', fontSize: 15 }}>ATLAS</div>
-              <div style={{ fontFamily: mono, fontSize: 10, color: C.textMute, letterSpacing: '0.18em', textTransform: 'uppercase', marginTop: 2 }}>Programa · by Black Sheep</div>
-            </span>
-          </a>
-          <div className="lm-nav-links" style={{ display: 'flex', gap: 32, justifyContent: 'center' }}>
-            {[['#diagnostico','Diagnóstico'],['#cases','Cases'],['#programa','O Programa'],['#investimento','Investimento'],['#faq','FAQ']].map(([href, label]) => (
-              <a key={href} href={href} className="lm-nav-a" style={{ color: C.textDim, textDecoration: 'none', fontSize: 14, transition: 'color .15s', fontFamily: sans }}>{label}</a>
-            ))}
-          </div>
-          <span className="lm-nav-cta"><BtnPrimary href="#aplicar">Aplicar <span style={{ fontFamily: mono }}>→</span></BtnPrimary></span>
+      <div style={{ background: C.green, width: '100%' }}>
+        <div className="lm-nav-inner" style={{ maxWidth: 1240, margin: '0 auto', padding: '28px 48px', display: 'flex', alignItems: 'center', gap: 20 }}>
+          <img src="/blacksheep-logo.png" alt="Black Sheep" style={{ height: 72, display: 'block' }} />
+          <span style={{ fontFamily: sans, fontSize: 28, fontWeight: 900, letterSpacing: 4, color: '#000' }}>ATLAS</span>
+          <span style={{ width: 1, height: 40, background: 'rgba(0,0,0,0.3)', flexShrink: 0 }} />
+          <span style={{ fontFamily: sans, fontSize: 14, fontWeight: 700, letterSpacing: 3, textTransform: 'uppercase' as const, color: '#000' }}>BY BLACK SHEEP</span>
         </div>
-      </nav>
+      </div>
 
       {/* ── HERO ── */}
       <section style={{ position: 'relative', padding: '80px 0 96px', overflow: 'hidden' }}>
@@ -183,18 +172,12 @@ export function LandingMentoria() {
                 Programa 001 · 6 meses · Implementação pessoal
               </div>
               <h2 style={{ fontSize: 'clamp(28px,3.6vw,52px)', lineHeight: 1.05, letterSpacing: '-0.03em', fontWeight: 700, margin: '0 0 24px', fontFamily: sans }}>
-                Sua empresa fatura bem. Mas você não faz ideia de quanto realmente sobra.
+                Saiba exatamente quanto sua empresa lucra e por que você não vê dinheiro no final do mês.
               </h2>
               <p style={{ fontSize: 19, lineHeight: 1.5, color: C.textDim, maxWidth: 560, margin: '0 0 32px', fontFamily: sans }}>
                 Em 6 meses, você implementa um modelo de gestão que mostra pra onde vai cada real que entra — e garante que seu crescimento vire lucro.
               </p>
-              <div style={{ display: 'flex', gap: 22, flexWrap: 'wrap', fontFamily: mono, fontSize: 12, color: C.textMute, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-                {['Controle em 30 dias', 'Mentoria 1:1 mensal', 'Software ATLAS incluído', 'Lucro previsível em 6 meses'].map(s => (
-                  <span key={s} style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-                    <span style={{ color: C.green, fontWeight: 600 }}>✓</span>{s}
-                  </span>
-                ))}
-              </div>
+              <div style={{ width: 80, height: 3, background: C.green, marginTop: 32, marginBottom: 48 }} />
             </div>
             <div className="lm-hero-visual" style={{ position: 'relative' }}>
               <div style={{ fontFamily: mono, fontSize: 10, color: C.textMute, letterSpacing: '0.2em', textTransform: 'uppercase', position: 'absolute', top: 8, left: 0 }}>BS / 001</div>
