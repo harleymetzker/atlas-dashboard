@@ -162,7 +162,7 @@ export function LandingMentoria() {
       </div>
 
       {/* ── HERO ── */}
-      <section style={{ position: 'relative', padding: '80px 0 96px', overflow: 'hidden' }}>
+      <section style={{ position: 'relative', padding: '140px 0 96px', overflow: 'hidden' }}>
         <div style={{ content: '', position: 'absolute', inset: 0, background: 'radial-gradient(60% 60% at 15% 20%, rgba(0,239,97,0.08), transparent 60%), radial-gradient(50% 50% at 90% 80%, rgba(0,239,97,0.06), transparent 60%)', pointerEvents: 'none' }} />
         <Page>
           <div className="lm-hero-inner" style={{ position: 'relative', display: 'grid', gridTemplateColumns: '1.1fr 1fr', gap: 60, alignItems: 'center' }}>
