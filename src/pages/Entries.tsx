@@ -246,7 +246,8 @@ export function Entries() {
   const filterInputStyle: React.CSSProperties = {
     fontFamily: "'Geist Mono', monospace",
     background: '#111', border: '1px solid #1e1e1e', borderRadius: 6,
-    padding: '8px 12px', color: '#fff', fontSize: 13, outline: 'none',
+    padding: '10px 14px', color: '#fff', fontSize: 15, outline: 'none',
+    height: 44, minWidth: 180, boxSizing: 'border-box',
   }
   const filterLabelStyle: React.CSSProperties = {
     fontFamily: "'Geist Mono', monospace", fontSize: 10,
@@ -282,17 +283,17 @@ export function Entries() {
         {/* DE */}
         <div>
           <label style={filterLabelStyle}>De</label>
-          <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} style={{ ...filterInputStyle, width: 160 }} />
+          <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} style={filterInputStyle} />
         </div>
         {/* ATÉ */}
         <div>
           <label style={filterLabelStyle}>Até</label>
-          <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} style={{ ...filterInputStyle, width: 160 }} />
+          <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} style={filterInputStyle} />
         </div>
         {/* MÊS */}
         <div>
           <label style={filterLabelStyle}>Mês</label>
-          <select value={selectedMonth} onChange={handleMonthShortcut} style={{ ...filterInputStyle, width: 160, cursor: 'pointer' }}>
+          <select value={selectedMonth} onChange={handleMonthShortcut} style={{ ...filterInputStyle, cursor: 'pointer' }}>
             <option value="">Selecionar...</option>
             {MONTHS.map((m, i) => <option key={i} value={i} style={{ background: '#111' }}>{m}</option>)}
           </select>
