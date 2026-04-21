@@ -633,6 +633,9 @@ export function LandingSoftware() {
                 <li style={{ display: 'flex', gap: 10, fontSize: 14.5, alignItems: 'flex-start', lineHeight: 1.5, fontFamily: sans, color: green, fontWeight: 500, marginTop: 6, paddingTop: 14, borderTop: `1px dashed ${borderSt}` }}>
                   <span style={{ flexShrink: 0 }}>⭐</span>1 convite para a Mentoria em Grupo Black Sheep
                 </li>
+                <li style={{ display: 'flex', gap: 10, fontSize: 14.5, alignItems: 'flex-start', lineHeight: 1.5, fontFamily: sans, color: green, fontWeight: 500 }}>
+                  <span style={{ flexShrink: 0 }}>⭐</span>Acesso ao Programa Domínio Empresarial da Black Sheep
+                </li>
               </ul>
             </div>
           </div>
