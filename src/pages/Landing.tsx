@@ -19,6 +19,8 @@ const mq = `
   .lp-nav{padding:20px 24px!important}
   .lp-footer-inner{padding:32px 24px!important}
   .lp-filtro-grid{grid-template-columns:1fr!important}
+  .lp-jornada{display:block!important}
+  .lp-jnum{font-size:28px!important;margin-bottom:4px!important;margin-top:0!important}
 }`
 
 const GREEN = '#00EF61'
@@ -378,7 +380,7 @@ export function Landing() {
           Saiba exatamente quanto sua empresa lucra e por que você não vê dinheiro no final do mês.
         </h1>
         <p style={s.heroSub}>
-          Em 6 meses, implemento um modelo de gestão que mostra pra onde vai cada real e garante crescimento com lucro.
+          Em 6 meses, você implementa um modelo de gestão que mostra pra onde vai cada real que entra — e garante que seu crescimento vire lucro.
         </p>
         <div style={s.heroAccentLine} />
       </div>
@@ -436,7 +438,7 @@ export function Landing() {
 
       {/* CASO 01 */}
       <div style={{ ...s.section, paddingTop: 40 }} className="lp-section" id="_caso1">
-        <span style={s.eyebrow}>Caso 01</span>
+        <span style={s.eyebrow}>§01 · Caso 01</span>
         <div style={{ ...s.body, maxWidth: 620 }}>
           <Para style={{ color: '#fff', fontWeight: 600 }}>E-commerce de moda feminina. Shein, TikTok Shop, Mercado Livre, Shopee.</Para>
           <Para style={{ color: '#fff' }}>Faturamento: 7 milhões por ano.</Para>
@@ -460,7 +462,7 @@ export function Landing() {
 
       {/* CASO 02 */}
       <div style={s.section} className="lp-section" id="_caso2">
-        <span style={s.eyebrow}>Caso 02</span>
+        <span style={s.eyebrow}>§02 · Caso 02</span>
         <div style={{ ...s.body, maxWidth: 620 }}>
           <Para style={{ color: '#fff', fontWeight: 600 }}>Mentorias e infoprodutos.</Para>
           <Para>Num mês de escala, bateu R$600 mil de faturamento. Recorde.</Para>
@@ -516,7 +518,8 @@ export function Landing() {
       {/* O PROGRAMA */}
       <div style={s.section} className="lp-section">
         <GreenLine />
-        <span style={s.eyebrow}>O Programa</span>
+        <span style={s.eyebrow}>§03 · O Programa</span>
+        <h2 style={s.h2}>Em 30 dias, controle total. Em 6 meses, outra empresa.</h2>
         <div style={{ ...s.body, maxWidth: 620 }}>
           <Para style={{ color: '#fff', fontWeight: 600 }}>O ATLAS é um programa de 6 meses da Black Sheep.</Para>
           <Para>Eu entro na sua empresa e implemento um modelo de gestão financeira. Pessoalmente.</Para>
@@ -533,7 +536,7 @@ export function Landing() {
 
       {/* ENTREGA */}
       <div style={s.section} className="lp-section">
-        <span style={s.eyebrow}>Entrega</span>
+        <span style={s.eyebrow}>§04 · Entrega</span>
         <div style={s.jornadas}>
           {[
             { n: '01', t: 'ABC da Gestão', d: 'Fundamentos. Faturamento é ego. Custos fixos vs variáveis. Separação pessoal vs empresa. Onde empresas perdem dinheiro.' },
@@ -541,8 +544,8 @@ export function Landing() {
             { n: '03', t: 'Eficiência e Margem', d: 'Precificação lucrativa. O que escalar primeiro. Ajustes que geram caixa rápido. CAC. Corte de custos.' },
             { n: '04', t: 'Modelo de Gestão', d: 'Rotina semanal. Indicadores que importam. Decisões com dados. Controle com crescimento.' },
           ].map((j, i) => (
-            <div key={j.n} style={{ ...s.jornada, ...(i === 3 ? { borderBottom: '1px solid #1e1e1e' } : {}) }}>
-              <span style={s.jnum}>{j.n}</span>
+            <div key={j.n} style={{ ...s.jornada, ...(i === 3 ? { borderBottom: '1px solid #1e1e1e' } : {}) }} className="lp-jornada">
+              <span style={s.jnum} className="lp-jnum">{j.n}</span>
               <div>
                 <div style={s.jtitle}>{j.t}</div>
                 <div style={s.jdesc}>{j.d}</div>
@@ -596,12 +599,12 @@ export function Landing() {
 
       {/* FILTRO */}
       <div style={s.section} className="lp-section">
-        <span style={s.eyebrow}>Filtro</span>
+        <span style={s.eyebrow}>§05 · Filtro</span>
         <h2 style={s.h2}>Mas esse programa não é pra todo mundo.</h2>
 
-        <div style={{ ...s.pgrid }} className="lp-filtro-grid">
-          {/* Coluna positiva — borda top verde */}
-          <div style={{ padding: '28px 28px 32px', borderRight: '1px solid #1e1e1e', borderTop: `3px solid ${GREEN}` }}>
+        <div style={{ ...s.pgrid, border: 'none', gap: 8 }} className="lp-filtro-grid">
+          {/* Coluna positiva — solution card */}
+          <div style={{ padding: '28px 28px 32px', border: '1px solid rgba(0,239,97,0.3)' }}>
             <p style={{ fontSize: 16, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase' as const, color: GREEN, marginTop: 0, marginBottom: 20 }}>Isso é pra você se:</p>
             {[
               'Fatura R$60 mil ou mais por mês e não sabe sua margem real',
@@ -615,8 +618,8 @@ export function Landing() {
               </div>
             ))}
           </div>
-          {/* Coluna negativa */}
-          <div style={{ padding: '28px 28px 32px', borderTop: '1px solid #333' }}>
+          {/* Coluna negativa — pain card */}
+          <div style={{ padding: '28px 28px 32px', border: '1px solid rgba(239,68,68,0.2)' }}>
             <p style={{ fontSize: 16, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase' as const, color: '#555', marginTop: 0, marginBottom: 20 }}>Isso não é pra você se:</p>
             {[
               'Está começando e ainda não fatura consistente',
@@ -636,7 +639,7 @@ export function Landing() {
 
       {/* OBJEÇÕES */}
       <div style={s.section} className="lp-section">
-        <span style={s.eyebrow}>Três coisas que você pode estar pensando</span>
+        <span style={s.eyebrow}>§06 · Objeções</span>
         <div>
           {[
             {
@@ -665,7 +668,7 @@ export function Landing() {
       {/* INVESTIMENTO */}
       <div style={s.invest} className="lp-invest">
         <GreenLine />
-        <span style={s.priceLabel}>Investimento</span>
+        <span style={s.priceLabel}>§07 · Investimento</span>
         <span style={s.price}>R$14.000</span>
         <p style={s.priceDetail}>
           6 meses. 4 módulos. 6 reuniões individuais comigo. Software ATLAS incluído. Suporte no grupo.
@@ -676,13 +679,16 @@ export function Landing() {
         <p style={{ ...s.priceDetail, marginTop: 20, marginBottom: 48 }}>
           A pergunta não é se R$14 mil é caro. É quanto você tá perdendo por mês sem saber.
         </p>
+        <div style={{ textAlign: 'center', marginTop: 32 }}>
+          <a href="#aplicar" style={s.btn}>Quero implementar o ATLAS</a>
+        </div>
       </div>
 
       <hr style={s.hr} />
 
       {/* COMO ENTRAR */}
       <div style={s.section} id="aplicar" className="lp-section">
-        <span style={s.eyebrow}>Próximo Passo</span>
+        <span style={s.eyebrow}>§08 · Próximo Passo</span>
         <div>
           {[
             { n: '01', t: 'Você aplica.', d: 'Preenche o formulário com informações sobre seu negócio.' },
@@ -706,6 +712,7 @@ export function Landing() {
 
       {/* QUEM VAI IMPLEMENTAR */}
       <div style={s.section} className="lp-section">
+        <span style={s.eyebrow}>§09 · Mentor</span>
         <h2 style={s.h2}>Quem será seu Mentor</h2>
         <img
           src="/harley.jpg"
