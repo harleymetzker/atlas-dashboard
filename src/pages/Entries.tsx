@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
-import { format, startOfMonth } from 'date-fns'
-import { Plus, Trash2, Pencil, Upload } from 'lucide-react'
+import { format, startOfMonth, startOfMonth as som, endOfMonth, parseISO } from 'date-fns'
+import { Trash2, Pencil, Search } from 'lucide-react'
 import { useEntries } from '../hooks/useEntries'
 import type { Entry, EntryType } from '../types'
 import { REVENUE_CATEGORIES, EXPENSE_CATEGORY_GROUPS, ANTECIPACAO_CATEGORY } from '../types'
 import { formatCurrency } from '../lib/calculations'
-import { DateFilter } from '../components/layout/DateFilter'
 import { Button } from '../components/ui/Button'
 import { Input } from '../components/ui/Input'
 import { CurrencyInput } from '../components/ui/CurrencyInput'
@@ -60,6 +59,11 @@ function firstCategory(type: EntryType): string {
 
 const todayStr = format(new Date(), 'yyyy-MM-dd')
 
+const MONTHS = [
+  'Janeiro','Fevereiro','Março','Abril','Maio','Junho',
+  'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro',
+]
+
 const defaultForm = {
   type: 'revenue' as EntryType,
   category: 'Vendas',
@@ -84,6 +88,7 @@ export function Entries() {
   const [formError, setFormError] = useState('')
   const [importUploadOpen, setImportUploadOpen] = useState(false)
   const [importRows, setImportRows] = useState<RawRow[] | null>(null)
+  const [search, setSearch] = useState('')
 
   const { entries, loading, addEntry, deleteEntry, updateEntry } = useEntries({
     startDate,
@@ -198,6 +203,23 @@ export function Entries() {
     setImportRows(null)
   }
 
+  function handleMonthShortcut(e: React.ChangeEvent<HTMLSelectElement>) {
+    const idx = Number(e.target.value)
+    if (isNaN(idx)) return
+    const year = endDate ? parseISO(endDate).getFullYear() : new Date().getFullYear()
+    const ref = new Date(year, idx, 1)
+    setStartDate(format(som(ref), 'yyyy-MM-dd'))
+    setEndDate(format(endOfMonth(ref), 'yyyy-MM-dd'))
+    e.target.value = ''
+  }
+
+  const filteredEntries = search.trim()
+    ? entries.filter(e =>
+        e.description?.toLowerCase().includes(search.toLowerCase()) ||
+        e.category?.toLowerCase().includes(search.toLowerCase())
+      )
+    : entries
+
   const categoryGroups    = getCategoryGroups(form.type)
   const categoryOptions   = getCategoryOptions(form.type)
   const isAntecipacao     = form.category === ANTECIPACAO_CATEGORY
@@ -207,36 +229,101 @@ export function Entries() {
   const showCompetence    = !isAntecipacao && !isExpenseToggle
   const showPayment       = isAntecipacao || (!isRevenueToggle)
 
+  const filterInputStyle: React.CSSProperties = {
+    fontFamily: "'Geist Mono', monospace",
+    background: '#111', border: '1px solid #1e1e1e', borderRadius: 6,
+    padding: '8px 12px', color: '#fff', fontSize: 13, outline: 'none',
+  }
+  const filterLabelStyle: React.CSSProperties = {
+    fontFamily: "'Geist Mono', monospace", fontSize: 10,
+    textTransform: 'uppercase', letterSpacing: 1, color: '#666', display: 'block', marginBottom: 5,
+  }
+
   return (
-    <div className="p-8 space-y-8">
-      <div className="flex flex-wrap items-start justify-between gap-6">
+    <div className="p-8 space-y-6">
+      {/* ── Title + buttons ── */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16 }}>
         <div>
-          <h2 className="text-2xl font-bold text-white tracking-tight">Lançamentos</h2>
-          <p className="text-sm text-white/50 mt-1">Filtro por data de competência</p>
+          <h2 style={{ fontFamily: "'Geist', sans-serif", fontSize: 32, fontWeight: 800, color: '#fff', lineHeight: 1.1 }}>Lançamentos</h2>
+          <p style={{ fontSize: 14, color: '#666', marginTop: 4 }}>fato a fato, sem eufemismo</p>
         </div>
-        <div className="flex gap-2">
-          <Button variant="secondary" onClick={() => setImportUploadOpen(true)}>
-            <Upload size={16} /> Importar Extrato
-          </Button>
-          <Button onClick={openAdd}><Plus size={16} /> Novo Lançamento</Button>
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+          <button
+            onClick={() => setImportUploadOpen(true)}
+            style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 16px', background: 'transparent', border: '1px solid #1e1e1e', borderRadius: 8, color: '#fff', fontSize: 13, cursor: 'pointer', fontFamily: "'Geist', sans-serif" }}
+          >
+            + Importar extrato
+          </button>
+          <button
+            onClick={openAdd}
+            style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 16px', background: '#00EF61', border: 'none', borderRadius: 8, color: '#000', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: "'Geist', sans-serif" }}
+          >
+            + Novo lançamento
+          </button>
         </div>
       </div>
 
-      <div className="flex flex-wrap items-end gap-3">
-        <DateFilter startDate={startDate} endDate={endDate} onChange={(s, e) => { setStartDate(s); setEndDate(e) }} />
-        <Select
-          label="Tipo"
-          value={typeFilter}
-          onChange={e => setTypeFilter(e.target.value as EntryType | '')}
-          options={[{ value: '', label: 'Todos' }, ...TYPE_OPTIONS]}
-          className="w-44"
-        />
+      {/* ── Filters ── */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-end', gap: 10 }}>
+        {/* DE */}
+        <div>
+          <label style={filterLabelStyle}>De</label>
+          <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} style={{ ...filterInputStyle, width: 148 }} />
+        </div>
+        {/* ATÉ */}
+        <div>
+          <label style={filterLabelStyle}>Até</label>
+          <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} style={{ ...filterInputStyle, width: 148 }} />
+        </div>
+        {/* MÊS */}
+        <div>
+          <label style={filterLabelStyle}>Mês</label>
+          <select onChange={handleMonthShortcut} style={{ ...filterInputStyle, width: 140, cursor: 'pointer' }}>
+            <option value="">Selecionar...</option>
+            {MONTHS.map((m, i) => <option key={i} value={i} style={{ background: '#111' }}>{m}</option>)}
+          </select>
+        </div>
+        {/* TIPO segmented */}
+        <div>
+          <label style={filterLabelStyle}>Tipo</label>
+          <div style={{ display: 'flex', background: '#111', border: '1px solid #1e1e1e', borderRadius: 6, padding: 3 }}>
+            {([['', 'Todos'], ['revenue', 'Receitas'], ['expense', 'Despesas']] as const).map(([val, lbl]) => (
+              <button
+                key={val}
+                onClick={() => setTypeFilter(val as EntryType | '')}
+                style={{
+                  padding: '5px 12px', borderRadius: 4, fontSize: 12, fontWeight: 500,
+                  border: 'none', cursor: 'pointer', transition: 'all 0.15s',
+                  fontFamily: "'Geist', sans-serif",
+                  background: typeFilter === val ? '#fff' : 'transparent',
+                  color: typeFilter === val ? '#000' : '#666',
+                }}
+              >
+                {lbl}
+              </button>
+            ))}
+          </div>
+        </div>
+        {/* BUSCAR */}
+        <div style={{ flex: 1, minWidth: 180 }}>
+          <label style={filterLabelStyle}>Buscar</label>
+          <div style={{ display: 'flex', alignItems: 'center', background: '#111', border: '1px solid #1e1e1e', borderRadius: 6, padding: '8px 12px', gap: 8 }}>
+            <Search size={13} style={{ color: '#555', flexShrink: 0 }} />
+            <input
+              type="text"
+              placeholder="Descrição, categoria..."
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              style={{ background: 'transparent', border: 'none', outline: 'none', color: '#fff', fontSize: 13, fontFamily: "'Geist', sans-serif", width: '100%' }}
+            />
+          </div>
+        </div>
       </div>
 
       <Card>
         {loading ? (
           <div className="text-center py-12 text-white/35">Carregando...</div>
-        ) : entries.length === 0 ? (
+        ) : filteredEntries.length === 0 ? (
           <div className="text-center py-12 text-white/35">Nenhum lançamento no período.</div>
         ) : (
           <div className="overflow-x-auto">
@@ -253,7 +340,7 @@ export function Entries() {
                 </tr>
               </thead>
               <tbody>
-                {entries.map(entry => (
+                {filteredEntries.map(entry => (
                   <tr key={entry.id} className="group hover:bg-[#111] transition-colors" style={{ borderBottom: '1px solid #1e1e1e' }}>
                     <td className="py-3" style={{ fontFamily: "'Geist Mono', monospace", color: '#A6A8AB' }}>
                       {entry.competence_date ?? <span style={{ color: '#333' }}>—</span>}
