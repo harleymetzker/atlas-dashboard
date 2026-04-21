@@ -16,6 +16,7 @@ import { Admin } from './pages/Admin'
 import { PontoEquilibrio } from './pages/PontoEquilibrio'
 import { Landing } from './pages/Landing'
 import { LandingSoftware } from './pages/LandingSoftware'
+import { LandingMentoria } from './pages/LandingMentoria'
 import { PrecificacaoProduto } from './pages/ferramentas/PrecificacaoProduto'
 import { PrecificacaoServico } from './pages/ferramentas/PrecificacaoServico'
 import { PontoEquilibrioDash } from './pages/ferramentas/PontoEquilibrioDash'
@@ -83,7 +84,8 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LandingSoftware />} />
-        <Route path="/mentoria" element={<Landing />} />
+        <Route path="/mentoria" element={<LandingMentoria />} />
+        <Route path="/mentoria1" element={<Landing />} />
         <Route path="/ponto" element={<PontoEquilibrio />} />
         <Route path="/cadastro" element={<Cadastro />} />
         <Route path="/cadastro-enviado" element={<CadastroEnviado />} />
