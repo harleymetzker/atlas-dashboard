@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { format, startOfMonth, startOfMonth as som, endOfMonth, parseISO } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
 import { Trash2, Pencil, Search } from 'lucide-react'
 import { useEntries } from '../hooks/useEntries'
 import type { Entry, EntryType } from '../types'
@@ -94,6 +95,13 @@ export function Entries() {
     startDate,
     endDate,
     type: typeFilter || undefined,
+    dateField: 'competence_date',
+  })
+
+  // Unfiltered by type — used for summary cards so they always show full-period totals
+  const { entries: allPeriodEntries } = useEntries({
+    startDate,
+    endDate,
     dateField: 'competence_date',
   })
 
@@ -219,6 +227,10 @@ export function Entries() {
         e.category?.toLowerCase().includes(search.toLowerCase())
       )
     : entries
+
+  const totalReceitas   = allPeriodEntries.filter(e => e.type === 'revenue').reduce((s, e) => s + e.amount, 0)
+  const totalDespesas   = allPeriodEntries.filter(e => e.type !== 'revenue').reduce((s, e) => s + e.amount, 0)
+  const periodoLabel    = startDate ? format(parseISO(startDate), 'MMMM yyyy', { locale: ptBR }) : ''
 
   const categoryGroups    = getCategoryGroups(form.type)
   const categoryOptions   = getCategoryOptions(form.type)
@@ -392,6 +404,23 @@ export function Entries() {
           </div>
         )}
       </Card>
+
+      {/* ── Summary cards ── */}
+      {!loading && (
+        <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+          {[
+            { label: 'Total de Lançamentos', value: String(allPeriodEntries.length), color: '#fff', isCount: true },
+            { label: 'Total de Receitas',    value: formatCurrency(totalReceitas),   color: '#00EF61' },
+            { label: 'Total de Despesas',    value: `-${formatCurrency(totalDespesas)}`, color: '#EF4444' },
+          ].map(({ label, value, color }) => (
+            <div key={label} style={{ flex: 1, minWidth: 160, background: '#111', border: '1px solid #1e1e1e', borderRadius: 8, padding: 20 }}>
+              <p style={{ fontFamily: "'Geist Mono', monospace", fontSize: 10, textTransform: 'uppercase', letterSpacing: 1, color: '#666', marginBottom: 8 }}>{label}</p>
+              <p style={{ fontFamily: "'Geist Mono', monospace", fontSize: 22, fontWeight: 700, color, lineHeight: 1.2 }}>{value}</p>
+              <p style={{ fontSize: 11, color: '#555', marginTop: 4 }}>{periodoLabel}</p>
+            </div>
+          ))}
+        </div>
+      )}
 
       <ImportUploadModal
         open={importUploadOpen}
