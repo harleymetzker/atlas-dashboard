@@ -243,11 +243,10 @@ export function Entries() {
   const showCompetence    = !isAntecipacao && !isExpenseToggle
   const showPayment       = isAntecipacao || (!isRevenueToggle)
 
-  const filterInputStyle: React.CSSProperties = {
-    fontFamily: "'Geist Mono', monospace",
-    background: '#111', border: '1px solid #1e1e1e', borderRadius: 6,
-    padding: '10px 14px', color: '#fff', fontSize: 15, outline: 'none',
-    height: 44, minWidth: 180, boxSizing: 'border-box',
+  const F: React.CSSProperties = {
+    height: 44, background: '#111', border: '1px solid #1e1e1e', borderRadius: 6,
+    fontFamily: "'Geist Mono', monospace", fontSize: 14, color: '#fff',
+    outline: 'none', boxSizing: 'border-box',
   }
   const filterLabelStyle: React.CSSProperties = {
     fontFamily: "'Geist Mono', monospace", fontSize: 10,
@@ -283,17 +282,20 @@ export function Entries() {
         {/* DE */}
         <div>
           <label style={filterLabelStyle}>De</label>
-          <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} style={filterInputStyle} />
+          <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)}
+            style={{ ...F, padding: '0 12px', minWidth: 160 }} />
         </div>
         {/* ATÉ */}
         <div>
           <label style={filterLabelStyle}>Até</label>
-          <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} style={filterInputStyle} />
+          <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)}
+            style={{ ...F, padding: '0 12px', minWidth: 160 }} />
         </div>
         {/* MÊS */}
         <div>
           <label style={filterLabelStyle}>Mês</label>
-          <select value={selectedMonth} onChange={handleMonthShortcut} style={{ ...filterInputStyle, cursor: 'pointer' }}>
+          <select value={selectedMonth} onChange={handleMonthShortcut}
+            style={{ ...F, padding: '0 12px', minWidth: 160, cursor: 'pointer' }}>
             <option value="">Selecionar...</option>
             {MONTHS.map((m, i) => <option key={i} value={i} style={{ background: '#111' }}>{m}</option>)}
           </select>
@@ -301,17 +303,18 @@ export function Entries() {
         {/* TIPO segmented */}
         <div>
           <label style={filterLabelStyle}>Tipo</label>
-          <div style={{ display: 'flex', background: '#111', border: '1px solid #1e1e1e', borderRadius: 6, padding: 3 }}>
+          <div style={{ ...F, display: 'flex', alignItems: 'center', padding: '0 4px', gap: 2, overflow: 'hidden' }}>
             {([['', 'Todos'], ['revenue', 'Receitas'], ['expense', 'Despesas']] as const).map(([val, lbl]) => (
               <button
                 key={val}
                 onClick={() => setTypeFilter(val as EntryType | '')}
                 style={{
-                  padding: '5px 12px', borderRadius: 4, fontSize: 12, fontWeight: 500,
+                  height: 34, padding: '0 12px', borderRadius: 4, fontSize: 13, fontWeight: 500,
                   border: 'none', cursor: 'pointer', transition: 'all 0.15s',
-                  fontFamily: "'Geist', sans-serif",
+                  fontFamily: "'Geist Mono', monospace",
                   background: typeFilter === val ? '#fff' : 'transparent',
-                  color: typeFilter === val ? '#000' : '#666',
+                  color: typeFilter === val ? '#000' : '#A6A8AB',
+                  whiteSpace: 'nowrap',
                 }}
               >
                 {lbl}
@@ -320,16 +323,16 @@ export function Entries() {
           </div>
         </div>
         {/* BUSCAR */}
-        <div style={{ flex: 1, minWidth: 180 }}>
+        <div style={{ flex: 1, minWidth: 200 }}>
           <label style={filterLabelStyle}>Buscar</label>
-          <div style={{ display: 'flex', alignItems: 'center', background: '#111', border: '1px solid #1e1e1e', borderRadius: 6, padding: '8px 12px', gap: 8 }}>
+          <div style={{ ...F, display: 'flex', alignItems: 'center', paddingLeft: 12, paddingRight: 12, gap: 8 }}>
             <Search size={13} style={{ color: '#555', flexShrink: 0 }} />
             <input
               type="text"
               placeholder="Descrição, categoria..."
               value={search}
               onChange={e => setSearch(e.target.value)}
-              style={{ background: 'transparent', border: 'none', outline: 'none', color: '#fff', fontSize: 13, fontFamily: "'Geist', sans-serif", width: '100%' }}
+              style={{ background: 'transparent', border: 'none', outline: 'none', color: '#fff', fontSize: 14, fontFamily: "'Geist Mono', monospace", width: '100%', height: '100%' }}
             />
           </div>
         </div>
