@@ -56,8 +56,11 @@ const GLOBAL_CSS = `
     .ls-step-shot-order { order: unset !important; }
     .ls-ai-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
     .ls-plans { grid-template-columns: 1fr !important; }
-    .ls-vs-table-row { grid-template-columns: 1fr 1fr !important; }
-    .ls-vs-crit { grid-column: 1/-1 !important; background: ${bgRaised} !important; padding-bottom: 8px !important; padding-top: 16px !important; }
+    .ls-plan-monthly { order: 2 !important; }
+    .ls-plan-annual  { order: 1 !important; }
+    .ls-vs-table-row { grid-template-columns: 30% 35% 35% !important; }
+    .ls-vs-table-row > div { font-size: 12px !important; padding: 8px !important; word-break: break-word !important; }
+    .ls-vs-crit { background: ${bgRaised} !important; }
     .ls-section { padding: 72px 0 !important; }
     .ls-nav-links { display: none !important; }
     .ls-foot-grid { flex-direction: column !important; align-items: flex-start !important; }
@@ -120,13 +123,6 @@ function BtnGhost({ href, children, lg, fullWidth }: { href: string; children: R
   )
 }
 
-function CheckIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={green} strokeWidth="2.5">
-      <path d="M4 12l5 5 11-11" />
-    </svg>
-  )
-}
 
 function ArrowIcon({ size = 16 }: { size?: number }) {
   return (
@@ -181,45 +177,14 @@ export function LandingSoftware() {
     <div style={{ background: '#000', color: text, fontFamily: sans, fontSize: 16, lineHeight: 1.5, overflowX: 'hidden' }}>
 
       {/* ── NAV ── */}
-      <nav style={{
-        position: 'sticky', top: 0, zIndex: 50,
-        background: 'rgba(0,0,0,0.72)',
-        backdropFilter: 'blur(14px)',
-        WebkitBackdropFilter: 'blur(14px)',
-        borderBottom: `1px solid ${border}`,
-      }}>
-        <div className="ls-wrap" style={{ maxWidth: 1240, margin: '0 auto', padding: '0 40px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 0' }}>
-            {/* Brand */}
-            <a href="#" style={{ display: 'flex', alignItems: 'center', gap: 12, textDecoration: 'none' }}>
-              <span style={{
-                width: 36, height: 36, background: green, borderRadius: 8,
-                display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden',
-              }}>
-                <img src="/atlas/sheep-logo.png" alt="Black Sheep" style={{ width: 28, height: 28, objectFit: 'contain', display: 'block' }} />
-              </span>
-              <span style={{ display: 'flex', flexDirection: 'column', lineHeight: 1 }}>
-                <span style={{ fontWeight: 700, fontSize: 15, letterSpacing: '-0.01em', color: text }}>ATLAS</span>
-                <span style={{ fontFamily: mono, fontSize: 9.5, letterSpacing: '0.14em', color: textMute, textTransform: 'uppercase', marginTop: 3 }}>By Black Sheep</span>
-              </span>
-            </a>
-            {/* Links */}
-            <div className="ls-nav-links" style={{ display: 'flex', gap: 32, alignItems: 'center' }}>
-              {['#como-funciona', '#diagnostico', '#comparativo', '#precos', '#faq'].map((href, i) => (
-                <a key={href} href={href} className="ls-nav-link"
-                  style={{ color: textDim, fontSize: 14, transition: 'color .15s', textDecoration: 'none', fontFamily: sans }}
-                >
-                  {['Como funciona', 'Diagnóstico IA', 'Vs. planilha', 'Preços', 'FAQ'][i]}
-                </a>
-              ))}
-            </div>
-            {/* CTA */}
-            <div>
-              <BtnPrimary href="#precos">Assinar agora →</BtnPrimary>
-            </div>
-          </div>
+      <div style={{ background: green, width: '100%' }}>
+        <div className="ls-wrap" style={{ maxWidth: 1240, margin: '0 auto', padding: '15px 48px', display: 'flex', alignItems: 'center', gap: 16 }}>
+          <img src="/blacksheep-logo.png" alt="Black Sheep" style={{ height: 60, display: 'block', flexShrink: 0 }} />
+          <span style={{ fontFamily: sans, fontSize: 'clamp(20px,2.5vw,28px)', fontWeight: 900, letterSpacing: 4, color: '#000', whiteSpace: 'nowrap' as const }}>ATLAS</span>
+          <span style={{ width: 1, height: 32, background: 'rgba(0,0,0,0.3)', flexShrink: 0, margin: '0 4px' }} />
+          <span style={{ fontFamily: sans, fontSize: 'clamp(10px,1.2vw,13px)', fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase' as const, color: '#000', whiteSpace: 'nowrap' as const }}>BY BLACK SHEEP</span>
         </div>
-      </nav>
+      </div>
 
       {/* ── HERO ── */}
       <header className="ls-hero" style={{ position: 'relative', padding: '80px 0 120px', overflow: 'hidden' }}>
@@ -260,21 +225,10 @@ export function LandingSoftware() {
               <span style={{ color: green }}>do zero.</span>
             </h1>
             <p style={{ marginTop: 28, fontSize: 19, color: textDim, maxWidth: 520, lineHeight: 1.55, fontFamily: sans }}>
-              Preenche seus <b style={{ color: text, fontWeight: 600 }}>gastos e receitas</b>. O Atlas devolve{' '}
-              <b style={{ color: text, fontWeight: 600 }}>DRE, DFC e fluxo de caixa projetado</b> — prontos. Nenhum curso. Nenhuma planilha. Nenhuma desculpa.
+              Preencha seus <b style={{ color: text, fontWeight: 600 }}>gastos e receitas</b>. O ATLAS te devolve{' '}
+              <b style={{ color: text, fontWeight: 600 }}>DRE, DFC e fluxo de caixa projetado</b> — tudo pronto. Nenhum curso. Nenhuma planilha. Nenhuma complicação.
             </p>
-            <div style={{ marginTop: 36, display: 'flex', gap: 14, flexWrap: 'wrap' }}>
-              <BtnPrimary href="#precos" lg>Assinar o Atlas <ArrowIcon size={16} /></BtnPrimary>
-              <BtnGhost href="#como-funciona" lg>Ver como funciona</BtnGhost>
-            </div>
-            <div style={{ marginTop: 24, display: 'flex', gap: 22, flexWrap: 'wrap', color: textMute, fontSize: 13, fontFamily: sans }}>
-              {['Sem cartão pra começar', 'Configuração em 5 minutos', 'Diagnóstico com IA incluso'].map(s => (
-                <span key={s} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-                  <CheckIcon />
-                  {s}
-                </span>
-              ))}
-            </div>
+            <div style={{ marginTop: 48 }} />
           </div>
           {/* Visual */}
           <div className="ls-hero-visual" style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 520 }}>
@@ -293,7 +247,7 @@ export function LandingSoftware() {
             <img
               className="ls-hero-img"
               src="/atlas/atlas-hero.png"
-              alt="Atlas — a ovelha carrega o mundo financeiro do seu negócio"
+              alt="ATLAS — a ovelha carrega o mundo financeiro do seu negócio"
               style={{ width: '100%', maxWidth: 560, position: 'relative', zIndex: 2, filter: 'drop-shadow(0 40px 80px rgba(0,239,97,0.12))' }}
             />
           </div>
@@ -393,7 +347,7 @@ export function LandingSoftware() {
               Três passos. Zero planilha.
             </h2>
             <p style={{ fontSize: 18, color: textDim, lineHeight: 1.55, fontFamily: sans, margin: 0 }}>
-              Você lança o que entrou e o que saiu. O Atlas faz o resto — da DRE ao fluxo de caixa projetado.
+              Você lança o que entrou e o que saiu. O ATLAS faz o resto — da DRE ao fluxo de caixa projetado.
             </p>
           </div>
           {/* Steps */}
@@ -405,8 +359,8 @@ export function LandingSoftware() {
               img: '/atlas/shot-overview.png', tag: 'Lançamentos', reverse: false,
             },
             {
-              num: '02', h: 'Atlas monta sua DRE, DFC e fluxo projetado.',
-              p: 'No mesmo segundo em que você lança, a DRE é recalculada. O Demonstrativo de Fluxo de Caixa também. E o fluxo projetado puxa seus lançamentos futuros pra te mostrar o caixa daqui a 60 dias.',
+              num: '02', h: 'ATLAS monta sua DRE, DFC e fluxo projetado.',
+              p: 'No mesmo segundo em que você lança, a DRE é recalculada. O Demonstrativo de Fluxo de Caixa também. E o fluxo projetado puxa seus lançamentos futuros pra te mostrar o caixa daqui a 90 dias.',
               bullets: ['DRE gerencial pronta — margem bruta, contribuição, EBITDA', 'Fluxo de caixa realizado + projetado', 'Ponto de equilíbrio calculado no automático'],
               img: '/atlas/shot-dre.png', tag: 'DRE gerencial', reverse: true,
             },
@@ -461,7 +415,10 @@ export function LandingSoftware() {
                 }}>
                   {tag}
                 </span>
-                <img src={img} alt={h} style={{ width: '100%', display: 'block' }} />
+                {num === '03'
+                  ? <video autoPlay muted loop playsInline poster={img} style={{ width: '100%', display: 'block' }}><source src="/atlas-demo.mp4" type="video/mp4" /></video>
+                  : <img src={img} alt={h} style={{ width: '100%', display: 'block' }} />
+                }
               </div>
             </div>
           ))}
@@ -488,7 +445,7 @@ export function LandingSoftware() {
               Um <span style={{ color: green }}>sócio financeiro</span> pra ler seus números.
             </h2>
             <p style={{ color: textDim, fontSize: 17, lineHeight: 1.6, margin: '0 0 16px', maxWidth: 500, fontFamily: sans }}>
-              No final de cada mês, o Atlas lê sua DRE, seu fluxo, sua tendência — e te entrega um diagnóstico em português claro: o que tá bom, o que tá péssimo, o que fazer.
+              No final de cada mês, o ATLAS lê sua DRE, seu fluxo, sua tendência — e te entrega um diagnóstico em português claro: o que tá bom, o que tá péssimo, o que fazer.
             </p>
             <p style={{ color: textDim, fontSize: 17, lineHeight: 1.6, margin: '0 0 28px', maxWidth: 500, fontFamily: sans }}>
               Sem jargão. Sem dashboard bonito pra inglês ver. Direto no ponto.
@@ -564,7 +521,7 @@ export function LandingSoftware() {
         <div className="ls-wrap" style={{ maxWidth: 1240, margin: '0 auto', padding: '0 40px' }}>
           <div style={{ textAlign: 'center', maxWidth: 780, margin: '0 auto 40px' }}>
             <span style={{ fontFamily: mono, fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: textMute, display: 'block', marginBottom: 16 }}>
-              Atlas vs. o que você usa hoje
+              ATLAS vs. o que você usa hoje
             </span>
             <h2 style={{ fontSize: 'clamp(32px,4vw,52px)', fontWeight: 700, letterSpacing: '-0.03em', lineHeight: 1.05, margin: 0, fontFamily: sans }}>
               Uma coisa é planilha. Outra é gestão.
@@ -575,12 +532,12 @@ export function LandingSoftware() {
             <div className="ls-vs-table-row" style={{ display: 'grid', gridTemplateColumns: '1.3fr 1fr 1fr', alignItems: 'center', background: '#000', borderBottom: `1px solid ${borderSt}` }}>
               <div style={{ padding: '20px 24px', fontFamily: mono, fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase', color: textMute }}>Critério</div>
               <div style={{ padding: '20px 24px', borderLeft: `1px solid ${border}`, fontFamily: mono, fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase', color: textMute }}>Planilha / caderno</div>
-              <div style={{ padding: '20px 24px', borderLeft: `1px solid ${border}`, fontFamily: mono, fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase', color: green, fontWeight: 600 }}>Atlas</div>
+              <div style={{ padding: '20px 24px', borderLeft: `1px solid ${border}`, fontFamily: mono, fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase', color: green, fontWeight: 600 }}>ATLAS</div>
             </div>
             {/* Data rows */}
             {[
               { crit: 'DRE gerencial', planilha: 'Você monta, sem saber se fechou', atlas: 'Pronta a cada lançamento' },
-              { crit: 'Fluxo de caixa projetado', planilha: 'Só vê o passado', atlas: '60 dias à frente, automático' },
+              { crit: 'Fluxo de caixa projetado', planilha: 'Só vê o passado', atlas: '90 dias à frente, automático' },
               { crit: 'Diagnóstico mensal', planilha: 'Você que interpreta (e chuta)', atlas: 'IA lê e te fala o que fazer' },
               { crit: 'Precificação de produto', planilha: 'Cálculo manual, sempre furado', atlas: 'Ferramenta dedicada' },
               { crit: 'Curva de aprendizado', planilha: 'Semanas (e uns cursos)', atlas: '5 minutos' },
@@ -611,28 +568,27 @@ export function LandingSoftware() {
               Preço
             </span>
             <h2 style={{ fontSize: 'clamp(32px,4vw,52px)', fontWeight: 700, letterSpacing: '-0.03em', lineHeight: 1.05, margin: '0 0 18px', fontFamily: sans }}>
-              Duas formas de entrar.<br />Uma vai te economizar mais.
+              Escolha como quer começar.
             </h2>
             <p style={{ fontSize: 18, color: textDim, lineHeight: 1.55, fontFamily: sans, margin: 0 }}>
-              Sem contratos longos. Sem fidelidade. Cancela quando quiser.
+              Mensal pra testar sem compromisso. Anual pra quem já decidiu — e quer pagar metade.
             </p>
           </div>
           <div className="ls-plans" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, maxWidth: 960, margin: '0 auto' }}>
             {/* Mensal */}
-            <div style={{ background: bgCard, border: `1px solid ${border}`, borderRadius: 20, padding: 36, position: 'relative' }}>
+            <div className="ls-plan-monthly" style={{ background: bgCard, border: `1px solid ${border}`, borderRadius: 20, padding: 36, position: 'relative' }}>
               <div style={{ fontFamily: mono, fontSize: 12, letterSpacing: '0.18em', textTransform: 'uppercase', color: textMute }}>Mensal</div>
-              <h3 style={{ fontSize: 24, fontWeight: 600, margin: '6px 0', letterSpacing: '-0.01em', fontFamily: sans }}>Pra começar sem compromisso</h3>
-              <p style={{ color: textDim, fontSize: 14, marginBottom: 28, lineHeight: 1.5, fontFamily: sans }}>Mês a mês. Testa na prática antes de firmar.</p>
+              <h3 style={{ fontSize: 24, fontWeight: 600, margin: '6px 0 28px', letterSpacing: '-0.01em', fontFamily: sans }}>Pra começar agora</h3>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 6 }}>
                 <div style={{ fontFamily: mono, fontSize: 56, fontWeight: 600, letterSpacing: '-0.03em', lineHeight: 1, color: text }}>
                   <span style={{ fontSize: 20, color: textMute, marginRight: 6 }}>R$</span>99
                 </div>
                 <div style={{ color: textDim, fontSize: 14, fontFamily: sans }}>/ mês</div>
               </div>
-              <div style={{ color: textMute, fontFamily: mono, fontSize: 12, letterSpacing: '0.04em', marginBottom: 28, minHeight: 18 }}>&nbsp;</div>
+              <div style={{ minHeight: 40, marginBottom: 28 }} />
               <BtnGhost href="#precos" fullWidth>Assinar mensal</BtnGhost>
               <ul style={{ listStyle: 'none', padding: 0, margin: '28px 0 0', display: 'flex', flexDirection: 'column', gap: 12 }}>
-                {['Lançamentos ilimitados', 'DRE, DFC e fluxo projetado', 'Ferramentas de precificação e ponto de equilíbrio', 'Diagnóstico IA — 2 créditos por mês', 'Alertas e comparativos mensais', 'Suporte por e-mail'].map(f => (
+                {['Acesso completo ao ATLAS', 'DRE, DFC e fluxo projetado automáticos', 'Diagnóstico IA — 1 crédito por mês', 'Suporte por e-mail', 'Cancela quando quiser'].map(f => (
                   <li key={f} style={{ display: 'flex', gap: 10, color: text, fontSize: 14.5, alignItems: 'flex-start', lineHeight: 1.5, fontFamily: sans }}>
                     <span style={{ color: green, fontWeight: 700, flexShrink: 0 }}>✓</span>{f}
                   </li>
@@ -640,9 +596,9 @@ export function LandingSoftware() {
               </ul>
             </div>
             {/* Anual (featured) */}
-            <div style={{
+            <div className="ls-plan-annual" style={{
               background: `linear-gradient(180deg, rgba(0,239,97,0.04), transparent 40%), ${bgCard}`,
-              border: `1px solid ${green}`, borderRadius: 20, padding: 36, position: 'relative',
+              border: `2px solid ${green}`, borderRadius: 20, padding: 36, position: 'relative',
               boxShadow: `0 0 0 1px ${green}, 0 30px 80px rgba(0,239,97,0.08)`,
             }}>
               <div style={{
@@ -650,36 +606,33 @@ export function LandingSoftware() {
                 background: green, color: '#000',
                 fontFamily: mono, fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase',
                 padding: '6px 12px', borderRadius: 100, fontWeight: 700,
-              }}>Economize 50%</div>
+              }}>MAIS ESCOLHIDO</div>
               <div style={{ fontFamily: mono, fontSize: 12, letterSpacing: '0.18em', textTransform: 'uppercase', color: green }}>Anual</div>
-              <h3 style={{ fontSize: 24, fontWeight: 600, margin: '6px 0', letterSpacing: '-0.01em', fontFamily: sans }}>Pra quem quer sangrar menos no caixa</h3>
-              <p style={{ color: textDim, fontSize: 14, marginBottom: 28, lineHeight: 1.5, fontFamily: sans }}>Plano anual — menos da metade do mensal, por mês.</p>
+              <h3 style={{ fontSize: 24, fontWeight: 600, margin: '6px 0 28px', letterSpacing: '-0.01em', fontFamily: sans }}>Pra quem já decidiu</h3>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 6 }}>
                 <div style={{ fontFamily: mono, fontSize: 56, fontWeight: 600, letterSpacing: '-0.03em', lineHeight: 1, color: text }}>
-                  <span style={{ fontSize: 20, color: textMute, marginRight: 6 }}>R$</span>599
+                  <span style={{ fontSize: 20, color: textMute, marginRight: 6 }}>R$</span>49,91
                 </div>
-                <div style={{ color: textDim, fontSize: 14, fontFamily: sans }}>/ ano</div>
+                <div style={{ color: textDim, fontSize: 14, fontFamily: sans }}>/ mês</div>
               </div>
-              <div style={{ color: textMute, fontFamily: mono, fontSize: 12, letterSpacing: '0.04em', marginBottom: 28 }}>
-                equivale a <b style={{ color: green, fontWeight: 500 }}>R$ 49,91/mês</b> — vs. R$ 99 no mensal
-              </div>
+              <div style={{ color: textMute, fontFamily: mono, fontSize: 12, letterSpacing: '0.04em', marginBottom: 4 }}>R$ 599 cobrados 1× ao ano</div>
+              <div style={{ color: green, fontFamily: mono, fontSize: 12, letterSpacing: '0.04em', marginBottom: 28 }}>Economize R$ 589/ano vs. mensal</div>
               <BtnPrimary href="#precos">Assinar anual</BtnPrimary>
               <ul style={{ listStyle: 'none', padding: 0, margin: '28px 0 0', display: 'flex', flexDirection: 'column', gap: 12 }}>
                 {[
-                  { text: 'Tudo do plano mensal', bonus: false },
-                  { text: '2 meses grátis no comparativo', bonus: false },
-                  { text: 'Diagnóstico IA — 2 créditos por mês', bonus: false },
-                  { text: 'Prioridade no suporte', bonus: false },
-                  { text: '1 convite para a Mentoria em Grupo Black Sheep', bonus: true },
-                ].map(({ text: f, bonus }) => (
-                  <li key={f} style={{
-                    display: 'flex', gap: 10, fontSize: 14.5, alignItems: 'flex-start', lineHeight: 1.5, fontFamily: sans,
-                    color: bonus ? green : text, fontWeight: bonus ? 500 : 400,
-                    ...(bonus ? { marginTop: 6, paddingTop: 14, borderTop: `1px dashed ${borderSt}` } : {}),
-                  }}>
-                    <span style={{ color: green, fontWeight: 700, flexShrink: 0 }}>{bonus ? '★' : '✓'}</span>{f}
+                  { f: 'Tudo do plano mensal', bold: false },
+                  { f: 'Pague 6 meses, use 12', bold: true },
+                  { f: 'Diagnóstico IA — 2 créditos por mês', bold: false },
+                  { f: 'Suporte prioritário (resposta em até 24h)', bold: false },
+                  { f: 'Acesso antecipado a novas ferramentas', bold: false },
+                ].map(({ f, bold }) => (
+                  <li key={f} style={{ display: 'flex', gap: 10, color: text, fontSize: 14.5, alignItems: 'flex-start', lineHeight: 1.5, fontFamily: sans, fontWeight: bold ? 600 : 400 }}>
+                    <span style={{ color: green, fontWeight: 700, flexShrink: 0 }}>✓</span>{f}
                   </li>
                 ))}
+                <li style={{ display: 'flex', gap: 10, fontSize: 14.5, alignItems: 'flex-start', lineHeight: 1.5, fontFamily: sans, color: green, fontWeight: 500, marginTop: 6, paddingTop: 14, borderTop: `1px dashed ${borderSt}` }}>
+                  <span style={{ flexShrink: 0 }}>⭐</span>1 convite para a Mentoria em Grupo Black Sheep
+                </li>
               </ul>
             </div>
           </div>
@@ -704,13 +657,13 @@ export function LandingSoftware() {
             </h2>
           </div>
           <div style={{ maxWidth: 820, margin: '0 auto' }}>
-            <FaqItem defaultOpen q="Eu não entendo nada de contabilidade. Consigo usar?" a="Essa é literalmente a ideia. Você lança o que entrou e o que saiu — o Atlas monta DRE, DFC e fluxo projetado sozinho. Não precisa saber o que é margem de contribuição pra usar. O sistema explica quando for relevante." />
+            <FaqItem defaultOpen q="Eu não entendo nada de contabilidade. Consigo usar?" a="Essa é literalmente a ideia. Você lança o que entrou e o que saiu — o ATLAS monta DRE, DFC e fluxo projetado sozinho. Não precisa saber o que é margem de contribuição pra usar. O sistema explica quando for relevante." />
             <FaqItem q="Como funciona o diagnóstico com IA?" a='Ao fechar o mês, você clica em "Gerar diagnóstico". A IA lê toda a sua DRE, fluxo de caixa, histórico e tendência — e devolve um texto direto em português: o que tá bom, o que tá crítico, o que fazer. Cada plano vem com créditos de diagnóstico mensais.' />
-            <FaqItem q="Posso importar dados do banco?" a="Sim. Você pode importar extratos em OFX ou CSV e categorizar em lote. Lançamentos recorrentes (aluguel, salários, assinaturas) você configura uma vez e o Atlas repete." />
+            <FaqItem q="Posso importar dados do banco?" a="Sim. Você pode importar extratos em OFX ou CSV e categorizar em lote. Lançamentos recorrentes (aluguel, salários, assinaturas) você configura uma vez e o ATLAS repete." />
             <FaqItem q="Preciso assinar contrato ou fidelidade?" a="Não. No plano mensal, você cancela a qualquer momento. No plano anual, se desistir nos primeiros 7 dias, devolvemos 100% do valor." />
             <FaqItem q="Como funciona o convite para a mentoria Black Sheep?" a="Assinou o plano anual? Entra uma vez na Mentoria em Grupo Black Sheep — encontro ao vivo onde a gente destrincha gestão financeira de negócio real com base em casos dos próprios alunos. Não é curso gravado, é mentoria mesmo." />
             <FaqItem q="Meus dados ficam seguros?" a="Ficam. Criptografia em trânsito e em repouso, backup diário, autenticação por e-mail verificado. Você é o dono dos seus dados — pode exportar tudo em CSV/XLSX a qualquer momento." />
-            <FaqItem q="O Atlas substitui meu contador?" a="Não. O Atlas é gestão financeira — te mostra a saúde do negócio pra você tomar decisão. Seu contador cuida da parte fiscal e tributária. Os dois andam juntos. Inclusive, você pode exportar relatórios do Atlas pra mandar pro contador." />
+            <FaqItem q="O ATLAS substitui meu contador?" a="Não. O ATLAS é gestão financeira — te mostra a saúde do negócio pra você tomar decisão. Seu contador cuida da parte fiscal e tributária. Os dois andam juntos. Inclusive, você pode exportar relatórios do ATLAS pra mandar pro contador." />
           </div>
         </div>
       </section>
@@ -730,47 +683,12 @@ export function LandingSoftware() {
             Chega de<br />gerir no <span style={{ color: green, fontStyle: 'normal' }}>achismo</span>.
           </h2>
           <p style={{ color: textDim, fontSize: 19, maxWidth: 560, margin: '0 auto 36px', lineHeight: 1.55, fontFamily: sans }}>
-            Lance os números. Deixe o Atlas pensar. Tome decisão com dado — não com fé.
+            Lance os números. Deixe o ATLAS pensar. Tome decisão com dado — não com fé.
           </p>
-          <BtnPrimary href="#precos" lg>Assinar o Atlas agora <ArrowIcon size={18} /></BtnPrimary>
+          <BtnPrimary href="#precos" lg>Assinar o ATLAS agora <ArrowIcon size={18} /></BtnPrimary>
         </div>
       </section>
 
-      {/* ── FOOTER ── */}
-      <footer style={{ borderTop: `1px solid ${border}`, background: '#000', padding: '48px 0 40px' }}>
-        <div className="ls-wrap" style={{ maxWidth: 1240, margin: '0 auto', padding: '0 40px' }}>
-          <div className="ls-foot-grid" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 24 }}>
-            <div>
-              <a href="#" style={{ display: 'flex', alignItems: 'flex-start', gap: 12, textDecoration: 'none' }}>
-                <span style={{ width: 36, height: 36, background: green, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', flexShrink: 0 }}>
-                  <img src="/atlas/sheep-logo.png" alt="Black Sheep" style={{ width: 28, height: 28, objectFit: 'contain', display: 'block' }} />
-                </span>
-                <span style={{ display: 'flex', flexDirection: 'column', lineHeight: 1 }}>
-                  <span style={{ fontWeight: 700, fontSize: 15, letterSpacing: '-0.01em', color: text }}>ATLAS</span>
-                  <span style={{ fontFamily: mono, fontSize: 9.5, letterSpacing: '0.14em', color: textMute, textTransform: 'uppercase', marginTop: 3 }}>By Black Sheep</span>
-                </span>
-              </a>
-              <p style={{ maxWidth: 380, color: textMute, fontSize: 13, lineHeight: 1.55, margin: '14px 0 0', fontFamily: sans }}>
-                O sistema de gestão financeira para quem abriu o negócio pra vender — não pra virar contador.
-              </p>
-            </div>
-            <div className="ls-foot-links" style={{ display: 'flex', gap: 28, color: textMute, fontSize: 13 }}>
-              {[['#como-funciona', 'Produto'], ['#precos', 'Preços'], ['#faq', 'FAQ'], ['#', 'Contato']].map(([href, label]) => (
-                <a key={label} href={href} className="ls-foot-link" style={{ color: textMute, textDecoration: 'none', transition: 'color .15s', fontFamily: sans }}>{label}</a>
-              ))}
-            </div>
-          </div>
-          <div style={{
-            marginTop: 40, paddingTop: 24, borderTop: `1px solid ${border}`,
-            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-            color: textMute, fontFamily: mono, fontSize: 11, letterSpacing: '0.1em',
-            textTransform: 'uppercase', flexWrap: 'wrap', gap: 12,
-          }}>
-            <span>© 2026 Black Sheep — Todos os direitos reservados</span>
-            <span>Feito com disciplina em São Paulo, BR</span>
-          </div>
-        </div>
-      </footer>
 
     </div>
   )
