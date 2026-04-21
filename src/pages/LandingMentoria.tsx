@@ -153,11 +153,11 @@ export function LandingMentoria() {
 
       {/* ── NAV ── */}
       <div style={{ background: C.green, width: '100%' }}>
-        <div className="lm-nav-inner" style={{ maxWidth: 1240, margin: '0 auto', padding: '28px 48px', display: 'flex', alignItems: 'center', gap: 20 }}>
-          <img src="/blacksheep-logo.png" alt="Black Sheep" style={{ height: 72, display: 'block' }} />
-          <span style={{ fontFamily: sans, fontSize: 28, fontWeight: 900, letterSpacing: 4, color: '#000' }}>ATLAS</span>
-          <span style={{ width: 1, height: 40, background: 'rgba(0,0,0,0.3)', flexShrink: 0 }} />
-          <span style={{ fontFamily: sans, fontSize: 14, fontWeight: 700, letterSpacing: 3, textTransform: 'uppercase' as const, color: '#000' }}>BY BLACK SHEEP</span>
+        <div className="lm-nav-inner" style={{ maxWidth: 1240, margin: '0 auto', padding: '15px 48px', display: 'flex', alignItems: 'center', gap: 16 }}>
+          <img src="/blacksheep-logo.png" alt="Black Sheep" style={{ height: 60, display: 'block', flexShrink: 0 }} />
+          <span style={{ fontFamily: sans, fontSize: 'clamp(20px,2.5vw,28px)', fontWeight: 900, letterSpacing: 4, color: '#000', whiteSpace: 'nowrap' as const }}>ATLAS</span>
+          <span style={{ width: 1, height: 32, background: 'rgba(0,0,0,0.3)', flexShrink: 0, margin: '0 4px' }} />
+          <span style={{ fontFamily: sans, fontSize: 'clamp(10px,1.2vw,13px)', fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase' as const, color: '#000', whiteSpace: 'nowrap' as const }}>BY BLACK SHEEP</span>
         </div>
       </div>
 
@@ -172,10 +172,10 @@ export function LandingMentoria() {
                 Programa 001 · 6 meses · Implementação pessoal
               </div>
               <h2 style={{ fontSize: 'clamp(28px,3.6vw,52px)', lineHeight: 1.05, letterSpacing: '-0.03em', fontWeight: 700, margin: '0 0 24px', fontFamily: sans }}>
-                Saiba exatamente quanto sua empresa lucra e por que você não vê dinheiro no final do mês.
+                Sua empresa fatura bem. Mas você não faz ideia de quanto realmente sobra.
               </h2>
               <p style={{ fontSize: 19, lineHeight: 1.5, color: C.textDim, maxWidth: 560, margin: '0 0 32px', fontFamily: sans }}>
-                Em 6 meses, você implementa um modelo de gestão que mostra pra onde vai cada real que entra — e garante que seu crescimento vire lucro.
+                Em 30 dias você tem controle do financeiro da empresa. Você foca em vender e deixa a parte chata dos números com a gente.
               </p>
               <div style={{ width: 80, height: 3, background: C.green, marginTop: 32, marginBottom: 48 }} />
             </div>
