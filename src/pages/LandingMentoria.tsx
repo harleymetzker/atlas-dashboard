@@ -171,7 +171,7 @@ export function LandingMentoria() {
                 <span style={{ width: 8, height: 8, borderRadius: '50%', background: C.green, animation: 'lm-pulse 1.6s ease-in-out infinite' }} />
                 Programa 001 · 6 meses · Implementação pessoal
               </div>
-              <h2 style={{ fontSize: 'clamp(28px,3.6vw,52px)', lineHeight: 1.05, letterSpacing: '-0.03em', fontWeight: 700, margin: '0 0 24px', fontFamily: sans }}>
+              <h2 style={{ fontSize: 'clamp(36px,4.7vw,68px)', lineHeight: 1.05, letterSpacing: '-0.03em', fontWeight: 700, margin: '0 0 24px', fontFamily: sans }}>
                 Sua empresa fatura bem. Mas você não faz ideia de quanto realmente sobra.
               </h2>
               <p style={{ fontSize: 19, lineHeight: 1.5, color: C.textDim, maxWidth: 560, margin: '0 0 32px', fontFamily: sans }}>
