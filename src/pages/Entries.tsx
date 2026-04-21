@@ -90,6 +90,7 @@ export function Entries() {
   const [importUploadOpen, setImportUploadOpen] = useState(false)
   const [importRows, setImportRows] = useState<RawRow[] | null>(null)
   const [search, setSearch] = useState('')
+  const [selectedMonth, setSelectedMonth] = useState('')
 
   const { entries, loading, addEntry, deleteEntry, updateEntry } = useEntries({
     startDate,
@@ -212,13 +213,14 @@ export function Entries() {
   }
 
   function handleMonthShortcut(e: React.ChangeEvent<HTMLSelectElement>) {
-    const idx = Number(e.target.value)
+    const val = e.target.value
+    setSelectedMonth(val)
+    const idx = Number(val)
     if (isNaN(idx)) return
     const year = endDate ? parseISO(endDate).getFullYear() : new Date().getFullYear()
     const ref = new Date(year, idx, 1)
     setStartDate(format(som(ref), 'yyyy-MM-dd'))
     setEndDate(format(endOfMonth(ref), 'yyyy-MM-dd'))
-    e.target.value = ''
   }
 
   const filteredEntries = search.trim()
@@ -280,17 +282,17 @@ export function Entries() {
         {/* DE */}
         <div>
           <label style={filterLabelStyle}>De</label>
-          <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} style={{ ...filterInputStyle, width: 148 }} />
+          <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} style={{ ...filterInputStyle, width: 160 }} />
         </div>
         {/* ATÉ */}
         <div>
           <label style={filterLabelStyle}>Até</label>
-          <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} style={{ ...filterInputStyle, width: 148 }} />
+          <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} style={{ ...filterInputStyle, width: 160 }} />
         </div>
         {/* MÊS */}
         <div>
           <label style={filterLabelStyle}>Mês</label>
-          <select onChange={handleMonthShortcut} style={{ ...filterInputStyle, width: 140, cursor: 'pointer' }}>
+          <select value={selectedMonth} onChange={handleMonthShortcut} style={{ ...filterInputStyle, width: 160, cursor: 'pointer' }}>
             <option value="">Selecionar...</option>
             {MONTHS.map((m, i) => <option key={i} value={i} style={{ background: '#111' }}>{m}</option>)}
           </select>
