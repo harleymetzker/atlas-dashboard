@@ -2,6 +2,7 @@
   from = "/api/create-checkout-session"
   to = "/.netlify/functions/create-checkout-session"
   status = 200
+  force = true
 
 [[redirects]]
   from = "/*"

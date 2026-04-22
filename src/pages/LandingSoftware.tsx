@@ -1,5 +1,10 @@
 import { useState } from 'react'
 
+// ── Stripe price IDs ──────────────────────────────────────────────────────────
+
+const PRICE_MENSAL = 'price_1TOpZxFVyybhsLH94Wr4qQGd'
+const PRICE_ANUAL  = 'price_1TOpZxFVyybhsLH9ikBgu5Qj'
+
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 const green    = '#00EF61'
@@ -584,7 +589,7 @@ export function LandingSoftware() {
               </div>
               <div style={{ minHeight: 40, marginBottom: 28 }} />
               <button
-                onClick={() => handleCheckout(import.meta.env.VITE_STRIPE_PRICE_MENSAL)}
+                onClick={() => handleCheckout(PRICE_MENSAL)}
                 disabled={checkoutLoading !== null}
                 style={{
                   display: 'block', width: '100%', padding: '13px 24px',
@@ -594,7 +599,7 @@ export function LandingSoftware() {
                   opacity: checkoutLoading ? 0.7 : 1, transition: 'opacity 0.15s',
                 }}
               >
-                {checkoutLoading === import.meta.env.VITE_STRIPE_PRICE_MENSAL ? 'Aguarde...' : 'Assinar mensal'}
+                {checkoutLoading === PRICE_MENSAL ? 'Aguarde...' : 'Assinar mensal'}
               </button>
               <ul style={{ listStyle: 'none', padding: 0, margin: '28px 0 0', display: 'flex', flexDirection: 'column', gap: 12 }}>
                 {['Acesso completo ao ATLAS', 'DRE, DFC e fluxo projetado automáticos', 'Diagnóstico IA — 1 crédito por mês', 'Suporte por e-mail', 'Cancela quando quiser'].map(f => (
@@ -627,7 +632,7 @@ export function LandingSoftware() {
               <div style={{ color: textMute, fontFamily: mono, fontSize: 12, letterSpacing: '0.04em', marginBottom: 4 }}>R$ 599 cobrados 1× ao ano</div>
               <div style={{ color: green, fontFamily: mono, fontSize: 12, letterSpacing: '0.04em', marginBottom: 28 }}>Economize R$ 589/ano vs. mensal</div>
               <button
-                onClick={() => handleCheckout(import.meta.env.VITE_STRIPE_PRICE_ANUAL)}
+                onClick={() => handleCheckout(PRICE_ANUAL)}
                 disabled={checkoutLoading !== null}
                 style={{
                   display: 'block', width: '100%', padding: '13px 24px',
@@ -637,7 +642,7 @@ export function LandingSoftware() {
                   opacity: checkoutLoading ? 0.7 : 1, transition: 'opacity 0.15s',
                 }}
               >
-                {checkoutLoading === import.meta.env.VITE_STRIPE_PRICE_ANUAL ? 'Aguarde...' : 'Assinar anual'}
+                {checkoutLoading === PRICE_ANUAL ? 'Aguarde...' : 'Assinar anual'}
               </button>
               <ul style={{ listStyle: 'none', padding: 0, margin: '28px 0 0', display: 'flex', flexDirection: 'column', gap: 12 }}>
                 {[
