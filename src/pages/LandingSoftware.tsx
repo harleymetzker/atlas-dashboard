@@ -335,6 +335,16 @@ export function LandingSoftware() {
         </div>
       </section>
 
+      {/* ── MID CTA ── */}
+      <div style={{ padding: '60px 0', textAlign: 'center', borderTop: `1px solid ${border}` }}>
+        <div className="ls-wrap" style={{ maxWidth: 1240, margin: '0 auto', padding: '0 40px' }}>
+          <h2 style={{ fontSize: 'clamp(24px,3vw,32px)', fontWeight: 600, color: text, marginBottom: 24, letterSpacing: '-0.02em', fontFamily: sans }}>
+            Pronto pra parar de gerir no achismo?
+          </h2>
+          <BtnPrimary href="#precos">Ver planos e começar agora <ArrowIcon /></BtnPrimary>
+        </div>
+      </div>
+
       {/* ── HOW IT WORKS ── */}
       <section id="como-funciona" className="ls-section" style={{
         padding: '100px 0', background: bgRaised,
@@ -428,7 +438,7 @@ export function LandingSoftware() {
       </section>
 
       {/* ── AI DIAGNOSIS ── */}
-      <section id="diagnostico" style={{ padding: '120px 0', position: 'relative', overflow: 'hidden' }}>
+      <section id="diagnostico" style={{ padding: '120px 0', position: 'relative', overflow: 'hidden', scrollMarginTop: '80px' }}>
         <div style={{
           position: 'absolute', inset: 0, pointerEvents: 'none',
           background: 'radial-gradient(800px 500px at 50% 0%, rgba(0,239,97,0.06), transparent 60%)',
@@ -452,7 +462,6 @@ export function LandingSoftware() {
             <p style={{ color: textDim, fontSize: 17, lineHeight: 1.6, margin: '0 0 28px', maxWidth: 500, fontFamily: sans }}>
               Sem jargão. Sem dashboard bonito pra inglês ver. Direto no ponto.
             </p>
-            <BtnPrimary href="#precos">Ver um diagnóstico de verdade →</BtnPrimary>
           </div>
           {/* AI Card */}
           <div style={{
@@ -562,8 +571,34 @@ export function LandingSoftware() {
         </div>
       </section>
 
+      {/* ── FAQ ── */}
+      <section id="faq" className="ls-section" style={{
+        padding: '100px 0', background: bgRaised, scrollMarginTop: '80px',
+        borderTop: `1px solid ${border}`, borderBottom: `1px solid ${border}`,
+      }}>
+        <div className="ls-wrap" style={{ maxWidth: 1240, margin: '0 auto', padding: '0 40px' }}>
+          <div style={{ textAlign: 'center', maxWidth: 780, margin: '0 auto 40px' }}>
+            <span style={{ fontFamily: mono, fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: textMute, display: 'block', marginBottom: 16 }}>
+              FAQ
+            </span>
+            <h2 style={{ fontSize: 'clamp(32px,4vw,52px)', fontWeight: 700, letterSpacing: '-0.03em', lineHeight: 1.05, margin: 0, fontFamily: sans }}>
+              Perguntas que chegam direto.
+            </h2>
+          </div>
+          <div style={{ maxWidth: 820, margin: '0 auto' }}>
+            <FaqItem defaultOpen q="Eu não entendo nada de contabilidade. Consigo usar?" a="Essa é literalmente a ideia. Você lança o que entrou e o que saiu — o ATLAS monta DRE, DFC e fluxo projetado sozinho. Não precisa saber o que é margem de contribuição pra usar. O sistema explica quando for relevante." />
+            <FaqItem q="Como funciona o diagnóstico com IA?" a='Ao fechar o mês, você clica em "Gerar diagnóstico". A IA lê toda a sua DRE, fluxo de caixa, histórico e tendência — e devolve um texto direto em português: o que tá bom, o que tá crítico, o que fazer. Cada plano vem com créditos de diagnóstico mensais.' />
+            <FaqItem q="Posso importar dados do banco?" a="Sim. Você pode importar extratos em OFX ou CSV e categorizar em lote. Lançamentos recorrentes (aluguel, salários, assinaturas) você configura uma vez e o ATLAS repete." />
+            <FaqItem q="Preciso assinar contrato ou fidelidade?" a="No plano mensal, você cancela a qualquer momento — sem fidelidade, sem multa. No plano anual, você tem 7 dias de garantia: se não fizer sentido, devolvemos 100% do valor." />
+            <FaqItem q="Como funciona o convite para a mentoria Black Sheep?" a="Assinou o plano anual? Entra uma vez na Mentoria em Grupo Black Sheep — encontro ao vivo onde a gente destrincha gestão financeira de negócio real com base em casos dos próprios alunos. Não é curso gravado, é mentoria mesmo." />
+            <FaqItem q="Meus dados ficam seguros?" a="Ficam. Criptografia em trânsito e em repouso, backup diário, autenticação por e-mail verificado. Você é o dono dos seus dados — pode exportar tudo em CSV/XLSX a qualquer momento." />
+            <FaqItem q="O ATLAS substitui meu contador?" a="Não. O ATLAS é gestão financeira — te mostra a saúde do negócio pra você tomar decisão. Seu contador cuida da parte fiscal e tributária. Os dois andam juntos. Inclusive, você pode exportar relatórios do ATLAS pra mandar pro contador." />
+          </div>
+        </div>
+      </section>
+
       {/* ── PRICING ── */}
-      <section id="precos" style={{ padding: '120px 0' }}>
+      <section id="precos" style={{ padding: '120px 0', scrollMarginTop: '80px' }}>
         <div className="ls-wrap" style={{ maxWidth: 1240, margin: '0 auto', padding: '0 40px' }}>
           <div style={{ textAlign: 'center', maxWidth: 780, margin: '0 auto 60px' }}>
             <span style={{ fontFamily: mono, fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: green, display: 'block', marginBottom: 16 }}>
@@ -587,7 +622,10 @@ export function LandingSoftware() {
                 </div>
                 <div style={{ color: textDim, fontSize: 14, fontFamily: sans }}>/ mês</div>
               </div>
-              <div style={{ minHeight: 40, marginBottom: 28 }} />
+              <div style={{ minHeight: 40, marginBottom: 16 }} />
+              <div style={{ fontFamily: mono, fontSize: 12, letterSpacing: '0.08em', color: green, marginBottom: 20, textTransform: 'uppercase' as const }}>
+                ✓ Sem fidelidade · Cancele quando quiser
+              </div>
               <button
                 onClick={() => handleCheckout(PRICE_MENSAL)}
                 disabled={checkoutLoading !== null}
@@ -630,7 +668,10 @@ export function LandingSoftware() {
                 <div style={{ color: textDim, fontSize: 14, fontFamily: sans }}>/ mês</div>
               </div>
               <div style={{ color: textMute, fontFamily: mono, fontSize: 12, letterSpacing: '0.04em', marginBottom: 4 }}>R$ 599 cobrados 1× ao ano</div>
-              <div style={{ color: green, fontFamily: mono, fontSize: 12, letterSpacing: '0.04em', marginBottom: 28 }}>Economize R$ 589/ano vs. mensal</div>
+              <div style={{ color: green, fontFamily: mono, fontSize: 12, letterSpacing: '0.04em', marginBottom: 16 }}>Economize R$ 589/ano vs. mensal</div>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '8px 14px', background: 'rgba(0,239,97,0.12)', border: `1px solid ${green}`, borderRadius: 100, fontFamily: mono, fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: green, fontWeight: 700, marginBottom: 20 }}>
+                🛡 7 dias de garantia · Devolução total
+              </div>
               <button
                 onClick={() => handleCheckout(PRICE_ANUAL)}
                 disabled={checkoutLoading !== null}
@@ -671,32 +712,6 @@ export function LandingSoftware() {
         </div>
       </section>
 
-      {/* ── FAQ ── */}
-      <section id="faq" className="ls-section" style={{
-        padding: '100px 0', background: bgRaised,
-        borderTop: `1px solid ${border}`, borderBottom: `1px solid ${border}`,
-      }}>
-        <div className="ls-wrap" style={{ maxWidth: 1240, margin: '0 auto', padding: '0 40px' }}>
-          <div style={{ textAlign: 'center', maxWidth: 780, margin: '0 auto 40px' }}>
-            <span style={{ fontFamily: mono, fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: textMute, display: 'block', marginBottom: 16 }}>
-              FAQ
-            </span>
-            <h2 style={{ fontSize: 'clamp(32px,4vw,52px)', fontWeight: 700, letterSpacing: '-0.03em', lineHeight: 1.05, margin: 0, fontFamily: sans }}>
-              Perguntas que chegam direto.
-            </h2>
-          </div>
-          <div style={{ maxWidth: 820, margin: '0 auto' }}>
-            <FaqItem defaultOpen q="Eu não entendo nada de contabilidade. Consigo usar?" a="Essa é literalmente a ideia. Você lança o que entrou e o que saiu — o ATLAS monta DRE, DFC e fluxo projetado sozinho. Não precisa saber o que é margem de contribuição pra usar. O sistema explica quando for relevante." />
-            <FaqItem q="Como funciona o diagnóstico com IA?" a='Ao fechar o mês, você clica em "Gerar diagnóstico". A IA lê toda a sua DRE, fluxo de caixa, histórico e tendência — e devolve um texto direto em português: o que tá bom, o que tá crítico, o que fazer. Cada plano vem com créditos de diagnóstico mensais.' />
-            <FaqItem q="Posso importar dados do banco?" a="Sim. Você pode importar extratos em OFX ou CSV e categorizar em lote. Lançamentos recorrentes (aluguel, salários, assinaturas) você configura uma vez e o ATLAS repete." />
-            <FaqItem q="Preciso assinar contrato ou fidelidade?" a="Não. No plano mensal, você cancela a qualquer momento. No plano anual, se desistir nos primeiros 7 dias, devolvemos 100% do valor." />
-            <FaqItem q="Como funciona o convite para a mentoria Black Sheep?" a="Assinou o plano anual? Entra uma vez na Mentoria em Grupo Black Sheep — encontro ao vivo onde a gente destrincha gestão financeira de negócio real com base em casos dos próprios alunos. Não é curso gravado, é mentoria mesmo." />
-            <FaqItem q="Meus dados ficam seguros?" a="Ficam. Criptografia em trânsito e em repouso, backup diário, autenticação por e-mail verificado. Você é o dono dos seus dados — pode exportar tudo em CSV/XLSX a qualquer momento." />
-            <FaqItem q="O ATLAS substitui meu contador?" a="Não. O ATLAS é gestão financeira — te mostra a saúde do negócio pra você tomar decisão. Seu contador cuida da parte fiscal e tributária. Os dois andam juntos. Inclusive, você pode exportar relatórios do ATLAS pra mandar pro contador." />
-          </div>
-        </div>
-      </section>
-
       {/* ── FINAL CTA ── */}
       <section style={{ padding: '140px 0', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
         <div style={{
@@ -709,10 +724,10 @@ export function LandingSoftware() {
             letterSpacing: '-0.04em', lineHeight: 0.95,
             margin: '0 auto 22px', maxWidth: 900, fontFamily: sans,
           }}>
-            Chega de<br />gerir no <span style={{ color: green, fontStyle: 'normal' }}>achismo</span>.
+            Lucro previsível começa com <span style={{ color: green, fontStyle: 'normal' }}>números claros</span>.
           </h2>
           <p style={{ color: textDim, fontSize: 19, maxWidth: 560, margin: '0 auto 36px', lineHeight: 1.55, fontFamily: sans }}>
-            Lance os números. Deixe o ATLAS pensar. Tome decisão com dado — não com fé.
+            Em 5 minutos você tem DRE, fluxo de caixa e diagnóstico do seu negócio. Sem planilha. Sem curso. Sem enrolação.
           </p>
           <BtnPrimary href="#precos" lg>Assinar o ATLAS agora <ArrowIcon size={18} /></BtnPrimary>
         </div>
