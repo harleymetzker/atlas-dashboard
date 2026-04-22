@@ -136,7 +136,9 @@ function scrollToSection(id: string) {
   const el = document.getElementById(id)
   if (!el) return
   const target = id === 'precos' ? document.getElementById('precos-title') || el : el
-  const top = target.getBoundingClientRect().top + window.scrollY - 80
+  const isMobile = window.innerWidth < 900
+  const offset = isMobile ? 0 : 100
+  const top = target.getBoundingClientRect().top + window.scrollY + offset
   window.scrollTo({ top, behavior: 'smooth' })
 }
 
