@@ -135,9 +135,8 @@ function FaqItem({ q, a, defaultOpen }: { q: string; a: string; defaultOpen?: bo
 function scrollToSection(id: string) {
   const el = document.getElementById(id)
   if (!el) return
-  const isMobile = window.innerWidth < 900
-  const offset = isMobile ? 20 : 60
-  const top = el.getBoundingClientRect().top + window.scrollY - offset
+  const target = id === 'precos' ? document.getElementById('precos-title') || el : el
+  const top = target.getBoundingClientRect().top + window.scrollY - 80
   window.scrollTo({ top, behavior: 'smooth' })
 }
 
@@ -602,7 +601,7 @@ export function LandingSoftware() {
             <span style={{ fontFamily: mono, fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: green, display: 'block', marginBottom: 16 }}>
               Preço
             </span>
-            <h2 style={{ fontSize: 'clamp(32px,4vw,52px)', fontWeight: 700, letterSpacing: '-0.03em', lineHeight: 1.05, margin: '0 0 18px', fontFamily: sans }}>
+            <h2 id="precos-title" style={{ fontSize: 'clamp(32px,4vw,52px)', fontWeight: 700, letterSpacing: '-0.03em', lineHeight: 1.05, margin: '0 0 18px', fontFamily: sans }}>
               Escolha como quer começar.
             </h2>
             <p style={{ fontSize: 18, color: textDim, lineHeight: 1.55, fontFamily: sans, margin: 0 }}>
