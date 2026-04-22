@@ -134,7 +134,7 @@ function FaqItem({ q, a, defaultOpen }: { q: string; a: string; defaultOpen?: bo
 function scrollToSection(id: string) {
   const el = document.getElementById(id)
   if (!el) return
-  const top = el.getBoundingClientRect().top + window.scrollY - 120
+  const top = el.getBoundingClientRect().top + window.scrollY - 200
   window.scrollTo({ top, behavior: 'smooth' })
 }
 
