@@ -235,6 +235,17 @@ export function Admin() {
       .update({ status: 'active', updated_at: new Date().toISOString() })
       .eq('user_id', userId)
     setProfiles(prev => prev.map(p => p.user_id === userId ? { ...p, status: 'active' } : p))
+
+    const profile = profiles.find(p => p.user_id === userId)
+    if (profile) {
+      try {
+        await supabase.functions.invoke('send-approval-email', {
+          body: { email: profile.email, nome: profile.nome }
+        })
+      } catch (e) {
+        console.error('Erro ao enviar email de aprovação:', e)
+      }
+    }
   }
 
   async function handleBlock(userId: string) {
