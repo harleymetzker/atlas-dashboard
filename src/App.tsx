@@ -17,6 +17,7 @@ import { PontoEquilibrio } from './pages/PontoEquilibrio'
 import { Landing } from './pages/Landing'
 import { LandingSoftware } from './pages/LandingSoftware'
 import { LandingMentoria } from './pages/LandingMentoria'
+import { AssinaturaConfirmada } from './pages/AssinaturaConfirmada'
 import { PrecificacaoProduto } from './pages/ferramentas/PrecificacaoProduto'
 import { PrecificacaoServico } from './pages/ferramentas/PrecificacaoServico'
 import { PontoEquilibrioDash } from './pages/ferramentas/PontoEquilibrioDash'
@@ -87,6 +88,7 @@ export default function App() {
         <Route path="/mentoria" element={<LandingMentoria />} />
         <Route path="/mentoria1" element={<Landing />} />
         <Route path="/ponto" element={<PontoEquilibrio />} />
+        <Route path="/assinatura-confirmada" element={<AssinaturaConfirmada />} />
         <Route path="/cadastro" element={<Cadastro />} />
         <Route path="/cadastro-enviado" element={<CadastroEnviado />} />
         <Route path="*" element={

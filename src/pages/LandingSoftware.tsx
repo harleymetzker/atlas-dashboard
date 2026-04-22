@@ -100,29 +100,6 @@ function BtnPrimary({ href, children, lg }: { href: string; children: React.Reac
   )
 }
 
-function BtnGhost({ href, children, lg, fullWidth }: { href: string; children: React.ReactNode; lg?: boolean; fullWidth?: boolean }) {
-  return (
-    <a
-      href={href}
-      className="ls-btn-ghost"
-      style={{
-        display: 'inline-flex', alignItems: 'center', gap: 10,
-        padding: lg ? '18px 30px' : '14px 24px',
-        borderRadius: 10, fontWeight: 600,
-        fontSize: lg ? 17 : 15, letterSpacing: '-0.005em',
-        transition: 'background .15s, border-color .15s',
-        background: 'transparent', color: text,
-        border: `1px solid ${borderSt}`, textDecoration: 'none',
-        whiteSpace: 'nowrap',
-        fontFamily: sans,
-        ...(fullWidth ? { width: '100%', justifyContent: 'center' } : {}),
-      }}
-    >
-      {children}
-    </a>
-  )
-}
-
 
 function ArrowIcon({ size = 16 }: { size?: number }) {
   return (
@@ -172,6 +149,24 @@ function FaqItem({ q, a, defaultOpen }: { q: string; a: string; defaultOpen?: bo
 
 export function LandingSoftware() {
   injectCSS()
+
+  const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null)
+
+  async function handleCheckout(priceId: string) {
+    setCheckoutLoading(priceId)
+    try {
+      const res = await fetch('/api/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ priceId }),
+      })
+      const { url } = await res.json()
+      window.location.href = url
+    } catch {
+      alert('Erro ao iniciar checkout. Tente novamente.')
+      setCheckoutLoading(null)
+    }
+  }
 
   return (
     <div style={{ background: '#000', color: text, fontFamily: sans, fontSize: 16, lineHeight: 1.5, overflowX: 'hidden' }}>
@@ -586,7 +581,19 @@ export function LandingSoftware() {
                 <div style={{ color: textDim, fontSize: 14, fontFamily: sans }}>/ mês</div>
               </div>
               <div style={{ minHeight: 40, marginBottom: 28 }} />
-              <BtnGhost href="#precos" fullWidth>Assinar mensal</BtnGhost>
+              <button
+                onClick={() => handleCheckout(import.meta.env.VITE_STRIPE_PRICE_MENSAL)}
+                disabled={checkoutLoading !== null}
+                style={{
+                  display: 'block', width: '100%', padding: '13px 24px',
+                  border: `1px solid ${border}`, borderRadius: 10, background: 'transparent',
+                  color: text, fontFamily: sans, fontWeight: 600, fontSize: 15,
+                  cursor: checkoutLoading ? 'wait' : 'pointer', letterSpacing: '0.01em',
+                  opacity: checkoutLoading ? 0.7 : 1, transition: 'opacity 0.15s',
+                }}
+              >
+                {checkoutLoading === import.meta.env.VITE_STRIPE_PRICE_MENSAL ? 'Aguarde...' : 'Assinar mensal'}
+              </button>
               <ul style={{ listStyle: 'none', padding: 0, margin: '28px 0 0', display: 'flex', flexDirection: 'column', gap: 12 }}>
                 {['Acesso completo ao ATLAS', 'DRE, DFC e fluxo projetado automáticos', 'Diagnóstico IA — 1 crédito por mês', 'Suporte por e-mail', 'Cancela quando quiser'].map(f => (
                   <li key={f} style={{ display: 'flex', gap: 10, color: text, fontSize: 14.5, alignItems: 'flex-start', lineHeight: 1.5, fontFamily: sans }}>
@@ -617,7 +624,19 @@ export function LandingSoftware() {
               </div>
               <div style={{ color: textMute, fontFamily: mono, fontSize: 12, letterSpacing: '0.04em', marginBottom: 4 }}>R$ 599 cobrados 1× ao ano</div>
               <div style={{ color: green, fontFamily: mono, fontSize: 12, letterSpacing: '0.04em', marginBottom: 28 }}>Economize R$ 589/ano vs. mensal</div>
-              <BtnPrimary href="#precos">Assinar anual</BtnPrimary>
+              <button
+                onClick={() => handleCheckout(import.meta.env.VITE_STRIPE_PRICE_ANUAL)}
+                disabled={checkoutLoading !== null}
+                style={{
+                  display: 'block', width: '100%', padding: '13px 24px',
+                  border: 'none', borderRadius: 10, background: green,
+                  color: '#000', fontFamily: sans, fontWeight: 700, fontSize: 15,
+                  cursor: checkoutLoading ? 'wait' : 'pointer', letterSpacing: '0.01em',
+                  opacity: checkoutLoading ? 0.7 : 1, transition: 'opacity 0.15s',
+                }}
+              >
+                {checkoutLoading === import.meta.env.VITE_STRIPE_PRICE_ANUAL ? 'Aguarde...' : 'Assinar anual'}
+              </button>
               <ul style={{ listStyle: 'none', padding: 0, margin: '28px 0 0', display: 'flex', flexDirection: 'column', gap: 12 }}>
                 {[
                   { f: 'Tudo do plano mensal', bold: false },
