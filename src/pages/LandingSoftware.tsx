@@ -160,10 +160,15 @@ export function LandingSoftware() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ priceId }),
       })
-      const { url } = await res.json()
-      window.location.href = url
-    } catch {
-      alert('Erro ao iniciar checkout. Tente novamente.')
+      const data = await res.json()
+      if (!res.ok) {
+        alert('Erro: ' + (data.error || 'desconhecido'))
+        setCheckoutLoading(null)
+        return
+      }
+      window.location.href = data.url
+    } catch (err) {
+      alert('Erro ao iniciar checkout: ' + (err instanceof Error ? err.message : String(err)))
       setCheckoutLoading(null)
     }
   }

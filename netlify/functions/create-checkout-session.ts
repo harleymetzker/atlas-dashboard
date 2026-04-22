@@ -29,9 +29,10 @@ export const handler: Handler = async (event) => {
     }
   } catch (err) {
     console.error('Stripe error:', err)
+    const error = err as Error
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: 'Erro ao criar sessão de checkout' }),
+      body: JSON.stringify({ error: error.message || String(err) }),
     }
   }
 }
