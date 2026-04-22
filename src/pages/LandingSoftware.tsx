@@ -60,9 +60,9 @@ const GLOBAL_CSS = `
     .ls-step-copy-order { order: unset !important; }
     .ls-step-shot-order { order: unset !important; }
     .ls-ai-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
-    .ls-plans { grid-template-columns: 1fr !important; }
-    .ls-plan-monthly { order: 2 !important; }
-    .ls-plan-annual  { order: 1 !important; }
+    .ls-plans { grid-template-columns: 1fr !important; width: 100% !important; padding: 0 !important; }
+    .ls-plan-monthly { order: 1 !important; width: 100% !important; box-sizing: border-box !important; }
+    .ls-plan-annual  { order: 2 !important; width: 100% !important; box-sizing: border-box !important; }
     .ls-vs-table-row { grid-template-columns: 30% 35% 35% !important; }
     .ls-vs-table-row > div { font-size: 12px !important; padding: 8px !important; word-break: break-word !important; }
     .ls-vs-crit { background: ${bgRaised} !important; }
@@ -606,7 +606,7 @@ export function LandingSoftware() {
               Mensal pra testar sem compromisso. Anual pra quem já decidiu — e quer pagar metade.
             </p>
           </div>
-          <div className="ls-plans" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, maxWidth: 960, margin: '0 auto' }}>
+          <div className="ls-plans" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, maxWidth: 960, margin: '0 auto', width: '100%' }}>
             {/* Mensal */}
             <div className="ls-plan-monthly" style={{ background: bgCard, border: `1px solid ${border}`, borderRadius: 20, padding: 36, position: 'relative' }}>
               <div style={{ fontFamily: mono, fontSize: 12, letterSpacing: '0.18em', textTransform: 'uppercase', color: textMute }}>Mensal</div>
