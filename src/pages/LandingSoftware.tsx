@@ -161,14 +161,11 @@ export function LandingSoftware() {
         body: JSON.stringify({ priceId }),
       })
       const data = await res.json()
-      if (!res.ok) {
-        alert('Erro: ' + (data.error || 'desconhecido'))
-        setCheckoutLoading(null)
-        return
-      }
+      console.log('Resposta checkout:', res.status, data)
+      if (!res.ok) throw new Error(data.error || 'Erro desconhecido')
       window.location.href = data.url
     } catch (err) {
-      alert('Erro ao iniciar checkout: ' + (err instanceof Error ? err.message : String(err)))
+      alert('Erro: ' + (err instanceof Error ? err.message : String(err)))
       setCheckoutLoading(null)
     }
   }

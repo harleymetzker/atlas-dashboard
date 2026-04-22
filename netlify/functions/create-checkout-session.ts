@@ -8,8 +8,12 @@ export const handler: Handler = async (event) => {
     return { statusCode: 405, body: 'Method Not Allowed' }
   }
 
+  console.log('STRIPE_SECRET_KEY presente:', !!process.env.STRIPE_SECRET_KEY)
+
   try {
     const { priceId } = JSON.parse(event.body || '{}')
+
+    console.log('priceId recebido:', priceId)
 
     if (!priceId) {
       return { statusCode: 400, body: JSON.stringify({ error: 'priceId is required' }) }
