@@ -83,27 +83,6 @@ function injectCSS() {
 
 // ── Sub-components ────────────────────────────────────────────────────────────
 
-function BtnPrimary({ href, children, lg }: { href: string; children: React.ReactNode; lg?: boolean }) {
-  return (
-    <a
-      href={href}
-      className="ls-btn-primary"
-      style={{
-        display: 'inline-flex', alignItems: 'center', gap: 10,
-        padding: lg ? '18px 30px' : '14px 24px',
-        borderRadius: 10, fontWeight: 600,
-        fontSize: lg ? 17 : 15, letterSpacing: '-0.005em',
-        transition: 'transform .15s, filter .15s',
-        background: green, color: '#000',
-        border: `1px solid ${green}`, textDecoration: 'none',
-        whiteSpace: 'nowrap',
-        fontFamily: sans,
-      }}
-    >
-      {children}
-    </a>
-  )
-}
 
 
 function ArrowIcon({ size = 16 }: { size?: number }) {
@@ -148,6 +127,15 @@ function FaqItem({ q, a, defaultOpen }: { q: string; a: string; defaultOpen?: bo
       </div>
     </details>
   )
+}
+
+// ── Scroll helper ─────────────────────────────────────────────────────────────
+
+function scrollToSection(id: string) {
+  const el = document.getElementById(id)
+  if (!el) return
+  const top = el.getBoundingClientRect().top + window.scrollY - 40
+  window.scrollTo({ top, behavior: 'smooth' })
 }
 
 // ── Main component ────────────────────────────────────────────────────────────
@@ -341,7 +329,14 @@ export function LandingSoftware() {
           <h2 style={{ fontSize: 'clamp(24px,3vw,32px)', fontWeight: 600, color: text, marginBottom: 24, letterSpacing: '-0.02em', fontFamily: sans }}>
             Pronto pra parar de gerir no achismo?
           </h2>
-          <BtnPrimary href="#precos">Ver planos e começar agora <ArrowIcon /></BtnPrimary>
+          <a
+            href="#precos"
+            onClick={(e) => { e.preventDefault(); scrollToSection('precos') }}
+            className="ls-btn-primary"
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '14px 24px', borderRadius: 10, fontWeight: 600, fontSize: 15, letterSpacing: '-0.005em', transition: 'transform .15s, filter .15s', background: green, color: '#000', border: `1px solid ${green}`, textDecoration: 'none', whiteSpace: 'nowrap', fontFamily: sans }}
+          >
+            Ver planos e começar agora <ArrowIcon />
+          </a>
         </div>
       </div>
 
@@ -438,7 +433,7 @@ export function LandingSoftware() {
       </section>
 
       {/* ── AI DIAGNOSIS ── */}
-      <section id="diagnostico" style={{ padding: '120px 0', position: 'relative', overflow: 'hidden', scrollMarginTop: '80px' }}>
+      <section id="diagnostico" style={{ padding: '120px 0', position: 'relative', overflow: 'hidden' }}>
         <div style={{
           position: 'absolute', inset: 0, pointerEvents: 'none',
           background: 'radial-gradient(800px 500px at 50% 0%, rgba(0,239,97,0.06), transparent 60%)',
@@ -573,7 +568,7 @@ export function LandingSoftware() {
 
       {/* ── FAQ ── */}
       <section id="faq" className="ls-section" style={{
-        padding: '100px 0', background: bgRaised, scrollMarginTop: '80px',
+        padding: '100px 0', background: bgRaised,
         borderTop: `1px solid ${border}`, borderBottom: `1px solid ${border}`,
       }}>
         <div className="ls-wrap" style={{ maxWidth: 1240, margin: '0 auto', padding: '0 40px' }}>
@@ -598,7 +593,7 @@ export function LandingSoftware() {
       </section>
 
       {/* ── PRICING ── */}
-      <section id="precos" style={{ padding: '120px 0', scrollMarginTop: '80px' }}>
+      <section id="precos" style={{ padding: '120px 0' }}>
         <div className="ls-wrap" style={{ maxWidth: 1240, margin: '0 auto', padding: '0 40px' }}>
           <div style={{ textAlign: 'center', maxWidth: 780, margin: '0 auto 60px' }}>
             <span style={{ fontFamily: mono, fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: green, display: 'block', marginBottom: 16 }}>
@@ -729,7 +724,14 @@ export function LandingSoftware() {
           <p style={{ color: textDim, fontSize: 19, maxWidth: 560, margin: '0 auto 36px', lineHeight: 1.55, fontFamily: sans }}>
             Em 5 minutos você tem DRE, fluxo de caixa e diagnóstico do seu negócio. Sem planilha. Sem curso. Sem enrolação.
           </p>
-          <BtnPrimary href="#precos" lg>Assinar o ATLAS agora <ArrowIcon size={18} /></BtnPrimary>
+          <a
+            href="#precos"
+            onClick={(e) => { e.preventDefault(); scrollToSection('precos') }}
+            className="ls-btn-primary"
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '18px 30px', borderRadius: 10, fontWeight: 600, fontSize: 17, letterSpacing: '-0.005em', transition: 'transform .15s, filter .15s', background: green, color: '#000', border: `1px solid ${green}`, textDecoration: 'none', whiteSpace: 'nowrap', fontFamily: sans }}
+          >
+            Assinar o ATLAS agora <ArrowIcon size={18} />
+          </a>
         </div>
       </section>
 
