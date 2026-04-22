@@ -60,9 +60,10 @@ const GLOBAL_CSS = `
     .ls-step-copy-order { order: unset !important; }
     .ls-step-shot-order { order: unset !important; }
     .ls-ai-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
-    .ls-plans { grid-template-columns: 1fr !important; width: 100% !important; padding: 0 !important; }
-    .ls-plan-monthly { order: 1 !important; width: 100% !important; box-sizing: border-box !important; }
-    .ls-plan-annual  { order: 2 !important; width: 100% !important; box-sizing: border-box !important; }
+    .ls-plans { grid-template-columns: 1fr !important; width: 100% !important; }
+    .ls-plan-monthly { order: 1 !important; padding: 24px !important; }
+    .ls-plan-annual  { order: 2 !important; padding: 24px !important; }
+    .ls-precos { padding: 72px 0 !important; }
     .ls-vs-table-row { grid-template-columns: 30% 35% 35% !important; }
     .ls-vs-table-row > div { font-size: 12px !important; padding: 8px !important; word-break: break-word !important; }
     .ls-vs-crit { background: ${bgRaised} !important; }
@@ -595,7 +596,7 @@ export function LandingSoftware() {
       </section>
 
       {/* ── PRICING ── */}
-      <section id="precos" style={{ padding: '120px 0' }}>
+      <section id="precos" className="ls-precos" style={{ padding: '120px 0' }}>
         <div className="ls-wrap" style={{ maxWidth: 1240, margin: '0 auto', padding: '0 40px' }}>
           <div style={{ textAlign: 'center', maxWidth: 780, margin: '0 auto 60px' }}>
             <span style={{ fontFamily: mono, fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: green, display: 'block', marginBottom: 16 }}>
