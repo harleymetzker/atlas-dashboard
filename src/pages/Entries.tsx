@@ -95,8 +95,9 @@ export function Entries() {
   const [editingDateValue, setEditingDateValue] = useState('')
 
   const { entries: agendados, updateEntry: updateAgendado, deleteEntry: deleteAgendado, refetch: refetchAgendados } = useEntries({ dateField: 'payment_date' })
+  const in30Days = format(new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), 'yyyy-MM-dd')
   const scheduledEntries = agendados
-    .filter(e => e.status === 'agendado' && e.payment_date)
+    .filter(e => e.status === 'agendado' && e.payment_date && e.payment_date <= in30Days)
     .sort((a, b) => (a.payment_date ?? '').localeCompare(b.payment_date ?? ''))
 
   async function handleConfirmar(entry: Entry) {
