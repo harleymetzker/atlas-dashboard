@@ -73,7 +73,7 @@ function _calcDRE(entries: Entry[]): DRE {
 
 export function calcCashFlow(entries: Entry[], openingBalance = 0): CashFlowEntry[] {
   const byDate: Record<string, { revenue: number; costs: number; withdrawals: number }> = {}
-  for (const e of entries.filter(e => e.payment_date)) {
+  for (const e of entries.filter(e => e.payment_date && e.status !== 'agendado')) {
     const key = e.payment_date as string
     if (!byDate[key]) byDate[key] = { revenue: 0, costs: 0, withdrawals: 0 }
     if (e.type === 'revenue') byDate[key].revenue += e.amount

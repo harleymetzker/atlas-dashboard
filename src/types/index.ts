@@ -9,6 +9,7 @@ export interface Entry {
   amount: number
   competence_date: string | null // Data de Competência → DRE (null = sem competência, não entra na DRE)
   payment_date: string | null   // Data de Pagamento/Recebimento → Fluxo de Caixa (null = sem data)
+  status: 'agendado' | 'realizado'
   created_at: string
   recurrence_id?: string | null
 }

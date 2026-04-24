@@ -91,6 +91,32 @@ export function Entries() {
   const [importRows, setImportRows] = useState<RawRow[] | null>(null)
   const [search, setSearch] = useState('')
   const [selectedMonth, setSelectedMonth] = useState('')
+  const [editingDateId, setEditingDateId] = useState<string | null>(null)
+  const [editingDateValue, setEditingDateValue] = useState('')
+
+  const { entries: agendados, updateEntry: updateAgendado, deleteEntry: deleteAgendado, refetch: refetchAgendados } = useEntries({ dateField: 'payment_date' })
+  const scheduledEntries = agendados
+    .filter(e => e.status === 'agendado' && e.payment_date)
+    .sort((a, b) => (a.payment_date ?? '').localeCompare(b.payment_date ?? ''))
+
+  async function handleConfirmar(entry: Entry) {
+    await updateAgendado(entry.id, { status: 'realizado', payment_date: todayStr })
+    refetchAgendados()
+  }
+
+  async function handleAlterarData(entry: Entry) {
+    if (!editingDateValue) return
+    await updateAgendado(entry.id, { payment_date: editingDateValue })
+    setEditingDateId(null)
+    setEditingDateValue('')
+    refetchAgendados()
+  }
+
+  async function handleDeleteAgendado(id: string) {
+    if (!confirm('Excluir este lançamento agendado?')) return
+    await deleteAgendado(id)
+    refetchAgendados()
+  }
 
   const { entries, loading, addEntry, deleteEntry, updateEntry } = useEntries({
     startDate,
@@ -161,6 +187,10 @@ export function Entries() {
     setFormError('')
     try {
       const { recorrente, mesesRecorrencia, semDataRecebimento, ...rest } = form
+      const resolvedPaymentDate = isRevenueToggle ? null : (form.payment_date || null)
+      const status: 'agendado' | 'realizado' = (resolvedPaymentDate && resolvedPaymentDate > todayStr)
+        ? 'agendado'
+        : 'realizado'
       const payload = {
         ...rest,
         amount: Number(form.amount),
@@ -171,7 +201,8 @@ export function Entries() {
           : (isExpenseToggle || form.type === 'withdrawal') ? null
           : form.competence_date || null,
         // Revenue toggle: payment_date = null (não entra no fluxo de caixa)
-        payment_date: isRevenueToggle ? null : (form.payment_date || null),
+        payment_date: resolvedPaymentDate,
+        status,
       }
       if (editEntry) {
         await updateEntry(editEntry.id, payload)
@@ -200,6 +231,9 @@ export function Entries() {
       const isAntecipacao = row.category === ANTECIPACAO_CATEGORY
       const isRowWithdrawal = row.type === 'withdrawal'
       const paymentDate = row.semPayment ? null : (row.payment_date || null)
+      const importStatus: 'agendado' | 'realizado' = (paymentDate && paymentDate > todayStr)
+        ? 'agendado'
+        : 'realizado'
       await addEntry({
         type: row.type,
         category: row.category,
@@ -208,6 +242,7 @@ export function Entries() {
         // Antecipação: competence_date = payment_date; Retirada: null; sem toggle: null
         competence_date: isAntecipacao ? paymentDate : (isRowWithdrawal || row.semCompetence) ? null : (row.competence_date || null),
         payment_date: paymentDate,
+        status: importStatus,
       })
     }
     setImportRows(null)
@@ -278,6 +313,86 @@ export function Entries() {
           </button>
         </div>
       </div>
+
+      {/* ── Aguardando Confirmação ── */}
+      {scheduledEntries.length > 0 && (
+        <div style={{ background: '#0c0c0c', border: '1px solid rgba(234,179,8,0.25)', borderRadius: 12, padding: 20 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
+            <span style={{ fontFamily: "'Geist', sans-serif", fontSize: 15, fontWeight: 700, color: '#fff' }}>Aguardando Confirmação</span>
+            <span style={{ background: 'rgba(234,179,8,0.18)', color: '#eab308', fontFamily: "'Geist Mono', monospace", fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 20, letterSpacing: 1 }}>
+              {scheduledEntries.length}
+            </span>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            {scheduledEntries.map(entry => {
+              const vencido = entry.payment_date! <= todayStr
+              const isEditingDate = editingDateId === entry.id
+              return (
+                <div key={entry.id} style={{
+                  display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap',
+                  padding: '10px 14px', borderRadius: 8,
+                  background: vencido ? 'rgba(234,179,8,0.07)' : 'rgba(255,255,255,0.03)',
+                  border: `1px solid ${vencido ? 'rgba(234,179,8,0.3)' : '#1e1e1e'}`,
+                }}>
+                  {/* Info */}
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <span style={{ fontSize: 13, color: '#fff', fontFamily: "'Geist', sans-serif" }}>
+                      {entry.description || entry.category}
+                    </span>
+                    <span style={{ fontSize: 11, color: '#666', marginLeft: 8, fontFamily: "'Geist Mono', monospace" }}>
+                      {entry.category}
+                    </span>
+                  </div>
+                  {/* Valor */}
+                  <span style={{ fontFamily: "'Geist Mono', monospace", fontSize: 13, fontWeight: 600, color: entry.type === 'revenue' ? '#00EF61' : '#EF4444', whiteSpace: 'nowrap' }}>
+                    {entry.type !== 'revenue' ? '-' : ''}{formatCurrency(entry.amount)}
+                  </span>
+                  {/* Data prevista */}
+                  {isEditingDate ? (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                      <input
+                        type="date"
+                        value={editingDateValue}
+                        onChange={e => setEditingDateValue(e.target.value)}
+                        style={{ background: '#111', border: '1px solid #333', color: '#fff', padding: '4px 8px', borderRadius: 4, fontSize: 12, fontFamily: "'Geist Mono', monospace" }}
+                      />
+                      <button onClick={() => handleAlterarData(entry)} style={{ padding: '4px 10px', background: '#fff', color: '#000', border: 'none', borderRadius: 4, fontSize: 12, fontWeight: 700, cursor: 'pointer' }}>Salvar</button>
+                      <button onClick={() => setEditingDateId(null)} style={{ padding: '4px 10px', background: 'transparent', color: '#666', border: '1px solid #333', borderRadius: 4, fontSize: 12, cursor: 'pointer' }}>✕</button>
+                    </div>
+                  ) : (
+                    <span style={{ fontFamily: "'Geist Mono', monospace", fontSize: 12, color: vencido ? '#eab308' : '#666', whiteSpace: 'nowrap' }}>
+                      {vencido ? '⚠ ' : ''}{entry.payment_date}
+                    </span>
+                  )}
+                  {/* Ações */}
+                  {!isEditingDate && (
+                    <div style={{ display: 'flex', gap: 6 }}>
+                      <button
+                        onClick={() => handleConfirmar(entry)}
+                        style={{ padding: '5px 12px', background: 'rgba(0,239,97,0.15)', border: '1px solid rgba(0,239,97,0.3)', color: '#00EF61', borderRadius: 6, fontSize: 12, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}
+                      >
+                        Confirmar
+                      </button>
+                      <button
+                        onClick={() => { setEditingDateId(entry.id); setEditingDateValue(entry.payment_date ?? todayStr) }}
+                        style={{ padding: '5px 10px', background: 'rgba(255,255,255,0.05)', border: '1px solid #333', color: '#aaa', borderRadius: 6, fontSize: 12, cursor: 'pointer', whiteSpace: 'nowrap' }}
+                      >
+                        Alterar data
+                      </button>
+                      <button
+                        onClick={() => handleDeleteAgendado(entry.id)}
+                        style={{ padding: '5px 10px', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', color: '#EF4444', borderRadius: 6, fontSize: 12, cursor: 'pointer' }}
+                      >
+                        <Trash2 size={12} />
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )}
 
       {/* ── Filters ── */}
       <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-end', gap: 10 }}>
@@ -393,7 +508,14 @@ export function Entries() {
                       )}
                     </td>
                     <td className="py-3 text-right" style={{ fontFamily: "'Geist Mono', monospace", fontWeight: 500, color: entry.type === 'revenue' ? '#00EF61' : '#EF4444' }}>
-                      {entry.type !== 'revenue' ? '-' : ''}{formatCurrency(entry.amount)}
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 8 }}>
+                        {entry.status === 'agendado' && (
+                          <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: 0.8, padding: '2px 6px', borderRadius: 4, background: 'rgba(234,179,8,0.15)', color: '#eab308', textTransform: 'uppercase' }}>
+                            Agendado
+                          </span>
+                        )}
+                        {entry.type !== 'revenue' ? '-' : ''}{formatCurrency(entry.amount)}
+                      </div>
                     </td>
                     <td className="py-3 text-right">
                       <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
