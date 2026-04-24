@@ -226,27 +226,61 @@ export function Entries() {
   }
 
   async function handleImportRows(rows: ImportRow[]) {
+    // All currently scheduled entries available for reconciliation
+    const allAgendados = agendados.filter(e => e.status === 'agendado' && e.payment_date)
+    const usedIds = new Set<string>()
+    let reconciled = 0
+    let created = 0
+
     for (const row of rows) {
       const amount = Number(row.amount)
       if (isNaN(amount) || amount <= 0) continue
       const isAntecipacao = row.category === ANTECIPACAO_CATEGORY
       const isRowWithdrawal = row.type === 'withdrawal'
       const paymentDate = row.semPayment ? null : (row.payment_date || null)
-      const importStatus: 'agendado' | 'realizado' = (paymentDate && paymentDate > todayStr)
-        ? 'agendado'
-        : 'realizado'
-      await addEntry({
-        type: row.type,
-        category: row.category,
-        description: row.description,
-        amount,
-        // Antecipação: competence_date = payment_date; Retirada: null; sem toggle: null
-        competence_date: isAntecipacao ? paymentDate : (isRowWithdrawal || row.semCompetence) ? null : (row.competence_date || null),
-        payment_date: paymentDate,
-        status: importStatus,
-      })
+
+      // Reconciliation: only attempt if paymentDate is set and not antecipacao
+      const match = (!isAntecipacao && paymentDate)
+        ? allAgendados
+            .filter(e => {
+              if (usedIds.has(e.id)) return false
+              if (e.type !== row.type) return false
+              // Compare amounts in cents to avoid float issues
+              if (Math.round(e.amount * 100) !== Math.round(amount * 100)) return false
+              // ±7 days window
+              const diffMs = Math.abs(new Date(paymentDate).getTime() - new Date(e.payment_date!).getTime())
+              return diffMs <= 7 * 24 * 60 * 60 * 1000
+            })
+            .sort((a, b) => {
+              const aMs = Math.abs(new Date(paymentDate).getTime() - new Date(a.payment_date!).getTime())
+              const bMs = Math.abs(new Date(paymentDate).getTime() - new Date(b.payment_date!).getTime())
+              if (aMs !== bMs) return aMs - bMs
+              // Tie-break: oldest payment_date first
+              return (a.payment_date ?? '').localeCompare(b.payment_date ?? '')
+            })[0] ?? null
+        : null
+
+      if (match) {
+        usedIds.add(match.id)
+        await updateAgendado(match.id, { status: 'realizado', payment_date: paymentDate })
+        reconciled++
+      } else {
+        await addEntry({
+          type: row.type,
+          category: row.category,
+          description: row.description,
+          amount,
+          competence_date: isAntecipacao ? paymentDate : (isRowWithdrawal || row.semCompetence) ? null : (row.competence_date || null),
+          payment_date: paymentDate,
+          status: 'realizado',
+        })
+        created++
+      }
     }
+
     setImportRows(null)
+    refetchAgendados()
+    alert(`${reconciled + created} transações importadas · ${reconciled} conciliadas com agendamentos · ${created} novos lançamentos criados`)
   }
 
   function handleMonthShortcut(e: React.ChangeEvent<HTMLSelectElement>) {
