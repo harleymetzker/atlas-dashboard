@@ -29,6 +29,14 @@ interface ImportResultItem {
   previousPaymentDate?: string
 }
 
+type ReviewDecision = 'conciliar' | 'novo' | 'ignorar'
+interface ReviewItem {
+  row: ImportRow
+  candidates: Entry[]
+  decision: ReviewDecision
+  matchId: string | null
+}
+
 const TYPE_OPTIONS = [
   { value: 'revenue',    label: 'Receita' },
   { value: 'expense',    label: 'Despesa' },
@@ -107,6 +115,7 @@ export function Entries() {
   const [editingDateValue, setEditingDateValue] = useState('')
   const [importResult, setImportResult] = useState<ImportResultItem[] | null>(null)
   const [showImportDetails, setShowImportDetails] = useState(false)
+  const [reviewItems, setReviewItems] = useState<ReviewItem[] | null>(null)
 
   const { entries: agendados, updateEntry: updateAgendado, deleteEntry: deleteAgendado, refetch: refetchAgendados } = useEntries({ dateField: 'payment_date' })
   const in30Days = format(new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), 'yyyy-MM-dd')
@@ -240,116 +249,128 @@ export function Entries() {
   }
 
   async function handleImportRows(rows: ImportRow[]) {
-    // Calcula a janela de datas necessária para busca (±7 dias do range das transações)
+    // Calcula a janela de datas necessária (±7 dias do range das transações)
     const dates = rows.map(r => r.payment_date).filter(Boolean) as string[]
     if (dates.length === 0) return
     const timestamps = dates.map(d => new Date(d).getTime())
-    const minDate = new Date(Math.min(...timestamps) - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
-    const maxDate = new Date(Math.max(...timestamps) + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+    const minDate = new Date(Math.min(...timestamps) - 7 * 86400000).toISOString().split('T')[0]
+    const maxDate = new Date(Math.max(...timestamps) + 7 * 86400000).toISOString().split('T')[0]
 
-    // Busca TODOS os lançamentos do usuário na janela (qualquer status)
     const { data: allEntries } = await supabase
-      .from('entries')
-      .select('*')
-      .gte('payment_date', minDate)
-      .lte('payment_date', maxDate)
+      .from('entries').select('*')
+      .gte('payment_date', minDate).lte('payment_date', maxDate)
 
     if (!allEntries) return
 
-    const usedIds = new Set<string>()
+    const items: ReviewItem[] = rows
+      .filter(row => !isNaN(Number(row.amount)) && Number(row.amount) > 0)
+      .map(row => {
+        const amount = Number(row.amount)
+        const isAntecipacao = row.category === ANTECIPACAO_CATEGORY
+        const paymentDate = row.semPayment ? null : (row.payment_date || null)
+
+        const candidates = (!isAntecipacao && paymentDate)
+          ? allEntries
+              .filter(e => {
+                if (e.type !== row.type) return false
+                if (Math.round(e.amount * 100) !== Math.round(amount * 100)) return false
+                if (!e.payment_date) return false
+                const diffMs = Math.abs(new Date(paymentDate).getTime() - new Date(e.payment_date).getTime())
+                return diffMs <= 7 * 86400000
+              })
+              .sort((a, b) => {
+                // Agendados primeiro, depois por proximidade de data
+                if (a.status !== b.status) return a.status === 'agendado' ? -1 : 1
+                const aMs = Math.abs(new Date(paymentDate).getTime() - new Date(a.payment_date!).getTime())
+                const bMs = Math.abs(new Date(paymentDate).getTime() - new Date(b.payment_date!).getTime())
+                return aMs - bMs
+              })
+          : []
+
+        const agendados = candidates.filter(c => c.status === 'agendado')
+        const realizados = candidates.filter(c => c.status === 'realizado')
+
+        let decision: ReviewDecision
+        let matchId: string | null = null
+        if (agendados.length === 1) {
+          decision = 'conciliar'
+          matchId = agendados[0].id
+        } else if (agendados.length === 0 && realizados.length > 0) {
+          decision = 'ignorar'
+        } else {
+          decision = 'novo'
+        }
+
+        return { row, candidates, decision, matchId }
+      })
+
+    setImportRows(null)
+    setReviewItems(items)
+  }
+
+  function updateReviewItem(idx: number, patch: Partial<ReviewItem>) {
+    setReviewItems(prev => prev ? prev.map((item, i) => i === idx ? { ...item, ...patch } : item) : prev)
+  }
+
+  async function executeReview() {
+    if (!reviewItems) return
     const results: ImportResultItem[] = []
 
-    for (const row of rows) {
-      const amount = Number(row.amount)
-      if (isNaN(amount) || amount <= 0) continue
-      const isAntecipacao = row.category === ANTECIPACAO_CATEGORY
-      const isRowWithdrawal = row.type === 'withdrawal'
-      const paymentDate = row.semPayment ? null : (row.payment_date || null)
+    for (const item of reviewItems) {
+      const amount = Number(item.row.amount)
+      const isAntecipacao = item.row.category === ANTECIPACAO_CATEGORY
+      const isRowWithdrawal = item.row.type === 'withdrawal'
+      const paymentDate = item.row.semPayment ? null : (item.row.payment_date || null)
 
-      // Match across ALL entries (agendado AND realizado): type + cents + ±7 days
-      // Sort: closest date first, then oldest payment_date as tiebreak
-      const candidates = (!isAntecipacao && paymentDate)
-        ? allEntries.filter(e => {
-              if (usedIds.has(e.id)) return false
-              if (e.type !== row.type) return false
-              if (Math.round(e.amount * 100) !== Math.round(amount * 100)) return false
-              if (!e.payment_date) return false
-              const diffMs = Math.abs(new Date(paymentDate).getTime() - new Date(e.payment_date).getTime())
-              return diffMs <= 7 * 24 * 60 * 60 * 1000
-            })
-        : []
-      const agendadosCandidates = candidates.filter(c => c.status === 'agendado')
-      const realizadosCandidates = candidates.filter(c => c.status === 'realizado')
-      // Prioridade: agendados primeiro; só usa realizados se não houver agendados
-      const pool = agendadosCandidates.length > 0 ? agendadosCandidates : realizadosCandidates
-
-      let match: typeof pool[0] | null = null
-      if (pool.length === 1) {
-        match = pool[0]
-      } else if (pool.length > 1) {
-        if (pool[0].status === 'agendado') {
-          // Múltiplos agendados → ambíguo, não concilia automaticamente → Caso 4 (novo)
-          match = null
-        } else {
-          // Múltiplos realizados → qualquer um serve para detectar duplicata → Caso 2 (ignorar)
-          match = pool[0]
-        }
-      }
-
-      if (match) {
-        usedIds.add(match.id)
-        if (match.status === 'agendado') {
-          // Caso 1: agendado → confirmar com data real do extrato
-          await updateAgendado(match.id, { status: 'realizado', payment_date: paymentDate })
-          results.push({
-            txDescription: row.description,
-            txAmount: amount,
-            txType: row.type,
-            action: 'conciliado',
-            entryId: match.id,
-            entryDescription: match.description || match.category,
-            previousPaymentDate: match.payment_date ?? undefined,
-          })
-        } else {
-          // Caso 2: realizado → já registrado, ignorar
-          results.push({
-            txDescription: row.description,
-            txAmount: amount,
-            txType: row.type,
-            action: 'ignorado',
-            entryId: match.id,
-            entryDescription: match.description || match.category,
-          })
-        }
+      if (item.decision === 'conciliar' && item.matchId) {
+        const matched = item.candidates.find(c => c.id === item.matchId)!
+        await updateAgendado(item.matchId, { status: 'realizado', payment_date: paymentDate })
+        results.push({
+          txDescription: item.row.description,
+          txAmount: amount,
+          txType: item.row.type,
+          action: 'conciliado',
+          entryId: item.matchId,
+          entryDescription: matched.description || matched.category,
+          previousPaymentDate: matched.payment_date ?? undefined,
+        })
+      } else if (item.decision === 'ignorar') {
+        const matched = item.candidates.find(c => c.id === item.matchId) ?? item.candidates[0]
+        results.push({
+          txDescription: item.row.description,
+          txAmount: amount,
+          txType: item.row.type,
+          action: 'ignorado',
+          entryId: matched?.id ?? '',
+          entryDescription: matched?.description || matched?.category || '—',
+        })
       } else {
-        // Caso 4: sem match → criar novo lançamento e capturar o ID retornado
         const { data: newEntry, error } = await supabase
           .from('entries')
           .insert({
-            type: row.type,
-            category: row.category,
-            description: row.description,
+            type: item.row.type,
+            category: item.row.category,
+            description: item.row.description,
             amount,
-            competence_date: isAntecipacao ? paymentDate : (isRowWithdrawal || row.semCompetence) ? null : (row.competence_date || null),
+            competence_date: isAntecipacao ? paymentDate : (isRowWithdrawal || item.row.semCompetence) ? null : (item.row.competence_date || null),
             payment_date: paymentDate,
             status: 'realizado',
             recurrence_id: null,
           })
-          .select()
-          .single()
+          .select().single()
         if (error) throw new Error(error.message)
         results.push({
-          txDescription: row.description,
+          txDescription: item.row.description,
           txAmount: amount,
-          txType: row.type,
+          txType: item.row.type,
           action: 'novo',
           entryId: newEntry.id,
-          entryDescription: row.description || row.category,
+          entryDescription: item.row.description || item.row.category,
         })
       }
     }
 
-    setImportRows(null)
+    setReviewItems(null)
     refetchAgendados()
     setImportResult(results)
     setShowImportDetails(false)
@@ -685,6 +706,131 @@ export function Entries() {
           onClose={() => setImportRows(null)}
         />
       )}
+
+      {/* ── Review Modal ── */}
+      {reviewItems && (() => {
+        const BADGE: Record<string, React.CSSProperties> = {
+          agendado:  { background: 'rgba(234,179,8,0.15)',  color: '#eab308' },
+          realizado: { background: 'rgba(255,255,255,0.06)', color: '#888' },
+        }
+        const decisionBtnBase: React.CSSProperties = {
+          flex: 1, padding: '7px 10px', borderRadius: 6, fontSize: 12, fontWeight: 600,
+          cursor: 'pointer', border: '1px solid #333', fontFamily: "'Geist', sans-serif",
+          transition: 'all 0.15s',
+        }
+        return (
+          <Modal open={true} onClose={() => setReviewItems(null)} title="Revisar Conciliação">
+            <div style={{ display: 'flex', flexDirection: 'column', height: '70vh' }}>
+              {/* Subtitle */}
+              <p style={{ fontSize: 13, color: '#666', marginBottom: 16, fontFamily: "'Geist', sans-serif" }}>
+                {reviewItems.length} transações encontradas no extrato. Confirme como cada uma deve ser tratada.
+              </p>
+
+              {/* Scrollable cards */}
+              <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 10, paddingRight: 4, paddingBottom: 4 }}>
+                {reviewItems.map((item, idx) => {
+                  const amount = Number(item.row.amount)
+                  return (
+                    <div key={idx} style={{ background: '#0c0c0c', border: '1px solid #1e1e1e', borderRadius: 10, padding: 16, display: 'flex', flexDirection: 'column', gap: 12 }}>
+                      {/* Transaction header */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+                        <span style={{ ...TYPE_BADGE_STYLE[item.row.type], fontSize: 10, fontWeight: 700, letterSpacing: 0.8, padding: '2px 7px', borderRadius: 4, textTransform: 'uppercase' }}>
+                          {TYPE_LABELS[item.row.type]}
+                        </span>
+                        <span style={{ flex: 1, fontSize: 13, color: '#fff', fontFamily: "'Geist', sans-serif", fontWeight: 600 }}>
+                          {item.row.description || item.row.category}
+                        </span>
+                        <span style={{ fontFamily: "'Geist Mono', monospace", fontSize: 14, fontWeight: 700, color: item.row.type === 'revenue' ? '#00EF61' : '#EF4444' }}>
+                          {item.row.type !== 'revenue' ? '-' : ''}{formatCurrency(amount)}
+                        </span>
+                        <span style={{ fontFamily: "'Geist Mono', monospace", fontSize: 11, color: '#555' }}>
+                          {item.row.payment_date || '—'}
+                        </span>
+                      </div>
+
+                      {/* Decision buttons */}
+                      <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                        <button
+                          onClick={() => updateReviewItem(idx, { decision: 'novo', matchId: null })}
+                          style={{ ...decisionBtnBase, background: item.decision === 'novo' ? '#fff' : 'transparent', color: item.decision === 'novo' ? '#000' : '#888' }}
+                        >
+                          + Criar novo
+                        </button>
+                        <button
+                          onClick={() => updateReviewItem(idx, { decision: 'ignorar', matchId: item.candidates[0]?.id ?? null })}
+                          style={{ ...decisionBtnBase, background: item.decision === 'ignorar' ? 'rgba(255,255,255,0.12)' : 'transparent', color: item.decision === 'ignorar' ? '#fff' : '#888' }}
+                        >
+                          Ignorar (já registrado)
+                        </button>
+                      </div>
+
+                      {/* Candidates list */}
+                      {item.candidates.length > 0 && (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                          <p style={{ fontSize: 10, color: '#555', textTransform: 'uppercase', letterSpacing: 1, fontFamily: "'Geist Mono', monospace", marginBottom: 4 }}>
+                            Candidatos para conciliação
+                          </p>
+                          {item.candidates.map(c => {
+                            const selected = item.decision === 'conciliar' && item.matchId === c.id
+                            return (
+                              <button
+                                key={c.id}
+                                onClick={() => updateReviewItem(idx, { decision: 'conciliar', matchId: c.id })}
+                                style={{
+                                  display: 'flex', alignItems: 'center', gap: 10, padding: '9px 12px',
+                                  borderRadius: 7, cursor: 'pointer', textAlign: 'left',
+                                  background: selected ? 'rgba(0,239,97,0.08)' : 'rgba(255,255,255,0.02)',
+                                  border: `1px solid ${selected ? 'rgba(0,239,97,0.35)' : '#222'}`,
+                                  transition: 'all 0.15s',
+                                }}
+                              >
+                                {/* Radio indicator */}
+                                <span style={{
+                                  width: 14, height: 14, borderRadius: '50%', flexShrink: 0,
+                                  border: `2px solid ${selected ? '#00EF61' : '#444'}`,
+                                  background: selected ? '#00EF61' : 'transparent',
+                                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                }}>
+                                  {selected && <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#000' }} />}
+                                </span>
+                                <span style={{ ...BADGE[c.status], fontSize: 9, fontWeight: 700, letterSpacing: 0.8, padding: '2px 6px', borderRadius: 3, textTransform: 'uppercase', flexShrink: 0 }}>
+                                  {c.status}
+                                </span>
+                                <span style={{ flex: 1, fontSize: 12, color: '#ccc', fontFamily: "'Geist', sans-serif", overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                  {c.description || c.category}
+                                </span>
+                                <span style={{ fontFamily: "'Geist Mono', monospace", fontSize: 11, color: '#666', flexShrink: 0 }}>
+                                  {c.payment_date}
+                                </span>
+                              </button>
+                            )
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
+
+              {/* Footer */}
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10, paddingTop: 16, borderTop: '1px solid #1e1e1e', marginTop: 8 }}>
+                <button
+                  onClick={() => setReviewItems(null)}
+                  style={{ padding: '10px 20px', background: 'transparent', border: '1px solid #333', borderRadius: 8, color: '#aaa', fontSize: 13, cursor: 'pointer', fontFamily: "'Geist', sans-serif" }}
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={executeReview}
+                  style={{ padding: '10px 24px', background: '#00EF61', border: 'none', borderRadius: 8, color: '#000', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: "'Geist', sans-serif" }}
+                >
+                  Confirmar importação ({reviewItems.length})
+                </button>
+              </div>
+            </div>
+          </Modal>
+        )
+      })()}
 
       {/* ── Import Result Modal ── */}
       {importResult && (() => {
