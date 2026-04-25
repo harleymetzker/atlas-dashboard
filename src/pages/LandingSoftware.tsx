@@ -69,6 +69,7 @@ const GLOBAL_CSS = `
     .ls-vs-crit { background: ${bgRaised} !important; }
     .ls-section { padding: 72px 0 !important; }
     .ls-nav-links { display: none !important; }
+    .ls-byline { display: none !important; }
     .ls-foot-grid { flex-direction: column !important; align-items: flex-start !important; }
   }
 `
@@ -172,11 +173,14 @@ export function LandingSoftware() {
 
       {/* ── NAV ── */}
       <div style={{ background: green, width: '100%' }}>
-        <div className="ls-wrap" style={{ maxWidth: 1240, margin: '0 auto', padding: '15px 48px', display: 'flex', alignItems: 'center', gap: 16 }}>
-          <img src="/blacksheep-logo.png" alt="Black Sheep" style={{ height: 60, display: 'block', flexShrink: 0 }} />
-          <span style={{ fontFamily: sans, fontSize: 'clamp(20px,2.5vw,28px)', fontWeight: 900, letterSpacing: 4, color: '#000', whiteSpace: 'nowrap' as const }}>ATLAS</span>
-          <span style={{ width: 1, height: 32, background: 'rgba(0,0,0,0.3)', flexShrink: 0, margin: '0 4px' }} />
-          <span style={{ fontFamily: sans, fontSize: 'clamp(10px,1.2vw,13px)', fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase' as const, color: '#000', whiteSpace: 'nowrap' as const }}>BY BLACK SHEEP</span>
+        <div className="ls-wrap" style={{ maxWidth: 1240, margin: '0 auto', padding: '12px 48px', display: 'flex', alignItems: 'center', gap: 16 }}>
+          <img src="/blacksheep-sheep.png" alt="Black Sheep" style={{ height: 'clamp(52px, 5.5vw, 64px)', width: 'auto', display: 'block', flexShrink: 0 }} />
+          <span style={{ fontFamily: sans, fontSize: 'clamp(24px, 2.5vw, 32px)', fontWeight: 800, letterSpacing: 2, color: '#000', whiteSpace: 'nowrap' as const }}>ATLAS</span>
+          <span style={{ width: 1, height: 20, background: 'rgba(0,0,0,0.25)', flexShrink: 0, margin: '0 4px' }} />
+          <span className="ls-byline" style={{ display: 'flex', alignItems: 'center', gap: 5, whiteSpace: 'nowrap' as const }}>
+            <span style={{ fontFamily: sans, fontSize: 14, fontWeight: 400, color: 'rgba(0,0,0,0.65)' }}>by </span>
+            <img src="/blacksheep-wordmark.png" alt="Black Sheep" style={{ height: 22, width: 'auto', display: 'block' }} />
+          </span>
         </div>
       </div>
 
