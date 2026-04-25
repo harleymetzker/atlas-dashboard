@@ -283,15 +283,25 @@ export function Entries() {
               return diffMs <= 7 * 24 * 60 * 60 * 1000
             })
         : []
-      console.log('[OFX] candidatos:', candidates)
-      const match = candidates.length > 0
-        ? candidates.sort((a, b) => {
+      const agendadosCandidates = candidates.filter(c => c.status === 'agendado')
+      const realizadosCandidates = candidates.filter(c => c.status === 'realizado')
+      // Prioridade: agendados primeiro; só usa realizados se não houver agendados
+      const pool = agendadosCandidates.length > 0 ? agendadosCandidates : realizadosCandidates
+
+      console.log('[OFX] candidatos para', { description: row.description, amount, paymentDate })
+      console.log('[OFX] candidatos por status:', { agendados: agendadosCandidates, realizados: realizadosCandidates })
+      console.log('[OFX] pool escolhido:', pool, 'tamanho:', pool.length)
+
+      const match = pool.length > 0
+        ? pool.sort((a, b) => {
               const aMs = Math.abs(new Date(paymentDate!).getTime() - new Date(a.payment_date!).getTime())
               const bMs = Math.abs(new Date(paymentDate!).getTime() - new Date(b.payment_date!).getTime())
               if (aMs !== bMs) return aMs - bMs
               return (a.payment_date ?? '').localeCompare(b.payment_date ?? '')
             })[0]
         : null
+
+      console.log('[OFX] match final:', match)
 
       if (match) {
         usedIds.add(match.id)
