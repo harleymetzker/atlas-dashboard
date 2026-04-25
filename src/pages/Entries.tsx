@@ -283,14 +283,11 @@ export function Entries() {
       // Prioridade: agendados primeiro; só usa realizados se não houver agendados
       const pool = agendadosCandidates.length > 0 ? agendadosCandidates : realizadosCandidates
 
-      const match = pool.length > 0
-        ? pool.sort((a, b) => {
-              const aMs = Math.abs(new Date(paymentDate!).getTime() - new Date(a.payment_date!).getTime())
-              const bMs = Math.abs(new Date(paymentDate!).getTime() - new Date(b.payment_date!).getTime())
-              if (aMs !== bMs) return aMs - bMs
-              return (a.payment_date ?? '').localeCompare(b.payment_date ?? '')
-            })[0]
-        : null
+      let match: typeof pool[0] | null = null
+      if (pool.length === 1) {
+        match = pool[0]
+      }
+      // pool.length > 1 → ambíguo, não concilia automaticamente → cai no Caso 4 (novo)
 
       if (match) {
         usedIds.add(match.id)
