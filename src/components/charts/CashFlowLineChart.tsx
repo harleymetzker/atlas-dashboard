@@ -32,7 +32,7 @@ export function CashFlowLineChart({ data }: Props) {
               formatter={(v) => [`R$ ${Number(v).toLocaleString('pt-BR')}`, '']}
             />
             <Legend wrapperStyle={{ fontSize: 12, color: '#555', fontFamily: "'Geist Mono', monospace" }} />
-            <Line dataKey="Entradas" stroke="#00EF61" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
+            <Line dataKey="Entradas" stroke="#80EF00" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
             <Line dataKey="Saídas" stroke="#EF4444" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
           </LineChart>
         </ResponsiveContainer>

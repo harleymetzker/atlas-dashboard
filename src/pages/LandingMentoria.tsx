@@ -11,8 +11,8 @@ const C = {
   text:       '#F4F5F3',
   textDim:    '#A6A8AB',
   textMute:   '#6B6E6C',
-  green:      '#00EF61',
-  greenSoft:  'rgba(0,239,97,0.10)',
+  green:      '#80EF00',
+  greenSoft:  'rgba(128,239,0,0.10)',
   greenDark:  '#005C26',
   red:        '#FF3B3B',
   redSoft:    'rgba(255,59,59,0.10)',
@@ -25,8 +25,8 @@ const mono = "'Geist Mono', ui-monospace, monospace"
 // ── Global CSS (injected once) ────────────────────────────────────────────────
 const GLOBAL_CSS = `
   @keyframes lm-pulse {
-    0%,100% { box-shadow: 0 0 0 0 rgba(0,239,97,0.5); }
-    50%      { box-shadow: 0 0 0 8px rgba(0,239,97,0); }
+    0%,100% { box-shadow: 0 0 0 0 rgba(128,239,0,0.5); }
+    50%      { box-shadow: 0 0 0 8px rgba(128,239,0,0); }
   }
   @keyframes lm-scroll { to { transform: translateX(-50%); } }
 
@@ -162,7 +162,7 @@ export function LandingMentoria() {
 
       {/* ── HERO ── */}
       <section style={{ position: 'relative', padding: '140px 0 96px', overflow: 'hidden' }}>
-        <div style={{ content: '', position: 'absolute', inset: 0, background: 'radial-gradient(60% 60% at 15% 20%, rgba(0,239,97,0.08), transparent 60%), radial-gradient(50% 50% at 90% 80%, rgba(0,239,97,0.06), transparent 60%)', pointerEvents: 'none' }} />
+        <div style={{ content: '', position: 'absolute', inset: 0, background: 'radial-gradient(60% 60% at 15% 20%, rgba(128,239,0,0.08), transparent 60%), radial-gradient(50% 50% at 90% 80%, rgba(128,239,0,0.06), transparent 60%)', pointerEvents: 'none' }} />
         <Page>
           <div className="lm-hero-inner" style={{ position: 'relative', display: 'grid', gridTemplateColumns: '1.1fr 1fr', gap: 60, alignItems: 'center' }}>
             <div>
@@ -178,8 +178,8 @@ export function LandingMentoria() {
             <div className="lm-hero-visual" style={{ position: 'relative' }}>
               <div style={{ fontFamily: mono, fontSize: 10, color: C.textMute, letterSpacing: '0.2em', textTransform: 'uppercase', position: 'absolute', top: 8, left: 0 }}>BS / 001</div>
               <div style={{ fontFamily: mono, fontSize: 10, color: C.textMute, letterSpacing: '0.2em', textTransform: 'uppercase', position: 'absolute', top: 8, right: 0, textAlign: 'right' }}>GESTÃO · FINANÇAS<br />PROCESSOS · LUCRO</div>
-              <div style={{ position: 'absolute', inset: '10% 5%', borderRadius: '50%', background: 'radial-gradient(closest-side, rgba(0,239,97,0.30), transparent 70%)', filter: 'blur(30px)' }} />
-              <img src="/lp/atlas-hero.png" alt="Mascote Atlas da Black Sheep" style={{ position: 'relative', width: '100%', height: 'auto', filter: 'drop-shadow(0 30px 60px rgba(0,239,97,0.25))' }} />
+              <div style={{ position: 'absolute', inset: '10% 5%', borderRadius: '50%', background: 'radial-gradient(closest-side, rgba(128,239,0,0.30), transparent 70%)', filter: 'blur(30px)' }} />
+              <img src="/lp/atlas-hero.png" alt="Mascote Atlas da Black Sheep" style={{ position: 'relative', width: '100%', height: 'auto', filter: 'drop-shadow(0 30px 60px rgba(128,239,0,0.25))' }} />
             </div>
           </div>
         </Page>
@@ -238,7 +238,7 @@ export function LandingMentoria() {
           </div>
 
           {/* Verdict — updated copy */}
-          <div style={{ marginTop: 40, border: `1px solid ${C.greenDark}`, background: 'linear-gradient(180deg,rgba(0,239,97,0.08),rgba(0,239,97,0.02))', padding: 40, borderRadius: C.radiusLg, textAlign: 'center' }}>
+          <div style={{ marginTop: 40, border: `1px solid ${C.greenDark}`, background: 'linear-gradient(180deg,rgba(128,239,0,0.08),rgba(128,239,0,0.02))', padding: 40, borderRadius: C.radiusLg, textAlign: 'center' }}>
             <h3 style={{ fontSize: 28, lineHeight: 1.25, fontWeight: 500, letterSpacing: '-0.02em', margin: 0, fontFamily: sans }}>
               Enquanto todo mundo te ensina a vender mais, ninguém te ensinou a parar de perder o que já ganha. O ATLAS é o oposto de tudo que o digital te ensinou.
             </h3>
@@ -410,7 +410,7 @@ export function LandingMentoria() {
                 <li style={{ borderBottom: `1px solid ${C.border}`, height: 0, padding: 0, display: 'block' }} />
               </ul>
               {/* Updated commitment box */}
-              <div style={{ marginTop: 20, padding: '14px 16px', background: 'rgba(0,239,97,0.05)', border: `1px solid ${C.greenDark}`, borderRadius: 10, fontFamily: mono, fontSize: 12, color: C.textDim, lineHeight: 1.55 }}>
+              <div style={{ marginTop: 20, padding: '14px 16px', background: 'rgba(128,239,0,0.05)', border: `1px solid ${C.greenDark}`, borderRadius: 10, fontFamily: mono, fontSize: 12, color: C.textDim, lineHeight: 1.55 }}>
                 Seu compromisso: 30 minutos por semana preenchendo dados (ou delegue pra alguém do time). Leia os relatórios. Decida com números. Você não precisa mudar o que faz —{' '}
                 <strong style={{ color: C.green }}>só precisa enxergar o que não vê.</strong>
               </div>
@@ -461,7 +461,7 @@ export function LandingMentoria() {
         <Page>
           <SecHead kicker="§ 06 · Filtro" title={<>O ATLAS <em style={{ fontStyle: 'normal', color: C.green }}>não é pra todo mundo.</em></>} />
           <div className="lm-filter-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginTop: 40 }}>
-            <div style={{ background: `linear-gradient(180deg,rgba(0,239,97,0.04),transparent)`, border: `1px solid ${C.greenDark}`, borderRadius: C.radiusLg, padding: 32 }}>
+            <div style={{ background: `linear-gradient(180deg,rgba(128,239,0,0.04),transparent)`, border: `1px solid ${C.greenDark}`, borderRadius: C.radiusLg, padding: 32 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', paddingBottom: 14, marginBottom: 20, borderBottom: `1px solid ${C.border}` }}>
                 <h4 style={{ fontSize: 20, fontWeight: 500, margin: 0, letterSpacing: '-0.01em', fontFamily: sans }}>É pra você se</h4>
                 <span style={{ fontFamily: mono, fontSize: 12, letterSpacing: '0.14em', color: C.green, textTransform: 'uppercase' }}>→ Aplicar</span>
@@ -530,7 +530,7 @@ export function LandingMentoria() {
       <section id="investimento" className="lm-section" style={{ padding: '100px 0', background: C.bgRaised }}>
         <Page>
           <SecHead kicker="§ 09 · Investimento" title={<>Um ticket. <em style={{ fontStyle: 'normal', color: C.green }}>Tudo dentro.</em></>} />
-          <div className="lm-invest lm-invest-wrap" style={{ marginTop: 48, border: `1px solid ${C.greenDark}`, background: `radial-gradient(60% 80% at 80% 50%, rgba(0,239,97,0.10), transparent 70%), ${C.bgCard}`, borderRadius: C.radiusLg, padding: 56, display: 'grid', gridTemplateColumns: '1.1fr 1fr', gap: 48, alignItems: 'center' }}>
+          <div className="lm-invest lm-invest-wrap" style={{ marginTop: 48, border: `1px solid ${C.greenDark}`, background: `radial-gradient(60% 80% at 80% 50%, rgba(128,239,0,0.10), transparent 70%), ${C.bgCard}`, borderRadius: C.radiusLg, padding: 56, display: 'grid', gridTemplateColumns: '1.1fr 1fr', gap: 48, alignItems: 'center' }}>
             <div>
               <div style={{ fontFamily: mono, fontSize: 12, letterSpacing: '0.2em', textTransform: 'uppercase', color: C.green, marginBottom: 12 }}>Programa ATLAS · 6 meses</div>
               <div style={{ fontSize: 'clamp(72px,10vw,128px)', fontWeight: 700, letterSpacing: '-0.045em', lineHeight: 0.95, margin: '0 0 24px', fontFamily: sans }}>
@@ -612,7 +612,7 @@ export function LandingMentoria() {
 
       {/* ── CLOSING ── */}
       <section id="aplicar" style={{ position: 'relative', padding: '140px 0', textAlign: 'center', overflow: 'hidden' }}>
-        <div style={{ content: '', position: 'absolute', inset: 0, background: 'radial-gradient(40% 60% at 50% 50%, rgba(0,239,97,0.15), transparent 70%)', pointerEvents: 'none' }} />
+        <div style={{ content: '', position: 'absolute', inset: 0, background: 'radial-gradient(40% 60% at 50% 50%, rgba(128,239,0,0.15), transparent 70%)', pointerEvents: 'none' }} />
         <Page style={{ position: 'relative' }}>
           <h2 style={{ position: 'relative', fontSize: 'clamp(44px,6vw,92px)', fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 1.02, margin: '0 auto 32px', maxWidth: '18ch', fontFamily: sans }}>
             Chega de gerir no <em style={{ fontStyle: 'italic', color: C.green, fontWeight: 700 }}>achismo.</em>

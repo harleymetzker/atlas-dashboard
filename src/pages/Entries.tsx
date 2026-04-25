@@ -44,7 +44,7 @@ const TYPE_OPTIONS = [
 ]
 
 const TYPE_BADGE_STYLE: Record<EntryType, React.CSSProperties> = {
-  revenue:    { background: 'rgba(0,239,97,0.15)',   color: '#00EF61' },
+  revenue:    { background: 'rgba(128,239,0,0.15)',   color: '#80EF00' },
   expense:    { background: 'rgba(255,255,255,0.08)', color: '#A6A8AB' },
   withdrawal: { background: 'rgba(239,68,68,0.15)',  color: '#EF4444' },
 }
@@ -448,7 +448,7 @@ export function Entries() {
           </button>
           <button
             onClick={openAdd}
-            style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 16px', background: '#00EF61', border: 'none', borderRadius: 8, color: '#000', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: "'Geist', sans-serif" }}
+            style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 16px', background: '#80EF00', border: 'none', borderRadius: 8, color: '#000', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: "'Geist', sans-serif" }}
           >
             + Novo lançamento
           </button>
@@ -485,7 +485,7 @@ export function Entries() {
                     </span>
                   </div>
                   {/* Valor */}
-                  <span style={{ fontFamily: "'Geist Mono', monospace", fontSize: 13, fontWeight: 600, color: entry.type === 'revenue' ? '#00EF61' : '#EF4444', whiteSpace: 'nowrap' }}>
+                  <span style={{ fontFamily: "'Geist Mono', monospace", fontSize: 13, fontWeight: 600, color: entry.type === 'revenue' ? '#80EF00' : '#EF4444', whiteSpace: 'nowrap' }}>
                     {entry.type !== 'revenue' ? '-' : ''}{formatCurrency(entry.amount)}
                   </span>
                   {/* Data prevista */}
@@ -510,7 +510,7 @@ export function Entries() {
                     <div style={{ display: 'flex', gap: 6 }}>
                       <button
                         onClick={() => handleConfirmar(entry)}
-                        style={{ padding: '5px 12px', background: 'rgba(0,239,97,0.15)', border: '1px solid rgba(0,239,97,0.3)', color: '#00EF61', borderRadius: 6, fontSize: 12, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}
+                        style={{ padding: '5px 12px', background: 'rgba(128,239,0,0.15)', border: '1px solid rgba(128,239,0,0.3)', color: '#80EF00', borderRadius: 6, fontSize: 12, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}
                       >
                         Confirmar
                       </button>
@@ -639,16 +639,16 @@ export function Entries() {
                       {entry.description || '—'}
                       {entry.recurrence_id && (
                         <span style={{
-                          fontSize: 9, color: '#00EF61', letterSpacing: 1,
+                          fontSize: 9, color: '#80EF00', letterSpacing: 1,
                           textTransform: 'uppercase', marginLeft: 8,
-                          background: 'rgba(0,239,97,0.1)',
+                          background: 'rgba(128,239,0,0.1)',
                           padding: '2px 6px', borderRadius: 3,
                         }}>
                           Recorrente
                         </span>
                       )}
                     </td>
-                    <td className="py-3 text-right" style={{ fontFamily: "'Geist Mono', monospace", fontWeight: 500, color: entry.type === 'revenue' ? '#00EF61' : '#EF4444' }}>
+                    <td className="py-3 text-right" style={{ fontFamily: "'Geist Mono', monospace", fontWeight: 500, color: entry.type === 'revenue' ? '#80EF00' : '#EF4444' }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 8 }}>
                         {entry.status === 'agendado' && (
                           <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: 0.8, padding: '2px 6px', borderRadius: 4, background: 'rgba(234,179,8,0.15)', color: '#eab308', textTransform: 'uppercase' }}>
@@ -681,7 +681,7 @@ export function Entries() {
         <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
           {[
             { label: 'Total de Lançamentos', value: String(allPeriodEntries.length), color: '#fff', isCount: true },
-            { label: 'Total de Receitas',    value: formatCurrency(totalReceitas),   color: '#00EF61' },
+            { label: 'Total de Receitas',    value: formatCurrency(totalReceitas),   color: '#80EF00' },
             { label: 'Total de Despesas',    value: `-${formatCurrency(totalDespesas)}`, color: '#EF4444' },
           ].map(({ label, value, color }) => (
             <div key={label} style={{ flex: 1, minWidth: 160, background: '#111', border: '1px solid #1e1e1e', borderRadius: 8, padding: 20 }}>
@@ -741,7 +741,7 @@ export function Entries() {
                           {item.row.description || item.row.category}
                         </span>
                         <div style={{ textAlign: 'right' }}>
-                          <span style={{ fontFamily: "'Geist Mono', monospace", fontSize: 14, fontWeight: 700, color: item.row.type === 'revenue' ? '#00EF61' : '#EF4444', display: 'block' }}>
+                          <span style={{ fontFamily: "'Geist Mono', monospace", fontSize: 14, fontWeight: 700, color: item.row.type === 'revenue' ? '#80EF00' : '#EF4444', display: 'block' }}>
                             {item.row.type !== 'revenue' ? '-' : ''}{formatCurrency(amount)}
                           </span>
                           <span style={{ fontFamily: "'Geist Mono', monospace", fontSize: 10, color: '#555' }}>
@@ -781,16 +781,16 @@ export function Entries() {
                                 style={{
                                   display: 'flex', alignItems: 'center', gap: 10, padding: '9px 12px',
                                   borderRadius: 7, cursor: 'pointer', textAlign: 'left',
-                                  background: selected ? 'rgba(0,239,97,0.08)' : 'rgba(255,255,255,0.02)',
-                                  border: `1px solid ${selected ? 'rgba(0,239,97,0.35)' : '#222'}`,
+                                  background: selected ? 'rgba(128,239,0,0.08)' : 'rgba(255,255,255,0.02)',
+                                  border: `1px solid ${selected ? 'rgba(128,239,0,0.35)' : '#222'}`,
                                   transition: 'all 0.15s',
                                 }}
                               >
                                 {/* Radio indicator */}
                                 <span style={{
                                   width: 14, height: 14, borderRadius: '50%', flexShrink: 0,
-                                  border: `2px solid ${selected ? '#00EF61' : '#444'}`,
-                                  background: selected ? '#00EF61' : 'transparent',
+                                  border: `2px solid ${selected ? '#80EF00' : '#444'}`,
+                                  background: selected ? '#80EF00' : 'transparent',
                                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                                 }}>
                                   {selected && <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#000' }} />}
@@ -824,7 +824,7 @@ export function Entries() {
                 </button>
                 <button
                   onClick={executeReview}
-                  style={{ padding: '10px 24px', background: '#00EF61', border: 'none', borderRadius: 8, color: '#000', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: "'Geist', sans-serif" }}
+                  style={{ padding: '10px 24px', background: '#80EF00', border: 'none', borderRadius: 8, color: '#000', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: "'Geist', sans-serif" }}
                 >
                   Confirmar importação ({reviewItems.length})
                 </button>
@@ -845,7 +845,7 @@ export function Entries() {
           novo:       'Novo lançamento',
         }
         const actionColor: Record<ImportAction, string> = {
-          conciliado: '#00EF61',
+          conciliado: '#80EF00',
           ignorado:   '#666',
           novo:       '#60a5fa',
         }
@@ -855,7 +855,7 @@ export function Entries() {
               {/* Summary blocks */}
               <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
                 {[
-                  { label: 'Conciliadas com agendamentos', count: conciliadas.length, color: '#00EF61', bg: 'rgba(0,239,97,0.08)', border: 'rgba(0,239,97,0.2)' },
+                  { label: 'Conciliadas com agendamentos', count: conciliadas.length, color: '#80EF00', bg: 'rgba(128,239,0,0.08)', border: 'rgba(128,239,0,0.2)' },
                   { label: 'Já registradas (ignoradas)',   count: ignoradas.length,   color: '#888',    bg: 'rgba(255,255,255,0.03)', border: '#1e1e1e' },
                   { label: 'Novos lançamentos criados',    count: novas.length,       color: '#60a5fa', bg: 'rgba(96,165,250,0.08)', border: 'rgba(96,165,250,0.2)' },
                 ].map(({ label, count, color, bg, border }) => (
@@ -888,7 +888,7 @@ export function Entries() {
                         fontSize: 10, fontWeight: 700, letterSpacing: 0.8, padding: '2px 7px',
                         borderRadius: 4, textTransform: 'uppercase', whiteSpace: 'nowrap',
                         color: actionColor[item.action],
-                        background: item.action === 'conciliado' ? 'rgba(0,239,97,0.12)' : item.action === 'novo' ? 'rgba(96,165,250,0.12)' : 'rgba(255,255,255,0.06)',
+                        background: item.action === 'conciliado' ? 'rgba(128,239,0,0.12)' : item.action === 'novo' ? 'rgba(96,165,250,0.12)' : 'rgba(255,255,255,0.06)',
                       }}>
                         {actionLabel[item.action]}
                       </span>
@@ -904,7 +904,7 @@ export function Entries() {
                         )}
                       </div>
                       {/* Amount */}
-                      <span style={{ fontFamily: "'Geist Mono', monospace", fontSize: 13, fontWeight: 600, color: item.txType === 'revenue' ? '#00EF61' : '#EF4444', whiteSpace: 'nowrap' }}>
+                      <span style={{ fontFamily: "'Geist Mono', monospace", fontSize: 13, fontWeight: 600, color: item.txType === 'revenue' ? '#80EF00' : '#EF4444', whiteSpace: 'nowrap' }}>
                         {item.txType !== 'revenue' ? '-' : ''}{formatCurrency(item.txAmount)}
                       </span>
                       {/* Undo button */}
@@ -925,7 +925,7 @@ export function Entries() {
               <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <button
                   onClick={() => setImportResult(null)}
-                  style={{ padding: '10px 24px', background: '#00EF61', border: 'none', borderRadius: 8, color: '#000', fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: "'Geist', sans-serif" }}
+                  style={{ padding: '10px 24px', background: '#80EF00', border: 'none', borderRadius: 8, color: '#000', fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: "'Geist', sans-serif" }}
                 >
                   Concluir
                 </button>
@@ -999,7 +999,7 @@ export function Entries() {
                 onClick={() => setForm(f => ({ ...f, semDataRecebimento: !f.semDataRecebimento, payment_date: f.semDataRecebimento ? todayStr : f.payment_date, competence_date: f.semDataRecebimento ? todayStr : f.competence_date }))}
                 style={{
                   width: 40, height: 22, borderRadius: 11,
-                  background: form.semDataRecebimento ? '#00EF61' : '#333',
+                  background: form.semDataRecebimento ? '#80EF00' : '#333',
                   border: 'none', cursor: 'pointer', position: 'relative', transition: 'background 0.2s',
                   flexShrink: 0,
                 }}

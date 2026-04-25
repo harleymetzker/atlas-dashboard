@@ -1,6 +1,6 @@
 import { CheckCircle2 } from 'lucide-react'
 
-const GREEN = '#00EF61'
+const GREEN = '#80EF00'
 
 export function CadastroEnviado() {
   return (

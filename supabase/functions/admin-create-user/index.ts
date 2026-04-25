@@ -1,14 +1,17 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-const ADMIN_EMAIL = Deno.env.get('ADMIN_EMAIL') ?? ''
-
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
 }
 
+const ADMIN_EMAILS = ['harley@hmtz.com.br', 'blacksheep@hmtz.com.br']
+
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders })
+  if (req.method === "OPTIONS") {
+    return new Response("ok", { headers: corsHeaders })
+  }
 
   const authHeader = req.headers.get('Authorization')
   const supabaseUser = createClient(
@@ -18,13 +21,19 @@ Deno.serve(async (req) => {
   )
 
   const { data: { user }, error: authError } = await supabaseUser.auth.getUser()
-  if (authError || !user || user.email !== ADMIN_EMAIL) {
-    return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: corsHeaders })
+  if (authError || !user || !ADMIN_EMAILS.includes(user.email || '')) {
+    return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+      status: 401,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    })
   }
 
   const { email, password } = await req.json()
   if (!email || !password) {
-    return new Response(JSON.stringify({ error: 'email and password required' }), { status: 400, headers: corsHeaders })
+    return new Response(JSON.stringify({ error: 'email and password required' }), {
+      status: 400,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    })
   }
 
   const supabaseAdmin = createClient(
@@ -38,8 +47,14 @@ Deno.serve(async (req) => {
     email_confirm: true,
   })
 
-  if (error) return new Response(JSON.stringify({ error: error.message }), { status: 400, headers: corsHeaders })
+  if (error) {
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 400,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    })
+  }
+
   return new Response(JSON.stringify({ user: { id: data.user.id, email: data.user.email } }), {
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
   })
 })

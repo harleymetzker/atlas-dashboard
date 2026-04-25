@@ -24,7 +24,7 @@ export function Login() {
     <div className="min-h-screen bg-black flex items-center justify-center p-4">
       <div className="w-full max-w-sm">
         <div style={{
-          background: '#00EF61',
+          background: '#80EF00',
           borderRadius: 12,
           padding: '12px 32px',
           display: 'flex',

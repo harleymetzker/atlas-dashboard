@@ -7,7 +7,7 @@ const PRICE_ANUAL  = 'price_1TOpZxFVyybhsLH9ikBgu5Qj'
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
-const green    = '#00EF61'
+const green    = '#80EF00'
 const red      = '#FF3B3B'
 const text     = '#F4F5F3'
 const textDim  = '#A6A8AB'
@@ -185,7 +185,7 @@ export function LandingSoftware() {
         {/* glow bg */}
         <div style={{
           position: 'absolute', inset: 0, pointerEvents: 'none',
-          background: 'radial-gradient(600px 400px at 85% 10%, rgba(0,239,97,0.08), transparent 60%), radial-gradient(400px 300px at 10% 90%, rgba(0,239,97,0.04), transparent 60%)',
+          background: 'radial-gradient(600px 400px at 85% 10%, rgba(128,239,0,0.08), transparent 60%), radial-gradient(400px 300px at 10% 90%, rgba(128,239,0,0.04), transparent 60%)',
         }} />
         <div className="ls-wrap ls-hero-grid" style={{
           maxWidth: 1240, margin: '0 auto', padding: '0 40px',
@@ -196,8 +196,8 @@ export function LandingSoftware() {
           <div>
             <span style={{
               display: 'inline-flex', alignItems: 'center', gap: 10,
-              padding: '6px 12px', border: '1px solid rgba(0,239,97,0.25)',
-              background: 'rgba(0,239,97,0.10)', borderRadius: 100,
+              padding: '6px 12px', border: '1px solid rgba(128,239,0,0.25)',
+              background: 'rgba(128,239,0,0.10)', borderRadius: 100,
               fontFamily: mono, fontSize: 11, letterSpacing: '0.14em',
               textTransform: 'uppercase', color: green, marginBottom: 28,
             }}>
@@ -229,7 +229,7 @@ export function LandingSoftware() {
             <div style={{
               position: 'absolute', width: 420, height: 420,
               top: '50%', left: '50%', transform: 'translate(-50%,-50%)',
-              background: 'radial-gradient(circle, rgba(0,239,97,0.14), transparent 60%)',
+              background: 'radial-gradient(circle, rgba(128,239,0,0.14), transparent 60%)',
               zIndex: 1,
             }} />
             <div style={{ position: 'absolute', top: 20, left: 20, fontFamily: mono, fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: textMute, zIndex: 3 }}>
@@ -242,7 +242,7 @@ export function LandingSoftware() {
               className="ls-hero-img"
               src="/atlas/atlas-hero.png"
               alt="ATLAS — a ovelha carrega o mundo financeiro do seu negócio"
-              style={{ width: '100%', maxWidth: 560, position: 'relative', zIndex: 2, filter: 'drop-shadow(0 40px 80px rgba(0,239,97,0.12))' }}
+              style={{ width: '100%', maxWidth: 560, position: 'relative', zIndex: 2, filter: 'drop-shadow(0 40px 80px rgba(128,239,0,0.12))' }}
             />
           </div>
         </div>
@@ -313,7 +313,7 @@ export function LandingSoftware() {
           <div style={{
             marginTop: 56, padding: 40,
             border: `1px solid ${green}`, borderRadius: 20,
-            background: 'linear-gradient(135deg, rgba(0,239,97,0.06), transparent 70%)',
+            background: 'linear-gradient(135deg, rgba(128,239,0,0.06), transparent 70%)',
             textAlign: 'center',
           }}>
             <span style={{ fontFamily: mono, fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: green, display: 'block', marginBottom: 12 }}>
@@ -410,7 +410,7 @@ export function LandingSoftware() {
               <div className={reverse ? 'ls-step-shot-order' : ''} style={{
                 position: 'relative', border: `1px solid ${borderSt}`, borderRadius: radius,
                 overflow: 'hidden', background: bgCard, order: reverse ? 1 : 0,
-                boxShadow: '0 30px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,239,97,0.04)',
+                boxShadow: '0 30px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(128,239,0,0.04)',
               }}>
                 <div style={{
                   position: 'absolute', inset: 0,
@@ -440,7 +440,7 @@ export function LandingSoftware() {
       <section id="diagnostico" style={{ padding: '120px 0', position: 'relative', overflow: 'hidden' }}>
         <div style={{
           position: 'absolute', inset: 0, pointerEvents: 'none',
-          background: 'radial-gradient(800px 500px at 50% 0%, rgba(0,239,97,0.06), transparent 60%)',
+          background: 'radial-gradient(800px 500px at 50% 0%, rgba(128,239,0,0.06), transparent 60%)',
         }} />
         <div className="ls-wrap ls-ai-grid" style={{
           maxWidth: 1240, margin: '0 auto', padding: '0 40px',
@@ -471,7 +471,7 @@ export function LandingSoftware() {
             {/* Gradient border */}
             <div style={{
               position: 'absolute', inset: -1, borderRadius: radius + 1, pointerEvents: 'none',
-              background: 'linear-gradient(135deg, rgba(0,239,97,0.4), transparent 50%)',
+              background: 'linear-gradient(135deg, rgba(128,239,0,0.4), transparent 50%)',
               WebkitMask: 'linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)',
               WebkitMaskComposite: 'xor',
               maskComposite: 'exclude',
@@ -487,7 +487,7 @@ export function LandingSoftware() {
             </div>
             {/* TL;DR */}
             <div style={{
-              background: 'rgba(0,239,97,0.10)', borderLeft: `3px solid ${green}`,
+              background: 'rgba(128,239,0,0.10)', borderLeft: `3px solid ${green}`,
               padding: '14px 16px', borderRadius: '0 8px 8px 0', marginBottom: 22,
               fontFamily: sans, fontSize: 14.5, lineHeight: 1.5, color: text,
             }}>
@@ -561,7 +561,7 @@ export function LandingSoftware() {
                 <div style={{ padding: '20px 24px', fontSize: 14.5, color: textMute, borderLeft: `1px solid ${border}`, fontFamily: sans }}>
                   <span style={{ color: red, marginRight: 8, fontWeight: 700 }}>✕</span>{planilha}
                 </div>
-                <div style={{ padding: '20px 24px', fontSize: 14.5, color: text, borderLeft: `1px solid ${border}`, background: 'rgba(0,239,97,0.10)', fontFamily: sans }}>
+                <div style={{ padding: '20px 24px', fontSize: 14.5, color: text, borderLeft: `1px solid ${border}`, background: 'rgba(128,239,0,0.10)', fontFamily: sans }}>
                   <span style={{ color: green, marginRight: 8, fontWeight: 700 }}>✓</span>{atlasText}
                 </div>
               </div>
@@ -648,9 +648,9 @@ export function LandingSoftware() {
             </div>
             {/* Anual (featured) */}
             <div className="ls-plan-annual" style={{
-              background: `linear-gradient(180deg, rgba(0,239,97,0.04), transparent 40%), ${bgCard}`,
+              background: `linear-gradient(180deg, rgba(128,239,0,0.04), transparent 40%), ${bgCard}`,
               border: `2px solid ${green}`, borderRadius: 20, padding: 36, position: 'relative',
-              boxShadow: `0 0 0 1px ${green}, 0 30px 80px rgba(0,239,97,0.08)`,
+              boxShadow: `0 0 0 1px ${green}, 0 30px 80px rgba(128,239,0,0.08)`,
             }}>
               <div style={{
                 position: 'absolute', top: -12, right: 24,
@@ -668,7 +668,7 @@ export function LandingSoftware() {
               </div>
               <div style={{ color: textMute, fontFamily: mono, fontSize: 12, letterSpacing: '0.04em', marginBottom: 4 }}>R$ 599 cobrados 1× ao ano</div>
               <div style={{ color: green, fontFamily: mono, fontSize: 12, letterSpacing: '0.04em', marginBottom: 16 }}>Economize R$ 589/ano vs. mensal</div>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '8px 14px', background: 'rgba(0,239,97,0.12)', border: `1px solid ${green}`, borderRadius: 100, fontFamily: mono, fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: green, fontWeight: 700, marginBottom: 20 }}>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '8px 14px', background: 'rgba(128,239,0,0.12)', border: `1px solid ${green}`, borderRadius: 100, fontFamily: mono, fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: green, fontWeight: 700, marginBottom: 20 }}>
                 🛡 7 dias de garantia · Devolução total
               </div>
               <button
@@ -715,7 +715,7 @@ export function LandingSoftware() {
       <section style={{ padding: '140px 0', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
         <div style={{
           position: 'absolute', inset: 0, pointerEvents: 'none',
-          background: 'radial-gradient(700px 500px at 50% 50%, rgba(0,239,97,0.08), transparent 60%)',
+          background: 'radial-gradient(700px 500px at 50% 50%, rgba(128,239,0,0.08), transparent 60%)',
         }} />
         <div className="ls-wrap" style={{ maxWidth: 1240, margin: '0 auto', padding: '0 40px', position: 'relative', zIndex: 1 }}>
           <h2 style={{

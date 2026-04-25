@@ -23,7 +23,7 @@ const mq = `
   .lp-jnum{font-size:28px!important;margin-bottom:4px!important;margin-top:0!important}
 }`
 
-const GREEN = '#00EF61'
+const GREEN = '#80EF00'
 
 const s = {
   root: {
@@ -604,7 +604,7 @@ export function Landing() {
 
         <div style={{ ...s.pgrid, border: 'none', gap: 8 }} className="lp-filtro-grid">
           {/* Coluna positiva — solution card */}
-          <div style={{ padding: '28px 28px 32px', border: '1px solid rgba(0,239,97,0.3)' }}>
+          <div style={{ padding: '28px 28px 32px', border: '1px solid rgba(128,239,0,0.3)' }}>
             <p style={{ fontSize: 16, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase' as const, color: GREEN, marginTop: 0, marginBottom: 20 }}>Isso é pra você se:</p>
             {[
               'Fatura R$60 mil ou mais por mês e não sabe sua margem real',

@@ -31,7 +31,7 @@ const ferramentasItems = [
 function navStyle(
   { isActive }: NavLinkRenderProps,
   hovered: boolean,
-  activeBg = '#00EF61',
+  activeBg = '#80EF00',
   activeColor = '#000',
 ): React.CSSProperties {
   return {
@@ -75,7 +75,7 @@ function SubNavItem({ to, icon: Icon, label }: { to: string; icon: React.Element
         fontFamily: "'Geist', sans-serif",
         fontSize: 12, transition: 'all 0.15s',
         fontWeight: isActive ? 600 : 500,
-        background: isActive ? '#00EF61' : hovered ? 'rgba(255,255,255,0.06)' : 'transparent',
+        background: isActive ? '#80EF00' : hovered ? 'rgba(255,255,255,0.06)' : 'transparent',
         color: isActive ? '#000' : hovered ? '#fff' : '#A6A8AB',
       })}
       onMouseEnter={() => setHovered(true)}
@@ -108,7 +108,7 @@ export function Sidebar() {
       <div style={{ padding: '20px 16px 16px', borderBottom: '1px solid #1e1e1e' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <div style={{
-            background: '#00EF61', borderRadius: 8, padding: 0,
+            background: '#80EF00', borderRadius: 8, padding: 0,
             width: 40, height: 40, flexShrink: 0,
             overflow: 'hidden',
           }}>
@@ -156,8 +156,8 @@ export function Sidebar() {
                 style={{
                   width: '100%', display: 'flex', alignItems: 'center', gap: 10,
                   padding: '8px 10px', borderRadius: 8,
-                  background: ferramentasActive ? 'rgba(0,239,97,0.08)' : 'transparent',
-                  color: ferramentasActive ? '#00EF61' : '#A6A8AB',
+                  background: ferramentasActive ? 'rgba(128,239,0,0.08)' : 'transparent',
+                  color: ferramentasActive ? '#80EF00' : '#A6A8AB',
                   fontWeight: 500, fontSize: 13,
                   border: 'none', cursor: 'pointer',
                   transition: 'all 0.15s',

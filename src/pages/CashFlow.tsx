@@ -115,7 +115,7 @@ export function CashFlow() {
                     {cashFlowEntries.map(entry => (
                       <tr key={entry.date} className="hover:bg-[#111] transition-colors" style={{ borderBottom: '1px solid #1e1e1e' }}>
                         <td className="py-3" style={{ fontFamily: "'Geist Mono', monospace", color: '#A6A8AB' }}>{entry.date}</td>
-                        <td className="py-3 text-right" style={{ fontFamily: "'Geist Mono', monospace", color: entry.revenue > 0 ? '#00EF61' : '#555' }}>
+                        <td className="py-3 text-right" style={{ fontFamily: "'Geist Mono', monospace", color: entry.revenue > 0 ? '#80EF00' : '#555' }}>
                           {entry.revenue > 0 ? formatCurrency(entry.revenue) : '—'}
                         </td>
                         <td className="py-3 text-right" style={{ fontFamily: "'Geist Mono', monospace", color: (entry.costs + entry.withdrawals) > 0 ? '#EF4444' : '#555' }}>

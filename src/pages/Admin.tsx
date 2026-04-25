@@ -8,7 +8,7 @@ import {
 import { supabase } from '../lib/supabase'
 import { Card } from '../components/ui/Card'
 
-const GREEN = '#00EF61'
+const GREEN = '#80EF00'
 
 interface Profile {
   id: string

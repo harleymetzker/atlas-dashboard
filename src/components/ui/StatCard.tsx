@@ -11,7 +11,7 @@ interface StatCardProps {
 }
 
 export function StatCard({ label, value, sub, icon, positive, negative }: StatCardProps) {
-  const valueColor = positive ? '#00EF61' : negative ? '#EF4444' : '#fff'
+  const valueColor = positive ? '#80EF00' : negative ? '#EF4444' : '#fff'
   return (
     <div style={{ background: '#111', border: '1px solid #1e1e1e', borderRadius: 8, padding: 16 }}>
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16 }}>

@@ -64,7 +64,7 @@ function MiniToggle({ on, onToggle, disabled }: { on: boolean; onToggle: () => v
       disabled={disabled}
       style={{
         width: 28, height: 16, borderRadius: 8,
-        background: on ? '#00EF61' : '#333',
+        background: on ? '#80EF00' : '#333',
         border: 'none', cursor: disabled ? 'not-allowed' : 'pointer',
         position: 'relative', transition: 'background 0.2s',
         flexShrink: 0, opacity: disabled ? 0.4 : 1,

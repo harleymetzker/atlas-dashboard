@@ -21,7 +21,7 @@ interface DRERowProps {
 function DRERow({ label, value, pct, isResult, isProfit: _isProfit, indent, negative }: DRERowProps) {
   const valueColor = negative
     ? '#EF4444'
-    : value >= 0 ? '#00EF61' : '#EF4444'
+    : value >= 0 ? '#80EF00' : '#EF4444'
 
   return (
     <div
@@ -77,7 +77,7 @@ interface IndicCardProps {
 }
 
 function IndicCard({ label, mainValue, subValue, positive, negative }: IndicCardProps) {
-  const valueColor = positive ? '#00EF61' : negative ? '#EF4444' : '#fff'
+  const valueColor = positive ? '#80EF00' : negative ? '#EF4444' : '#fff'
   return (
     <div style={{ background: '#111', border: '1px solid #1e1e1e', borderRadius: 8, padding: 16 }}>
       <p style={{ fontFamily: "'Geist Mono', monospace", fontSize: 10, textTransform: 'uppercase', letterSpacing: 1, color: '#666', marginBottom: 8, lineHeight: 1.4 }}>{label}</p>
@@ -92,10 +92,10 @@ function StatusBadge({ ok, text }: { ok: boolean; text: string }) {
     <div style={{
       display: 'flex', alignItems: 'center', gap: 8,
       borderRadius: 6, padding: '8px 12px',
-      borderLeft: `3px solid ${ok ? '#00EF61' : '#EF4444'}`,
-      background: ok ? 'rgba(0,239,97,0.06)' : 'rgba(239,68,68,0.06)',
+      borderLeft: `3px solid ${ok ? '#80EF00' : '#EF4444'}`,
+      background: ok ? 'rgba(128,239,0,0.06)' : 'rgba(239,68,68,0.06)',
     }}>
-      <span style={{ fontSize: 12, fontWeight: 500, color: ok ? '#00EF61' : '#EF4444' }}>{text}</span>
+      <span style={{ fontSize: 12, fontWeight: 500, color: ok ? '#80EF00' : '#EF4444' }}>{text}</span>
     </div>
   )
 }

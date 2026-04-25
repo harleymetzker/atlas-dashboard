@@ -73,10 +73,10 @@ function AnalysisResult({ content }: { content: AnalysisContent }) {
                 padding: '14px 20px', background: 'transparent', border: 'none', cursor: 'pointer',
               }}
             >
-              <span style={{ fontFamily: "'Geist Mono', monospace", fontSize: 12, textTransform: 'uppercase', letterSpacing: 1, color: '#00EF61', fontWeight: 600 }}>
+              <span style={{ fontFamily: "'Geist Mono', monospace", fontSize: 12, textTransform: 'uppercase', letterSpacing: 1, color: '#80EF00', fontWeight: 600 }}>
                 {s.label}
               </span>
-              <ChevronDown size={14} style={{ color: '#00EF61', flexShrink: 0, transform: openSection === s.key ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
+              <ChevronDown size={14} style={{ color: '#80EF00', flexShrink: 0, transform: openSection === s.key ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
             </button>
             {openSection === s.key && (
               <div style={{ padding: '0 20px 18px', color: '#A6A8AB', fontSize: 14, lineHeight: 1.7 }}>
@@ -91,7 +91,7 @@ function AnalysisResult({ content }: { content: AnalysisContent }) {
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
         {[
           { label: 'Pontos Críticos',  items: content.pontos_criticos,  icon: AlertCircle,  color: '#EF4444' },
-          { label: 'Pontos Positivos', items: content.pontos_positivos, icon: CheckCircle2, color: '#00EF61' },
+          { label: 'Pontos Positivos', items: content.pontos_positivos, icon: CheckCircle2, color: '#80EF00' },
         ].map(({ label, items, icon: Icon, color }) => (
           <div key={label} style={{ background: '#111', border: '1px solid #1e1e1e', borderRadius: 8, padding: 20 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
@@ -478,9 +478,9 @@ export function Diagnostico() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
             { label: 'Faturamento Bruto', value: formatCurrency(dre.faturamentoBruto), color: '#fff' },
-            { label: 'Lucro Líquido',     value: formatCurrency(dre.lucro),            color: dre.lucro >= 0 ? '#00EF61' : '#EF4444' },
-            { label: 'EBITDA',            value: formatCurrency(dre.ebitda),           color: dre.ebitda >= 0 ? '#00EF61' : '#EF4444' },
-            { label: 'Geração de Caixa',  value: formatCurrency(geracao),              color: geracao >= 0 ? '#00EF61' : '#EF4444' },
+            { label: 'Lucro Líquido',     value: formatCurrency(dre.lucro),            color: dre.lucro >= 0 ? '#80EF00' : '#EF4444' },
+            { label: 'EBITDA',            value: formatCurrency(dre.ebitda),           color: dre.ebitda >= 0 ? '#80EF00' : '#EF4444' },
+            { label: 'Geração de Caixa',  value: formatCurrency(geracao),              color: geracao >= 0 ? '#80EF00' : '#EF4444' },
           ].map(({ label, value, color }) => (
             <div key={label} style={{ background: '#111', border: '1px solid #1e1e1e', borderRadius: 8, padding: 16 }}>
               <p style={{ fontFamily: "'Geist Mono', monospace", fontSize: 10, textTransform: 'uppercase', letterSpacing: 1, color: '#666', marginBottom: 8 }}>{label}</p>
@@ -502,7 +502,7 @@ export function Diagnostico() {
             <p style={{ fontSize: 14, color: '#A6A8AB', lineHeight: 1.5, marginBottom: 8 }}>
               Análise completa da sua DRE e fluxo de caixa. Interpretada como um sócio falaria.
             </p>
-            <p style={{ fontFamily: "'Geist Mono', monospace", fontSize: 11, color: !hasCredits ? '#EF4444' : '#00EF61' }}>
+            <p style={{ fontFamily: "'Geist Mono', monospace", fontSize: 11, color: !hasCredits ? '#EF4444' : '#80EF00' }}>
               {creditsAvailable}/{CREDIT_LIMIT} créditos disponíveis este mês
               {!hasCredits && ' — limite atingido'}
             </p>
@@ -563,7 +563,7 @@ export function Diagnostico() {
               <div key={item.id} style={{ background: '#111', border: '1px solid #1e1e1e', borderRadius: 8, padding: 20 }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
-                    <span style={{ background: 'rgba(0,239,97,0.15)', color: '#00EF61', fontSize: 10, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.5, padding: '3px 7px', borderRadius: 4, flexShrink: 0 }}>
+                    <span style={{ background: 'rgba(128,239,0,0.15)', color: '#80EF00', fontSize: 10, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.5, padding: '3px 7px', borderRadius: 4, flexShrink: 0 }}>
                       Encerrada
                     </span>
                     <div style={{ minWidth: 0 }}>
