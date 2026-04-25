@@ -256,6 +256,9 @@ export function Entries() {
 
     if (!allEntries) return
 
+    console.log('[OFX] rows recebidas:', rows)
+    console.log('[OFX] allEntries encontradas:', allEntries.length, allEntries)
+
     const usedIds = new Set<string>()
     const results: ImportResultItem[] = []
 
@@ -266,11 +269,12 @@ export function Entries() {
       const isRowWithdrawal = row.type === 'withdrawal'
       const paymentDate = row.semPayment ? null : (row.payment_date || null)
 
+      console.log('[OFX] procurando match para:', { type: row.type, amount, paymentDate })
+
       // Match across ALL entries (agendado AND realizado): type + cents + ±7 days
       // Sort: closest date first, then oldest payment_date as tiebreak
-      const match = (!isAntecipacao && paymentDate)
-        ? allEntries
-            .filter(e => {
+      const candidates = (!isAntecipacao && paymentDate)
+        ? allEntries.filter(e => {
               if (usedIds.has(e.id)) return false
               if (e.type !== row.type) return false
               if (Math.round(e.amount * 100) !== Math.round(amount * 100)) return false
@@ -278,12 +282,15 @@ export function Entries() {
               const diffMs = Math.abs(new Date(paymentDate).getTime() - new Date(e.payment_date).getTime())
               return diffMs <= 7 * 24 * 60 * 60 * 1000
             })
-            .sort((a, b) => {
-              const aMs = Math.abs(new Date(paymentDate).getTime() - new Date(a.payment_date!).getTime())
-              const bMs = Math.abs(new Date(paymentDate).getTime() - new Date(b.payment_date!).getTime())
+        : []
+      console.log('[OFX] candidatos:', candidates)
+      const match = candidates.length > 0
+        ? candidates.sort((a, b) => {
+              const aMs = Math.abs(new Date(paymentDate!).getTime() - new Date(a.payment_date!).getTime())
+              const bMs = Math.abs(new Date(paymentDate!).getTime() - new Date(b.payment_date!).getTime())
               if (aMs !== bMs) return aMs - bMs
               return (a.payment_date ?? '').localeCompare(b.payment_date ?? '')
-            })[0] ?? null
+            })[0]
         : null
 
       if (match) {
