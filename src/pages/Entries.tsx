@@ -240,8 +240,22 @@ export function Entries() {
   }
 
   async function handleImportRows(rows: ImportRow[]) {
-    // agendados hook loads ALL entries (no date filter) — usable for both agendado and realizado matching
-    const allEntries = agendados
+    // Calcula a janela de datas necessária para busca (±7 dias do range das transações)
+    const dates = rows.map(r => r.payment_date).filter(Boolean) as string[]
+    if (dates.length === 0) return
+    const timestamps = dates.map(d => new Date(d).getTime())
+    const minDate = new Date(Math.min(...timestamps) - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+    const maxDate = new Date(Math.max(...timestamps) + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+
+    // Busca TODOS os lançamentos do usuário na janela (qualquer status)
+    const { data: allEntries } = await supabase
+      .from('entries')
+      .select('*')
+      .gte('payment_date', minDate)
+      .lte('payment_date', maxDate)
+
+    if (!allEntries) return
+
     const usedIds = new Set<string>()
     const results: ImportResultItem[] = []
 
