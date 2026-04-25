@@ -286,8 +286,15 @@ export function Entries() {
       let match: typeof pool[0] | null = null
       if (pool.length === 1) {
         match = pool[0]
+      } else if (pool.length > 1) {
+        if (pool[0].status === 'agendado') {
+          // Múltiplos agendados → ambíguo, não concilia automaticamente → Caso 4 (novo)
+          match = null
+        } else {
+          // Múltiplos realizados → qualquer um serve para detectar duplicata → Caso 2 (ignorar)
+          match = pool[0]
+        }
       }
-      // pool.length > 1 → ambíguo, não concilia automaticamente → cai no Caso 4 (novo)
 
       if (match) {
         usedIds.add(match.id)
