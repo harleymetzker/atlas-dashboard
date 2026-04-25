@@ -740,12 +740,14 @@ export function Entries() {
                         <span style={{ flex: 1, fontSize: 13, color: '#fff', fontFamily: "'Geist', sans-serif", fontWeight: 600 }}>
                           {item.row.description || item.row.category}
                         </span>
-                        <span style={{ fontFamily: "'Geist Mono', monospace", fontSize: 14, fontWeight: 700, color: item.row.type === 'revenue' ? '#00EF61' : '#EF4444' }}>
-                          {item.row.type !== 'revenue' ? '-' : ''}{formatCurrency(amount)}
-                        </span>
-                        <span style={{ fontFamily: "'Geist Mono', monospace", fontSize: 11, color: '#555' }}>
-                          {item.row.payment_date || '—'}
-                        </span>
+                        <div style={{ textAlign: 'right' }}>
+                          <span style={{ fontFamily: "'Geist Mono', monospace", fontSize: 14, fontWeight: 700, color: item.row.type === 'revenue' ? '#00EF61' : '#EF4444', display: 'block' }}>
+                            {item.row.type !== 'revenue' ? '-' : ''}{formatCurrency(amount)}
+                          </span>
+                          <span style={{ fontFamily: "'Geist Mono', monospace", fontSize: 10, color: '#555' }}>
+                            Pag: {item.row.payment_date || '—'} · Comp: {item.row.semCompetence ? '—' : (item.row.competence_date || '—')}
+                          </span>
+                        </div>
                       </div>
 
                       {/* Decision buttons */}
@@ -799,8 +801,8 @@ export function Entries() {
                                 <span style={{ flex: 1, fontSize: 12, color: '#ccc', fontFamily: "'Geist', sans-serif", overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                                   {c.description || c.category}
                                 </span>
-                                <span style={{ fontFamily: "'Geist Mono', monospace", fontSize: 11, color: '#666', flexShrink: 0 }}>
-                                  {c.payment_date}
+                                <span style={{ fontFamily: "'Geist Mono', monospace", fontSize: 10, color: '#666', flexShrink: 0, textAlign: 'right' }}>
+                                  Pag: {c.payment_date || '—'}<br />Comp: {c.competence_date || '—'}
                                 </span>
                               </button>
                             )
