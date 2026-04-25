@@ -6,6 +6,7 @@ import { useEntries } from '../hooks/useEntries'
 import type { Entry, EntryType } from '../types'
 import { REVENUE_CATEGORIES, EXPENSE_CATEGORY_GROUPS, ANTECIPACAO_CATEGORY } from '../types'
 import { formatCurrency } from '../lib/calculations'
+import { supabase } from '../lib/supabase'
 import { Button } from '../components/ui/Button'
 import { Input } from '../components/ui/Input'
 import { CurrencyInput } from '../components/ui/CurrencyInput'
@@ -16,6 +17,17 @@ import { ImportUploadModal } from '../components/import/ImportUploadModal'
 import { ImportCategorizacao } from '../components/import/ImportCategorizacao'
 import type { ImportRow } from '../components/import/ImportCategorizacao'
 import type { RawRow } from '../lib/parseExtrato'
+
+type ImportAction = 'conciliado' | 'ignorado' | 'novo'
+interface ImportResultItem {
+  txDescription: string
+  txAmount: number
+  txType: EntryType
+  action: ImportAction
+  entryId: string
+  entryDescription: string
+  previousPaymentDate?: string
+}
 
 const TYPE_OPTIONS = [
   { value: 'revenue',    label: 'Receita' },
@@ -93,6 +105,8 @@ export function Entries() {
   const [selectedMonth, setSelectedMonth] = useState('')
   const [editingDateId, setEditingDateId] = useState<string | null>(null)
   const [editingDateValue, setEditingDateValue] = useState('')
+  const [importResult, setImportResult] = useState<ImportResultItem[] | null>(null)
+  const [showImportDetails, setShowImportDetails] = useState(false)
 
   const { entries: agendados, updateEntry: updateAgendado, deleteEntry: deleteAgendado, refetch: refetchAgendados } = useEntries({ dateField: 'payment_date' })
   const in30Days = format(new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), 'yyyy-MM-dd')
@@ -226,11 +240,10 @@ export function Entries() {
   }
 
   async function handleImportRows(rows: ImportRow[]) {
-    // All currently scheduled entries available for reconciliation
-    const allAgendados = agendados.filter(e => e.status === 'agendado' && e.payment_date)
+    // agendados hook loads ALL entries (no date filter) — usable for both agendado and realizado matching
+    const allEntries = agendados
     const usedIds = new Set<string>()
-    let reconciled = 0
-    let created = 0
+    const results: ImportResultItem[] = []
 
     for (const row of rows) {
       const amount = Number(row.amount)
@@ -239,48 +252,96 @@ export function Entries() {
       const isRowWithdrawal = row.type === 'withdrawal'
       const paymentDate = row.semPayment ? null : (row.payment_date || null)
 
-      // Reconciliation: only attempt if paymentDate is set and not antecipacao
+      // Match across ALL entries (agendado AND realizado): type + cents + ±7 days
+      // Sort: closest date first, then oldest payment_date as tiebreak
       const match = (!isAntecipacao && paymentDate)
-        ? allAgendados
+        ? allEntries
             .filter(e => {
               if (usedIds.has(e.id)) return false
               if (e.type !== row.type) return false
-              // Compare amounts in cents to avoid float issues
               if (Math.round(e.amount * 100) !== Math.round(amount * 100)) return false
-              // ±7 days window
-              const diffMs = Math.abs(new Date(paymentDate).getTime() - new Date(e.payment_date!).getTime())
+              if (!e.payment_date) return false
+              const diffMs = Math.abs(new Date(paymentDate).getTime() - new Date(e.payment_date).getTime())
               return diffMs <= 7 * 24 * 60 * 60 * 1000
             })
             .sort((a, b) => {
               const aMs = Math.abs(new Date(paymentDate).getTime() - new Date(a.payment_date!).getTime())
               const bMs = Math.abs(new Date(paymentDate).getTime() - new Date(b.payment_date!).getTime())
               if (aMs !== bMs) return aMs - bMs
-              // Tie-break: oldest payment_date first
               return (a.payment_date ?? '').localeCompare(b.payment_date ?? '')
             })[0] ?? null
         : null
 
       if (match) {
         usedIds.add(match.id)
-        await updateAgendado(match.id, { status: 'realizado', payment_date: paymentDate })
-        reconciled++
+        if (match.status === 'agendado') {
+          // Caso 1: agendado → confirmar com data real do extrato
+          await updateAgendado(match.id, { status: 'realizado', payment_date: paymentDate })
+          results.push({
+            txDescription: row.description,
+            txAmount: amount,
+            txType: row.type,
+            action: 'conciliado',
+            entryId: match.id,
+            entryDescription: match.description || match.category,
+            previousPaymentDate: match.payment_date ?? undefined,
+          })
+        } else {
+          // Caso 2: realizado → já registrado, ignorar
+          results.push({
+            txDescription: row.description,
+            txAmount: amount,
+            txType: row.type,
+            action: 'ignorado',
+            entryId: match.id,
+            entryDescription: match.description || match.category,
+          })
+        }
       } else {
-        await addEntry({
-          type: row.type,
-          category: row.category,
-          description: row.description,
-          amount,
-          competence_date: isAntecipacao ? paymentDate : (isRowWithdrawal || row.semCompetence) ? null : (row.competence_date || null),
-          payment_date: paymentDate,
-          status: 'realizado',
+        // Caso 4: sem match → criar novo lançamento e capturar o ID retornado
+        const { data: newEntry, error } = await supabase
+          .from('entries')
+          .insert({
+            type: row.type,
+            category: row.category,
+            description: row.description,
+            amount,
+            competence_date: isAntecipacao ? paymentDate : (isRowWithdrawal || row.semCompetence) ? null : (row.competence_date || null),
+            payment_date: paymentDate,
+            status: 'realizado',
+            recurrence_id: null,
+          })
+          .select()
+          .single()
+        if (error) throw new Error(error.message)
+        results.push({
+          txDescription: row.description,
+          txAmount: amount,
+          txType: row.type,
+          action: 'novo',
+          entryId: newEntry.id,
+          entryDescription: row.description || row.category,
         })
-        created++
       }
     }
 
     setImportRows(null)
     refetchAgendados()
-    alert(`${reconciled + created} transações importadas · ${reconciled} conciliadas com agendamentos · ${created} novos lançamentos criados`)
+    setImportResult(results)
+    setShowImportDetails(false)
+  }
+
+  async function handleUndoImport(item: ImportResultItem) {
+    if (item.action === 'conciliado') {
+      await updateAgendado(item.entryId, {
+        status: 'agendado',
+        payment_date: item.previousPaymentDate ?? null,
+      })
+    } else if (item.action === 'novo') {
+      await deleteAgendado(item.entryId)
+    }
+    setImportResult(prev => prev ? prev.filter(i => i !== item) : null)
+    refetchAgendados()
   }
 
   function handleMonthShortcut(e: React.ChangeEvent<HTMLSelectElement>) {
@@ -600,6 +661,107 @@ export function Entries() {
           onClose={() => setImportRows(null)}
         />
       )}
+
+      {/* ── Import Result Modal ── */}
+      {importResult && (() => {
+        const conciliadas = importResult.filter(i => i.action === 'conciliado')
+        const ignoradas   = importResult.filter(i => i.action === 'ignorado')
+        const novas       = importResult.filter(i => i.action === 'novo')
+        const actionLabel: Record<ImportAction, string> = {
+          conciliado: 'Conciliado',
+          ignorado:   'Já registrado',
+          novo:       'Novo lançamento',
+        }
+        const actionColor: Record<ImportAction, string> = {
+          conciliado: '#00EF61',
+          ignorado:   '#666',
+          novo:       '#60a5fa',
+        }
+        return (
+          <Modal open={true} onClose={() => setImportResult(null)} title="Importação concluída">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+              {/* Summary blocks */}
+              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                {[
+                  { label: 'Conciliadas com agendamentos', count: conciliadas.length, color: '#00EF61', bg: 'rgba(0,239,97,0.08)', border: 'rgba(0,239,97,0.2)' },
+                  { label: 'Já registradas (ignoradas)',   count: ignoradas.length,   color: '#888',    bg: 'rgba(255,255,255,0.03)', border: '#1e1e1e' },
+                  { label: 'Novos lançamentos criados',    count: novas.length,       color: '#60a5fa', bg: 'rgba(96,165,250,0.08)', border: 'rgba(96,165,250,0.2)' },
+                ].map(({ label, count, color, bg, border }) => (
+                  <div key={label} style={{ flex: 1, minWidth: 140, background: bg, border: `1px solid ${border}`, borderRadius: 10, padding: '14px 16px' }}>
+                    <p style={{ fontFamily: "'Geist Mono', monospace", fontSize: 28, fontWeight: 700, color, lineHeight: 1 }}>{count}</p>
+                    <p style={{ fontSize: 12, color: '#888', marginTop: 6, lineHeight: 1.4 }}>{label}</p>
+                  </div>
+                ))}
+              </div>
+
+              {/* Toggle details */}
+              <button
+                onClick={() => setShowImportDetails(v => !v)}
+                style={{ alignSelf: 'flex-start', background: 'transparent', border: '1px solid #333', color: '#aaa', borderRadius: 6, padding: '6px 14px', fontSize: 13, cursor: 'pointer', fontFamily: "'Geist', sans-serif" }}
+              >
+                {showImportDetails ? 'Ocultar detalhes' : 'Ver detalhes'}
+              </button>
+
+              {/* Detail list */}
+              {showImportDetails && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 6, maxHeight: 340, overflowY: 'auto', paddingRight: 4 }}>
+                  {importResult.map((item, idx) => (
+                    <div key={idx} style={{
+                      display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap',
+                      padding: '10px 12px', borderRadius: 8,
+                      background: 'rgba(255,255,255,0.02)', border: '1px solid #1e1e1e',
+                    }}>
+                      {/* Action badge */}
+                      <span style={{
+                        fontSize: 10, fontWeight: 700, letterSpacing: 0.8, padding: '2px 7px',
+                        borderRadius: 4, textTransform: 'uppercase', whiteSpace: 'nowrap',
+                        color: actionColor[item.action],
+                        background: item.action === 'conciliado' ? 'rgba(0,239,97,0.12)' : item.action === 'novo' ? 'rgba(96,165,250,0.12)' : 'rgba(255,255,255,0.06)',
+                      }}>
+                        {actionLabel[item.action]}
+                      </span>
+                      {/* Description */}
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <p style={{ fontSize: 13, color: '#fff', fontFamily: "'Geist', sans-serif", whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                          {item.txDescription || '—'}
+                        </p>
+                        {(item.action === 'conciliado' || item.action === 'ignorado') && (
+                          <p style={{ fontSize: 11, color: '#555', marginTop: 2, fontFamily: "'Geist Mono', monospace" }}>
+                            → {item.entryDescription}
+                          </p>
+                        )}
+                      </div>
+                      {/* Amount */}
+                      <span style={{ fontFamily: "'Geist Mono', monospace", fontSize: 13, fontWeight: 600, color: item.txType === 'revenue' ? '#00EF61' : '#EF4444', whiteSpace: 'nowrap' }}>
+                        {item.txType !== 'revenue' ? '-' : ''}{formatCurrency(item.txAmount)}
+                      </span>
+                      {/* Undo button */}
+                      {(item.action === 'conciliado' || item.action === 'novo') && (
+                        <button
+                          onClick={() => handleUndoImport(item)}
+                          style={{ padding: '4px 10px', background: 'transparent', border: '1px solid #333', color: '#888', borderRadius: 5, fontSize: 11, cursor: 'pointer', whiteSpace: 'nowrap', fontFamily: "'Geist', sans-serif" }}
+                        >
+                          Desfazer
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Conclude button */}
+              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <button
+                  onClick={() => setImportResult(null)}
+                  style={{ padding: '10px 24px', background: '#00EF61', border: 'none', borderRadius: 8, color: '#000', fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: "'Geist', sans-serif" }}
+                >
+                  Concluir
+                </button>
+              </div>
+            </div>
+          </Modal>
+        )
+      })()}
 
       <Modal open={modalOpen} onClose={() => setModalOpen(false)} title={editEntry ? 'Editar Lançamento' : 'Novo Lançamento'}>
         <div className="space-y-4">
