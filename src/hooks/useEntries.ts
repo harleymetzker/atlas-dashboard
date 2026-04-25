@@ -33,19 +33,17 @@ export function useEntries(filters: Filters = {}) {
 
   async function addEntry(entry: Omit<Entry, 'id' | 'user_id' | 'created_at'>, meses?: number) {
     if (meses && meses > 1 && entry.recurrence_id) {
-      const todayStr = new Date().toISOString().slice(0, 10)
       const rows = Array.from({ length: meses }, (_, i) => {
         const addMonths = (dateStr: string, n: number) => {
           const d = new Date(dateStr + 'T12:00:00')
           d.setMonth(d.getMonth() + n)
           return d.toISOString().slice(0, 10)
         }
-        const paymentDate = entry.payment_date ? addMonths(entry.payment_date, i) : null
         return {
           ...entry,
           competence_date: entry.competence_date ? addMonths(entry.competence_date, i) : null,
-          payment_date: paymentDate,
-          status: paymentDate && paymentDate > todayStr ? 'agendado' : 'realizado',
+          payment_date: entry.payment_date ? addMonths(entry.payment_date, i) : null,
+          status: 'agendado' as const,
         }
       })
       const { error } = await supabase.from('entries').insert(rows)

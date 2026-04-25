@@ -256,9 +256,6 @@ export function Entries() {
 
     if (!allEntries) return
 
-    console.log('[OFX] rows recebidas:', rows)
-    console.log('[OFX] allEntries encontradas:', allEntries.length, allEntries)
-
     const usedIds = new Set<string>()
     const results: ImportResultItem[] = []
 
@@ -268,8 +265,6 @@ export function Entries() {
       const isAntecipacao = row.category === ANTECIPACAO_CATEGORY
       const isRowWithdrawal = row.type === 'withdrawal'
       const paymentDate = row.semPayment ? null : (row.payment_date || null)
-
-      console.log('[OFX] procurando match para:', { type: row.type, amount, paymentDate })
 
       // Match across ALL entries (agendado AND realizado): type + cents + ±7 days
       // Sort: closest date first, then oldest payment_date as tiebreak
@@ -288,10 +283,6 @@ export function Entries() {
       // Prioridade: agendados primeiro; só usa realizados se não houver agendados
       const pool = agendadosCandidates.length > 0 ? agendadosCandidates : realizadosCandidates
 
-      console.log('[OFX] candidatos para', { description: row.description, amount, paymentDate })
-      console.log('[OFX] candidatos por status:', { agendados: agendadosCandidates, realizados: realizadosCandidates })
-      console.log('[OFX] pool escolhido:', pool, 'tamanho:', pool.length)
-
       const match = pool.length > 0
         ? pool.sort((a, b) => {
               const aMs = Math.abs(new Date(paymentDate!).getTime() - new Date(a.payment_date!).getTime())
@@ -300,8 +291,6 @@ export function Entries() {
               return (a.payment_date ?? '').localeCompare(b.payment_date ?? '')
             })[0]
         : null
-
-      console.log('[OFX] match final:', match)
 
       if (match) {
         usedIds.add(match.id)
