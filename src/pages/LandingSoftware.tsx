@@ -332,8 +332,28 @@ export function LandingSoftware() {
       </section>
 
       {/* ── MID CTA ── */}
-      <div style={{ padding: '60px 0', textAlign: 'center', borderTop: `1px solid ${border}` }}>
-        <div className="ls-wrap" style={{ maxWidth: 1240, margin: '0 auto', padding: '0 40px' }}>
+      <div style={{ position: 'relative', overflow: 'hidden', padding: '96px 0', textAlign: 'center', background: '#000', borderTop: `1px solid ${border}` }}>
+        {/* Pattern layer */}
+        <div
+          style={{
+            position: 'absolute', inset: 0, pointerEvents: 'none',
+            backgroundImage: 'url(/blacksheep-pattern.jpg)',
+            backgroundSize: '600px auto',
+            backgroundRepeat: 'repeat',
+            opacity: 0.18,
+          }}
+          aria-hidden="true"
+        />
+        {/* Radial overlay for readability */}
+        <div
+          style={{
+            position: 'absolute', inset: 0, pointerEvents: 'none',
+            background: 'radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.6) 70%, rgba(0,0,0,0.85) 100%)',
+          }}
+          aria-hidden="true"
+        />
+        {/* Content */}
+        <div className="ls-wrap" style={{ position: 'relative', zIndex: 10, maxWidth: 1240, margin: '0 auto', padding: '0 40px' }}>
           <h2 style={{ fontSize: 'clamp(24px,3vw,32px)', fontWeight: 600, color: text, marginBottom: 24, letterSpacing: '-0.02em', fontFamily: sans }}>
             Pronto pra parar de gerir no achismo?
           </h2>
