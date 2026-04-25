@@ -436,19 +436,19 @@ export function Entries() {
       {/* ── Title + buttons ── */}
       <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16 }}>
         <div>
-          <h2 style={{ fontFamily: "'Geist', sans-serif", fontSize: 32, fontWeight: 800, color: '#fff', lineHeight: 1.1 }}>Lançamentos</h2>
+          <h2 style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 32, fontWeight: 800, color: '#fff', lineHeight: 1.1 }}>Lançamentos</h2>
           <p style={{ fontSize: 14, color: '#666', marginTop: 4 }}>fato a fato, sem eufemismo</p>
         </div>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
           <button
             onClick={() => setImportUploadOpen(true)}
-            style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 16px', background: 'transparent', border: '1px solid #1e1e1e', borderRadius: 8, color: '#fff', fontSize: 13, cursor: 'pointer', fontFamily: "'Geist', sans-serif" }}
+            style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 16px', background: 'transparent', border: '1px solid #1e1e1e', borderRadius: 8, color: '#fff', fontSize: 13, cursor: 'pointer', fontFamily: "'Open Sans', sans-serif" }}
           >
             + Importar extrato
           </button>
           <button
             onClick={openAdd}
-            style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 16px', background: '#80EF00', border: 'none', borderRadius: 8, color: '#000', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: "'Geist', sans-serif" }}
+            style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 16px', background: '#80EF00', border: 'none', borderRadius: 8, color: '#000', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: "'Open Sans', sans-serif" }}
           >
             + Novo lançamento
           </button>
@@ -459,7 +459,7 @@ export function Entries() {
       {scheduledEntries.length > 0 && (
         <div style={{ background: '#0c0c0c', border: '1px solid rgba(234,179,8,0.25)', borderRadius: 12, padding: 20 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
-            <span style={{ fontFamily: "'Geist', sans-serif", fontSize: 15, fontWeight: 700, color: '#fff' }}>Aguardando Confirmação</span>
+            <span style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 15, fontWeight: 700, color: '#fff' }}>Aguardando Confirmação</span>
             <span style={{ background: 'rgba(234,179,8,0.18)', color: '#eab308', fontFamily: "'Geist Mono', monospace", fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 20, letterSpacing: 1 }}>
               {scheduledEntries.length}
             </span>
@@ -477,7 +477,7 @@ export function Entries() {
                 }}>
                   {/* Info */}
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <span style={{ fontSize: 13, color: '#fff', fontFamily: "'Geist', sans-serif" }}>
+                    <span style={{ fontSize: 13, color: '#fff', fontFamily: "'Open Sans', sans-serif" }}>
                       {entry.description || entry.category}
                     </span>
                     <span style={{ fontSize: 11, color: '#666', marginLeft: 8, fontFamily: "'Geist Mono', monospace" }}>
@@ -715,14 +715,14 @@ export function Entries() {
         }
         const decisionBtnBase: React.CSSProperties = {
           flex: 1, padding: '7px 10px', borderRadius: 6, fontSize: 12, fontWeight: 600,
-          cursor: 'pointer', border: '1px solid #333', fontFamily: "'Geist', sans-serif",
+          cursor: 'pointer', border: '1px solid #333', fontFamily: "'Open Sans', sans-serif",
           transition: 'all 0.15s',
         }
         return (
           <Modal open={true} onClose={() => setReviewItems(null)} title="Revisar Conciliação">
             <div style={{ display: 'flex', flexDirection: 'column', height: '70vh' }}>
               {/* Subtitle */}
-              <p style={{ fontSize: 13, color: '#666', marginBottom: 16, fontFamily: "'Geist', sans-serif" }}>
+              <p style={{ fontSize: 13, color: '#666', marginBottom: 16, fontFamily: "'Open Sans', sans-serif" }}>
                 {reviewItems.length} transações encontradas no extrato. Confirme como cada uma deve ser tratada.
               </p>
 
@@ -737,7 +737,7 @@ export function Entries() {
                         <span style={{ ...TYPE_BADGE_STYLE[item.row.type], fontSize: 10, fontWeight: 700, letterSpacing: 0.8, padding: '2px 7px', borderRadius: 4, textTransform: 'uppercase' }}>
                           {TYPE_LABELS[item.row.type]}
                         </span>
-                        <span style={{ flex: 1, fontSize: 13, color: '#fff', fontFamily: "'Geist', sans-serif", fontWeight: 600 }}>
+                        <span style={{ flex: 1, fontSize: 13, color: '#fff', fontFamily: "'Open Sans', sans-serif", fontWeight: 600 }}>
                           {item.row.description || item.row.category}
                         </span>
                         <div style={{ textAlign: 'right' }}>
@@ -798,7 +798,7 @@ export function Entries() {
                                 <span style={{ ...BADGE[c.status], fontSize: 9, fontWeight: 700, letterSpacing: 0.8, padding: '2px 6px', borderRadius: 3, textTransform: 'uppercase', flexShrink: 0 }}>
                                   {c.status}
                                 </span>
-                                <span style={{ flex: 1, fontSize: 12, color: '#ccc', fontFamily: "'Geist', sans-serif", overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                <span style={{ flex: 1, fontSize: 12, color: '#ccc', fontFamily: "'Open Sans', sans-serif", overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                                   {c.description || c.category}
                                 </span>
                                 <span style={{ fontFamily: "'Geist Mono', monospace", fontSize: 10, color: '#666', flexShrink: 0, textAlign: 'right' }}>
@@ -818,13 +818,13 @@ export function Entries() {
               <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10, paddingTop: 16, borderTop: '1px solid #1e1e1e', marginTop: 8 }}>
                 <button
                   onClick={() => setReviewItems(null)}
-                  style={{ padding: '10px 20px', background: 'transparent', border: '1px solid #333', borderRadius: 8, color: '#aaa', fontSize: 13, cursor: 'pointer', fontFamily: "'Geist', sans-serif" }}
+                  style={{ padding: '10px 20px', background: 'transparent', border: '1px solid #333', borderRadius: 8, color: '#aaa', fontSize: 13, cursor: 'pointer', fontFamily: "'Open Sans', sans-serif" }}
                 >
                   Cancelar
                 </button>
                 <button
                   onClick={executeReview}
-                  style={{ padding: '10px 24px', background: '#80EF00', border: 'none', borderRadius: 8, color: '#000', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: "'Geist', sans-serif" }}
+                  style={{ padding: '10px 24px', background: '#80EF00', border: 'none', borderRadius: 8, color: '#000', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: "'Open Sans', sans-serif" }}
                 >
                   Confirmar importação ({reviewItems.length})
                 </button>
@@ -869,7 +869,7 @@ export function Entries() {
               {/* Toggle details */}
               <button
                 onClick={() => setShowImportDetails(v => !v)}
-                style={{ alignSelf: 'flex-start', background: 'transparent', border: '1px solid #333', color: '#aaa', borderRadius: 6, padding: '6px 14px', fontSize: 13, cursor: 'pointer', fontFamily: "'Geist', sans-serif" }}
+                style={{ alignSelf: 'flex-start', background: 'transparent', border: '1px solid #333', color: '#aaa', borderRadius: 6, padding: '6px 14px', fontSize: 13, cursor: 'pointer', fontFamily: "'Open Sans', sans-serif" }}
               >
                 {showImportDetails ? 'Ocultar detalhes' : 'Ver detalhes'}
               </button>
@@ -894,7 +894,7 @@ export function Entries() {
                       </span>
                       {/* Description */}
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <p style={{ fontSize: 13, color: '#fff', fontFamily: "'Geist', sans-serif", whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        <p style={{ fontSize: 13, color: '#fff', fontFamily: "'Open Sans', sans-serif", whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                           {item.txDescription || '—'}
                         </p>
                         {(item.action === 'conciliado' || item.action === 'ignorado') && (
@@ -911,7 +911,7 @@ export function Entries() {
                       {(item.action === 'conciliado' || item.action === 'novo') && (
                         <button
                           onClick={() => handleUndoImport(item)}
-                          style={{ padding: '4px 10px', background: 'transparent', border: '1px solid #333', color: '#888', borderRadius: 5, fontSize: 11, cursor: 'pointer', whiteSpace: 'nowrap', fontFamily: "'Geist', sans-serif" }}
+                          style={{ padding: '4px 10px', background: 'transparent', border: '1px solid #333', color: '#888', borderRadius: 5, fontSize: 11, cursor: 'pointer', whiteSpace: 'nowrap', fontFamily: "'Open Sans', sans-serif" }}
                         >
                           Desfazer
                         </button>
@@ -925,7 +925,7 @@ export function Entries() {
               <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <button
                   onClick={() => setImportResult(null)}
-                  style={{ padding: '10px 24px', background: '#80EF00', border: 'none', borderRadius: 8, color: '#000', fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: "'Geist', sans-serif" }}
+                  style={{ padding: '10px 24px', background: '#80EF00', border: 'none', borderRadius: 8, color: '#000', fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: "'Open Sans', sans-serif" }}
                 >
                   Concluir
                 </button>

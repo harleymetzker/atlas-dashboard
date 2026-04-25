@@ -178,7 +178,7 @@ export function DRE() {
       {/* ── Header ── */}
       <div className="flex flex-wrap items-start justify-between gap-6">
         <div>
-          <h2 style={{ fontFamily: "'Geist', sans-serif", fontSize: 32, fontWeight: 800, color: '#fff', lineHeight: 1.1 }}>DRE</h2>
+          <h2 style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 32, fontWeight: 800, color: '#fff', lineHeight: 1.1 }}>DRE</h2>
           <p style={{ fontSize: 14, color: '#666', marginTop: 4 }}>Por data de competência</p>
         </div>
         <div style={{ display: 'flex', alignItems: 'flex-end', gap: 8 }}>

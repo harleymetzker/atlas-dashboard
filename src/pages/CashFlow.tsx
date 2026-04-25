@@ -51,7 +51,7 @@ export function CashFlow() {
     <div className="p-8 space-y-8">
       <div className="flex flex-wrap items-start justify-between gap-6">
         <div>
-          <h2 style={{ fontFamily: "'Geist', sans-serif", fontSize: 32, fontWeight: 800, color: '#fff', lineHeight: 1.1 }}>Fluxo de Caixa</h2>
+          <h2 style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 32, fontWeight: 800, color: '#fff', lineHeight: 1.1 }}>Fluxo de Caixa</h2>
           <p style={{ fontSize: 14, color: '#666', marginTop: 4 }}>Por data de pagamento/recebimento</p>
         </div>
         <DateFilter startDate={startDate} endDate={endDate} onChange={(s, e) => { setStartDate(s); setEndDate(e) }} />

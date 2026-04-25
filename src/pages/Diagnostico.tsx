@@ -439,7 +439,7 @@ export function Diagnostico() {
       {/* Header */}
       <div className="flex flex-wrap items-start justify-between gap-6">
         <div>
-          <h2 style={{ fontFamily: "'Geist', sans-serif", fontSize: 32, fontWeight: 800, color: '#fff', lineHeight: 1.1 }}>Diagnóstico</h2>
+          <h2 style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 32, fontWeight: 800, color: '#fff', lineHeight: 1.1 }}>Diagnóstico</h2>
           <p style={{ fontSize: 14, color: '#666', marginTop: 4 }}>Análise gerada por IA. Interpretada como um sócio falaria.</p>
           <button
             onClick={() => { setProfileForm(companyProfile!); setShowProfileForm(true) }}

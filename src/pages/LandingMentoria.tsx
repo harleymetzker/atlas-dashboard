@@ -19,7 +19,7 @@ const C = {
   radius:     14,
   radiusLg:   20,
 }
-const sans = "'Geist', system-ui, -apple-system, sans-serif"
+const sans = "'Open Sans', system-ui, -apple-system, sans-serif"
 const mono = "'Geist Mono', ui-monospace, monospace"
 
 // ── Global CSS (injected once) ────────────────────────────────────────────────

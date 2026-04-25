@@ -18,7 +18,7 @@ const bgCard   = '#0F110F'
 const bgRaised = '#0A0B0A'
 const radius   = 14
 
-const sans = "'Geist', -apple-system, system-ui, sans-serif"
+const sans = "'Open Sans', -apple-system, system-ui, sans-serif"
 const mono = "'Geist Mono', ui-monospace, monospace"
 
 // ── CSS-in-JS global styles injected once ─────────────────────────────────────

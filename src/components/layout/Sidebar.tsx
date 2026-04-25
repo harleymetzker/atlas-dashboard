@@ -37,7 +37,7 @@ function navStyle(
   return {
     display: 'flex', alignItems: 'center', gap: 10,
     padding: '8px 10px', borderRadius: 8, textDecoration: 'none',
-    fontFamily: "'Geist', sans-serif",
+    fontFamily: "'Open Sans', sans-serif",
     fontSize: 13, transition: 'all 0.15s',
     fontWeight: isActive ? 600 : 500,
     background: isActive ? activeBg : hovered ? 'rgba(255,255,255,0.06)' : 'transparent',
@@ -72,7 +72,7 @@ function SubNavItem({ to, icon: Icon, label }: { to: string; icon: React.Element
       style={({ isActive }) => ({
         display: 'flex', alignItems: 'center', gap: 8,
         padding: '7px 8px', borderRadius: 6, textDecoration: 'none',
-        fontFamily: "'Geist', sans-serif",
+        fontFamily: "'Open Sans', sans-serif",
         fontSize: 12, transition: 'all 0.15s',
         fontWeight: isActive ? 600 : 500,
         background: isActive ? '#80EF00' : hovered ? 'rgba(255,255,255,0.06)' : 'transparent',
@@ -120,7 +120,7 @@ export function Sidebar() {
           </div>
           <div style={{ minWidth: 0 }}>
             <div style={{
-              fontFamily: "'Geist', sans-serif",
+              fontFamily: "'Open Sans', sans-serif",
               fontWeight: 700, fontSize: 14,
               color: '#fff', lineHeight: 1.2,
             }}>
@@ -161,7 +161,7 @@ export function Sidebar() {
                   fontWeight: 500, fontSize: 13,
                   border: 'none', cursor: 'pointer',
                   transition: 'all 0.15s',
-                  fontFamily: "'Geist', sans-serif",
+                  fontFamily: "'Open Sans', sans-serif",
                 }}
                 onMouseEnter={e => {
                   if (!ferramentasActive) {
@@ -226,7 +226,7 @@ export function Sidebar() {
             background: 'transparent', color: '#666',
             fontSize: 12, border: 'none', cursor: 'pointer',
             transition: 'color 0.15s',
-            fontFamily: "'Geist', sans-serif",
+            fontFamily: "'Open Sans', sans-serif",
           }}
           onMouseEnter={e => { e.currentTarget.style.color = '#EF4444' }}
           onMouseLeave={e => { e.currentTarget.style.color = '#666' }}
