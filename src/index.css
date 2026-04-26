@@ -173,7 +173,7 @@
 @media (max-width: 768px) {
 
   /* Header: padding mobile */
-  .lp-header { padding: 28px 24px !important; }
+  .lp-header { padding: 16px 24px !important; }
 
   /* A1 – CTA overlay mais denso em mobile */
   .lp-cta-mid-overlay {
