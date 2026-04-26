@@ -78,6 +78,7 @@ const GLOBAL_CSS = `
 
     .lm-metrics-grid { grid-template-columns: 1fr !important; overflow: visible !important; }
     .lm-metrics-cell { min-height: 70px; }
+    .lm-mentor-stats { grid-template-columns: 1fr !important; }
   }
 `
 
@@ -627,7 +628,7 @@ export function LandingMentoria() {
               <p style={{ fontSize: 16.5, color: C.textDim, lineHeight: 1.55, margin: '0 0 28px', maxWidth: 620, fontFamily: sans }}>
                 <strong style={{ color: C.text, fontWeight: 500 }}>Não vou te ensinar teoria. Vamos implementar gestão.</strong>
               </p>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 1, background: C.border, border: `1px solid ${C.border}`, borderRadius: 12, overflow: 'hidden' }}>
+              <div className="lm-mentor-stats" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 1, background: C.border, border: `1px solid ${C.border}`, borderRadius: 12, overflow: 'hidden' }}>
                 {[
                   { v: '16', k: 'anos em operações reais' },
                   { v: '20+', k: 'negócios como sócio / conselheiro' },
