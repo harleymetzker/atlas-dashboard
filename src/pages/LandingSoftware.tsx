@@ -328,18 +328,19 @@ export function LandingSoftware() {
         <div
           style={{
             position: 'absolute', inset: 0, pointerEvents: 'none',
-            backgroundImage: 'url(/blacksheep-pattern.jpg)',
-            backgroundSize: '600px auto',
+            backgroundImage: 'url(/blacksheep-pattern.svg)',
+            backgroundSize: '600px 600px',
             backgroundRepeat: 'repeat',
-            opacity: 0.18,
+            opacity: 1,
           }}
           aria-hidden="true"
         />
         {/* Radial overlay for readability */}
         <div
           style={{
-            position: 'absolute', inset: 0, pointerEvents: 'none',
-            background: 'radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.6) 70%, rgba(0,0,0,0.85) 100%)',
+            position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
+            pointerEvents: 'none', zIndex: 1,
+            background: 'radial-gradient(ellipse at center, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.85) 25%, rgba(0,0,0,0.4) 55%, rgba(0,0,0,0) 80%)',
           }}
           aria-hidden="true"
         />
