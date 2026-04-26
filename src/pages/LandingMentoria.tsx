@@ -165,29 +165,75 @@ export function LandingMentoria() {
       </div>
 
       {/* ── HERO ── */}
-      <section style={{ position: 'relative', padding: '140px 0 96px', overflow: 'hidden' }}>
-        <div style={{ content: '', position: 'absolute', inset: 0, background: 'radial-gradient(60% 60% at 15% 20%, rgba(128,239,0,0.08), transparent 60%), radial-gradient(50% 50% at 90% 80%, rgba(128,239,0,0.06), transparent 60%)', pointerEvents: 'none' }} />
-        <Page>
-          <div className="lm-hero-inner" style={{ position: 'relative', display: 'grid', gridTemplateColumns: '1.1fr 1fr', gap: 60, alignItems: 'center' }}>
+      <header style={{ position: 'relative', padding: '80px 0 8px', overflow: 'hidden' }}>
+        {/* Glow background */}
+        <div style={{
+          position: 'absolute', inset: 0, pointerEvents: 'none',
+          background: 'radial-gradient(600px 400px at 85% 10%, rgba(128,239,0,0.08), transparent 60%), radial-gradient(400px 300px at 10% 90%, rgba(128,239,0,0.04), transparent 60%)',
+        }} />
+        <Page style={{ position: 'relative', zIndex: 1 }}>
+          <div className="lm-hero-inner" style={{
+            display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 60,
+            alignItems: 'center',
+          }}>
+            {/* Copy */}
             <div>
+              {/* Kicker badge */}
+              <span style={{
+                display: 'inline-flex', alignItems: 'center', gap: 10,
+                padding: '6px 12px', border: '1px solid rgba(128,239,0,0.25)',
+                background: 'rgba(128,239,0,0.10)', borderRadius: 100,
+                fontFamily: mono, fontSize: 11, letterSpacing: '0.14em',
+                textTransform: 'uppercase' as const, color: C.green, marginBottom: 28,
+              }}>
+                <span style={{ width: 6, height: 6, borderRadius: '50%', background: C.green, boxShadow: `0 0 12px ${C.green}` }} />
+                Mentoria com software · <b style={{ marginLeft: 4 }}>6 meses</b>
+              </span>
 
-              <h2 className="font-paradise" style={{ fontSize: 'clamp(36px,4.7vw,68px)', lineHeight: 1.05, letterSpacing: '-0.03em', fontWeight: 700, margin: '0 0 24px' }}>
-                Sua empresa fatura bem. Mas você não faz ideia de quanto realmente sobra.
-              </h2>
-              <p style={{ fontSize: 19, lineHeight: 1.5, color: C.textDim, maxWidth: 560, margin: '0 0 32px', fontFamily: sans }}>
-                Em 30 dias você tem controle do financeiro da empresa. Você foca em vender e deixa a parte chata dos números com a gente.
+              {/* H1 com Chantal pontual */}
+              <h1 className="font-paradise" style={{
+                fontWeight: 700,
+                fontSize: 'clamp(36px, 4.5vw, 60px)',
+                lineHeight: 1.05,
+                margin: 0, color: C.text,
+              }}>
+                Você fatura.<br />Mas quanto<br />realmente{' '}
+                <span style={{ fontFamily: chantal, color: C.green, fontSize: '0.85em' }}>sobra</span>?
+              </h1>
+
+              {/* Subtítulo */}
+              <p style={{ marginTop: 28, fontSize: 19, color: C.textDim, maxWidth: 520, lineHeight: 1.55, fontFamily: sans }}>
+                Em 30 dias você tem <b style={{ color: C.text, fontWeight: 600 }}>controle do financeiro</b>. Você foca em vender e deixa a parte chata dos números com a gente.
               </p>
-              <div style={{ width: 80, height: 3, background: C.green, marginTop: 32, marginBottom: 48 }} />
+
+              {/* CTA primário */}
+              <div style={{ marginTop: 36 }}>
+                <BtnPrimary href="#aplicar" lg>
+                  <span style={{ fontFamily: sans }}>Quero implementar o ATLAS <span style={{ fontFamily: mono }}>→</span></span>
+                </BtnPrimary>
+              </div>
             </div>
-            <div className="lm-hero-visual" style={{ position: 'relative' }}>
-              <div style={{ fontFamily: mono, fontSize: 10, color: C.textMute, letterSpacing: '0.2em', textTransform: 'uppercase', position: 'absolute', top: 8, left: 0 }}>BS / 001</div>
-              <div style={{ fontFamily: mono, fontSize: 10, color: C.textMute, letterSpacing: '0.2em', textTransform: 'uppercase', position: 'absolute', top: 8, right: 0, textAlign: 'right' }}>GESTÃO · FINANÇAS<br />PROCESSOS · LUCRO</div>
-              <div style={{ position: 'absolute', inset: '10% 5%', borderRadius: '50%', background: 'radial-gradient(closest-side, rgba(128,239,0,0.30), transparent 70%)', filter: 'blur(30px)' }} />
-              <img src="/atlas-mascot.jpg" alt="ATLAS — sistema financeiro Black Sheep" style={{ position: 'relative', width: '100%', height: 'auto', filter: 'drop-shadow(0 40px 80px rgba(255,255,255,0.08))' }} />
+
+            {/* Visual com mascote */}
+            <div className="lm-hero-visual" style={{ position: 'relative', display: 'flex', alignItems: 'flex-end', justifyContent: 'center', minHeight: 460 }}>
+              {/* Tag superior esquerda */}
+              <div style={{ position: 'absolute', top: 20, left: 20, fontFamily: mono, fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase' as const, color: C.textMute, zIndex: 3, opacity: 0.5 }}>
+                BS / 001<br />MENTORIA · ATLAS
+              </div>
+              {/* Tag superior direita */}
+              <div style={{ position: 'absolute', top: 20, right: 20, textAlign: 'right' as const, fontFamily: mono, fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase' as const, color: C.textMute, zIndex: 3, opacity: 0.5 }}>
+                GESTÃO · FINANÇAS<br />PROCESSOS · LUCRO
+              </div>
+              {/* Imagem */}
+              <img
+                src="/atlas-mascot.jpg"
+                alt="ATLAS — sistema financeiro Black Sheep"
+                style={{ width: '100%', maxWidth: 560, position: 'relative', zIndex: 2, filter: 'drop-shadow(0 40px 80px rgba(255,255,255,0.08))' }}
+              />
             </div>
           </div>
         </Page>
-      </section>
+      </header>
 
       {/* ── MARQUEE ── */}
       <div className="lm-marquee" style={{ borderTop: `1px solid ${C.border}`, borderBottom: `1px solid ${C.border}`, background: C.bgRaised, overflow: 'hidden', padding: '18px 0' }}>
