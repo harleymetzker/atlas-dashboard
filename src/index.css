@@ -162,3 +162,49 @@
     transition: background-color 5000s ease-in-out 0s;
   }
 }
+
+/* ── Landing mobile br helper (oculto em desktop) ────────────────────────── */
+.lp-mobile-br { display: none; }
+
+/* ── Landing responsive — mobile (max 768px) ─────────────────────────────── */
+@media (max-width: 768px) {
+
+  /* P1 – mascote: limite de altura em mobile, texto fica primeiro pelo DOM */
+  .ls-hero-visual { max-height: 60vh !important; min-height: 200px !important; }
+  .ls-hero-img    { max-height: 55vh !important; object-fit: contain !important; }
+
+  /* P2 – header: sheep menor pra caber byline */
+  .lp-nav-sheep { height: 40px !important; }
+
+  /* P3 – todos os h2 com Paradise Point: tamanho mobile */
+  h2.font-paradise { font-size: clamp(28px, 7vw, 36px) !important; line-height: 1.15 !important; }
+
+  /* P4 – h1 hero */
+  .lp-hero-h1 { font-size: clamp(36px, 9vw, 48px) !important; line-height: 1.1 !important; }
+
+  /* P5 – overlay CTA mais forte em mobile */
+  .lp-cta-overlay {
+    background: radial-gradient(ellipse at center, rgba(0,0,0,0.98) 0%, rgba(0,0,0,0.92) 35%, rgba(0,0,0,0.6) 65%, rgba(0,0,0,0) 90%) !important;
+  }
+
+  /* P6 – cards de plano: padding-top e gap */
+  .ls-plans { gap: 32px !important; }
+  .ls-plan-monthly,
+  .ls-plan-annual  { padding-top: 32px !important; }
+  .lp-badge-chosen { top: 16px !important; }
+
+  /* P7 – headline final: tamanho e quebras manuais */
+  .lp-final-h2   { font-size: clamp(36px, 9vw, 52px) !important; line-height: 1.05 !important; }
+  .lp-mobile-br  { display: inline; }
+  .lp-claros     { font-size: 0.6em !important; }
+
+  /* P8 – truth card: borda mais suave */
+  .lp-truth-card { border-color: rgba(128, 239, 0, 0.5) !important; }
+
+  /* P9 – números das etapas */
+  .lp-step-num {
+    width: 64px !important; height: 64px !important;
+    font-size: 24px !important; border-radius: 14px !important;
+    margin-bottom: 28px !important;
+  }
+}

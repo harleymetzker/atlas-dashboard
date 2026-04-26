@@ -54,7 +54,7 @@ const GLOBAL_CSS = `
     .ls-wrap { padding: 0 24px !important; }
     .ls-hero { padding: 56px 0 8px !important; }
     .ls-hero-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
-    .ls-hero-visual { min-height: 360px !important; order: -1 !important; align-items: flex-end !important; }
+    .ls-hero-visual { min-height: 360px !important; align-items: flex-end !important; }
     .ls-hero-img { max-width: 340px !important; }
     .ls-problem-grid { grid-template-columns: 1fr !important; }
     .ls-step { grid-template-columns: 1fr !important; gap: 30px !important; padding: 40px 0 !important; }
@@ -66,11 +66,10 @@ const GLOBAL_CSS = `
     .ls-plan-annual  { order: 2 !important; padding: 24px !important; }
     .ls-precos { padding: 72px 0 !important; }
     .ls-vs-table-row { grid-template-columns: 30% 35% 35% !important; }
-    .ls-vs-table-row > div { font-size: 12px !important; padding: 8px !important; word-break: break-word !important; }
+    .ls-vs-table-row > div { font-size: 14px !important; padding: 12px !important; word-break: break-word !important; }
     .ls-vs-crit { background: ${bgRaised} !important; }
     .ls-section { padding: 72px 0 !important; }
     .ls-nav-links { display: none !important; }
-    .ls-byline { display: none !important; }
     .ls-foot-grid { flex-direction: column !important; align-items: flex-start !important; }
   }
 `
@@ -175,7 +174,7 @@ export function LandingSoftware() {
       {/* ── NAV ── */}
       <div style={{ background: green, width: '100%' }}>
         <div className="ls-wrap" style={{ maxWidth: 1240, margin: '0 auto', padding: '12px 48px', display: 'flex', alignItems: 'center', gap: 16 }}>
-          <img src="/blacksheep-sheep.png" alt="Black Sheep" style={{ height: 'clamp(52px, 5.5vw, 64px)', width: 'auto', display: 'block', flexShrink: 0 }} />
+          <img src="/blacksheep-sheep.png" alt="Black Sheep" className="lp-nav-sheep" style={{ height: 'clamp(52px, 5.5vw, 64px)', width: 'auto', display: 'block', flexShrink: 0 }} />
           <span style={{ fontFamily: sans, fontSize: 'clamp(24px, 2.5vw, 32px)', fontWeight: 800, letterSpacing: 2, color: '#000', whiteSpace: 'nowrap' as const }}>ATLAS</span>
           <span style={{ width: 1, height: 20, background: 'rgba(0,0,0,0.25)', flexShrink: 0, margin: '0 4px' }} />
           <span className="ls-byline" style={{ display: 'flex', alignItems: 'center', gap: 5, whiteSpace: 'nowrap' as const }}>
@@ -209,7 +208,7 @@ export function LandingSoftware() {
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: green, boxShadow: `0 0 12px ${green}` }} />
               Gestão financeira <b style={{ marginLeft: 4 }}>sem planilha</b>
             </span>
-            <h1 className="font-paradise" style={{
+            <h1 className="font-paradise lp-hero-h1" style={{
               fontWeight: 700,
               fontSize: 'clamp(40px, 5.2vw, 72px)',
               lineHeight: 1,
@@ -305,7 +304,7 @@ export function LandingSoftware() {
               </div>
             ))}
           </div>
-          <div style={{
+          <div className="lp-truth-card" style={{
             marginTop: 56, padding: 40,
             border: `1px solid ${green}`, borderRadius: 20,
             background: 'linear-gradient(135deg, rgba(128,239,0,0.06), transparent 70%)',
@@ -337,6 +336,7 @@ export function LandingSoftware() {
         />
         {/* Radial overlay for readability */}
         <div
+          className="lp-cta-overlay"
           style={{
             position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
             pointerEvents: 'none', zIndex: 1,
@@ -405,7 +405,7 @@ export function LandingSoftware() {
               borderBottom: num !== '03' ? `1px solid ${border}` : 'none',
             }}>
               <div className={reverse ? 'ls-step-copy-order' : ''} style={{ maxWidth: 460, order: reverse ? 2 : 0 }}>
-                <div style={{
+                <div className="lp-step-num" style={{
                   display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
                   width: 44, height: 44, border: `1px solid ${borderSt}`, borderRadius: 10,
                   fontFamily: mono, fontSize: 14, fontWeight: 600, color: green, marginBottom: 20,
@@ -668,7 +668,7 @@ export function LandingSoftware() {
               border: `2px solid ${green}`, borderRadius: 20, padding: 36, position: 'relative',
               boxShadow: `0 0 0 1px ${green}, 0 30px 80px rgba(128,239,0,0.08)`,
             }}>
-              <div style={{
+              <div className="lp-badge-chosen" style={{
                 position: 'absolute', top: -12, right: 24,
                 background: green, color: '#000',
                 fontFamily: mono, fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase',
@@ -734,12 +734,12 @@ export function LandingSoftware() {
           background: 'radial-gradient(700px 500px at 50% 50%, rgba(128,239,0,0.08), transparent 60%)',
         }} />
         <div className="ls-wrap" style={{ maxWidth: 1240, margin: '0 auto', padding: '0 40px', position: 'relative', zIndex: 1 }}>
-          <h2 className="font-paradise" style={{
+          <h2 className="font-paradise lp-final-h2" style={{
             fontSize: 'clamp(42px,6vw,86px)', fontWeight: 800,
             lineHeight: 0.95,
             margin: '0 auto 22px', maxWidth: 900,
           }}>
-            Lucro previsível começa com <span style={{ color: green, fontStyle: 'normal' }}>números <span style={{ fontFamily: chantal, fontSize: '0.88em' }}>claros</span></span>.
+            Lucro previsível{' '}<span className="lp-mobile-br"><br /></span>começa com{' '}<span className="lp-mobile-br"><br /></span>números <span style={{ color: green, fontStyle: 'normal' }}><span className="lp-claros" style={{ fontFamily: chantal, fontSize: '0.88em' }}>claros</span></span>.
           </h2>
           <p style={{ color: textDim, fontSize: 19, maxWidth: 560, margin: '0 auto 36px', lineHeight: 1.55, fontFamily: sans }}>
             Em 5 minutos você tem DRE, fluxo de caixa e diagnóstico do seu negócio. Sem planilha. Sem curso. Sem enrolação.
