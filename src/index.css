@@ -224,7 +224,8 @@
   .ls-plan-annual { padding-top: 32px !important; }
   .lp-final-h2    { font-size: clamp(36px, 9vw, 52px) !important; line-height: 1.05 !important; }
   .lp-mobile-br   { display: inline; }
-  .lp-claros      { font-size: 0.6em !important; }
   .lp-truth-card  { border-color: rgba(128, 239, 0, 0.5) !important; }
+  /* lp-final-claros depois de lp-claros pra garantir que vence em cascata */
+  .lp-final-claros { font-size: 1.15em !important; line-height: 1.0 !important; display: inline-block !important; transform: translateY(0.05em) !important; }
   .lp-step-num    { width: 64px !important; height: 64px !important; font-size: 24px !important; border-radius: 14px !important; margin-bottom: 28px !important; }
 }
