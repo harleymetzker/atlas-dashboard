@@ -184,7 +184,7 @@
   }
 
   /* A2 – "claros" Chantal no headline final: mesmo tamanho do título */
-  .lp-final-claros { font-size: 1em !important; line-height: 1.0 !important; display: inline-block !important; transform: translateY(0.05em) !important; }
+  .lp-final-claros { font-size: 1.15em !important; line-height: 1.0 !important; display: inline-block !important; transform: translateY(0.05em) !important; }
 
   /* A3 – badge "MAIS ESCOLHIDO" dentro do card, não cortando */
   .lp-badge-mais-escolhido { top: 12px !important; right: 16px !important; transform: none !important; }
