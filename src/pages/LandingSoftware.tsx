@@ -218,7 +218,7 @@ export function LandingSoftware() {
               financeira{' '}
               <span style={{ fontFamily: chantal, color: green, fontSize: '0.7em', whiteSpace: 'nowrap' }}>do zero</span>.
             </h1>
-            <p style={{ marginTop: 28, fontSize: 19, color: textDim, maxWidth: 520, lineHeight: 1.55, fontFamily: sans }}>
+            <p className="lp-hero-sub" style={{ marginTop: 28, fontSize: 19, color: textDim, maxWidth: 520, lineHeight: 1.55, fontFamily: sans }}>
               Preencha seus <b style={{ color: text, fontWeight: 600 }}>gastos e receitas</b>. O ATLAS te devolve{' '}
               <b style={{ color: text, fontWeight: 600 }}>DRE, DFC e fluxo de caixa projetado</b> — tudo pronto. Nenhum curso. Nenhuma planilha. Nenhuma complicação.
             </p>
@@ -233,7 +233,7 @@ export function LandingSoftware() {
               <b style={{ color: green, fontWeight: 500 }}>● LIVE</b><br />MAR / 2026
             </div>
             <img
-              className="ls-hero-img"
+              className="ls-hero-img lp-hero-mascot"
               src="/atlas-mascot.jpg"
               alt="ATLAS — sistema financeiro Black Sheep"
               style={{ width: '100%', maxWidth: 560, position: 'relative', zIndex: 2, filter: 'drop-shadow(0 40px 80px rgba(255,255,255,0.08))' }}
@@ -273,7 +273,7 @@ export function LandingSoftware() {
             <span style={{ fontFamily: mono, fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: red, display: 'block', marginBottom: 16 }}>
               O problema
             </span>
-            <h2 className="font-paradise" style={{ fontSize: 'clamp(32px,4vw,52px)', fontWeight: 700, lineHeight: 1.05, margin: '0 0 18px' }}>
+            <h2 className="font-paradise lp-h2" style={{ fontSize: 'clamp(32px,4vw,52px)', fontWeight: 700, lineHeight: 1.05, margin: '0 0 18px' }}>
               Você abriu o negócio pra vender, não pra virar contador.
             </h2>
             <p style={{ fontSize: 18, color: textDim, lineHeight: 1.55, fontFamily: sans, margin: 0 }}>
@@ -336,7 +336,7 @@ export function LandingSoftware() {
         />
         {/* Radial overlay for readability */}
         <div
-          className="lp-cta-overlay"
+          className="lp-cta-overlay lp-cta-mid-overlay"
           style={{
             position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
             pointerEvents: 'none', zIndex: 1,
@@ -346,7 +346,7 @@ export function LandingSoftware() {
         />
         {/* Content */}
         <div className="ls-wrap" style={{ position: 'relative', zIndex: 10, maxWidth: 1240, margin: '0 auto', padding: '0 40px' }}>
-          <h2 className="font-paradise" style={{ fontSize: 'clamp(24px,3vw,32px)', fontWeight: 600, color: text, marginBottom: 24 }}>
+          <h2 className="font-paradise lp-h2" style={{ fontSize: 'clamp(24px,3vw,32px)', fontWeight: 600, color: text, marginBottom: 24 }}>
             Pronto pra parar de gerir no achismo?
           </h2>
           <a
@@ -370,7 +370,7 @@ export function LandingSoftware() {
             <span style={{ fontFamily: mono, fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: green, display: 'block', marginBottom: 16 }}>
               Como funciona
             </span>
-            <h2 className="font-paradise" style={{ fontSize: 'clamp(32px,4vw,52px)', fontWeight: 700, lineHeight: 1.05, margin: '0 0 18px' }}>
+            <h2 className="font-paradise lp-h2" style={{ fontSize: 'clamp(32px,4vw,52px)', fontWeight: 700, lineHeight: 1.05, margin: '0 0 18px' }}>
               Três passos. Zero planilha.
             </h2>
             <p style={{ fontSize: 18, color: textDim, lineHeight: 1.55, fontFamily: sans, margin: 0 }}>
@@ -468,7 +468,7 @@ export function LandingSoftware() {
             <span style={{ fontFamily: mono, fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: green, display: 'block', marginBottom: 16 }}>
               Diagnóstico IA — incluso
             </span>
-            <h2 className="font-paradise" style={{ fontSize: 'clamp(32px,4vw,52px)', fontWeight: 700, lineHeight: 1.05, margin: '18px 0 20px' }}>
+            <h2 className="font-paradise lp-h2" style={{ fontSize: 'clamp(32px,4vw,52px)', fontWeight: 700, lineHeight: 1.05, margin: '18px 0 20px' }}>
               Um <span style={{ color: green }}>sócio financeiro</span> pra ler seus números.
             </h2>
             <p style={{ color: textDim, fontSize: 17, lineHeight: 1.6, margin: '0 0 16px', maxWidth: 500, fontFamily: sans }}>
@@ -549,16 +549,16 @@ export function LandingSoftware() {
             <span style={{ fontFamily: mono, fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: textMute, display: 'block', marginBottom: 16 }}>
               ATLAS vs. o que você usa hoje
             </span>
-            <h2 className="font-paradise" style={{ fontSize: 'clamp(32px,4vw,52px)', fontWeight: 700, lineHeight: 1.05, margin: 0 }}>
+            <h2 className="font-paradise lp-h2" style={{ fontSize: 'clamp(32px,4vw,52px)', fontWeight: 700, lineHeight: 1.05, margin: 0 }}>
               Uma coisa é planilha.<br />Outra é gestão.
             </h2>
           </div>
-          <div style={{ maxWidth: 1000, margin: '0 auto', border: `1px solid ${borderSt}`, borderRadius: radius, overflow: 'hidden', background: bgCard }}>
+          <div className="lp-comparison-table" style={{ maxWidth: 1000, margin: '0 auto', border: `1px solid ${borderSt}`, borderRadius: radius, overflow: 'hidden', background: bgCard }}>
             {/* Header row */}
             <div className="ls-vs-table-row" style={{ display: 'grid', gridTemplateColumns: '1.3fr 1fr 1fr', alignItems: 'center', background: '#000', borderBottom: `1px solid ${borderSt}` }}>
-              <div style={{ padding: '20px 24px', fontFamily: mono, fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase', color: textMute }}>Critério</div>
-              <div style={{ padding: '20px 24px', borderLeft: `1px solid ${border}`, fontFamily: mono, fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase', color: textMute }}>Planilha / caderno</div>
-              <div style={{ padding: '20px 24px', borderLeft: `1px solid ${border}`, fontFamily: mono, fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase', color: green, fontWeight: 600 }}>ATLAS</div>
+              <div className="col-criterio" style={{ padding: '20px 24px', fontFamily: mono, fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase', color: textMute }}>Critério</div>
+              <div className="col-planilha" style={{ padding: '20px 24px', borderLeft: `1px solid ${border}`, fontFamily: mono, fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase', color: textMute }}>Planilha / caderno</div>
+              <div className="col-atlas" style={{ padding: '20px 24px', borderLeft: `1px solid ${border}`, fontFamily: mono, fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase', color: green, fontWeight: 600 }}>ATLAS</div>
             </div>
             {/* Data rows */}
             {[
@@ -573,11 +573,11 @@ export function LandingSoftware() {
                 display: 'grid', gridTemplateColumns: '1.3fr 1fr 1fr',
                 alignItems: 'center', borderBottom: i < 5 ? `1px solid ${border}` : 'none',
               }}>
-                <div className="ls-vs-crit" style={{ padding: '20px 24px', fontSize: 14.5, fontWeight: 500, color: text, fontFamily: sans }}>{crit}</div>
-                <div style={{ padding: '20px 24px', fontSize: 14.5, color: textMute, borderLeft: `1px solid ${border}`, fontFamily: sans }}>
+                <div className="ls-vs-crit col-criterio" style={{ padding: '20px 24px', fontSize: 14.5, fontWeight: 500, color: text, fontFamily: sans }}>{crit}</div>
+                <div className="col-planilha" style={{ padding: '20px 24px', fontSize: 14.5, color: textMute, borderLeft: `1px solid ${border}`, fontFamily: sans }}>
                   <span style={{ color: red, marginRight: 8, fontWeight: 700 }}>✕</span>{planilha}
                 </div>
-                <div style={{ padding: '20px 24px', fontSize: 14.5, color: text, borderLeft: `1px solid ${border}`, background: 'rgba(128,239,0,0.10)', fontFamily: sans }}>
+                <div className="col-atlas" style={{ padding: '20px 24px', fontSize: 14.5, color: text, borderLeft: `1px solid ${border}`, background: 'rgba(128,239,0,0.10)', fontFamily: sans }}>
                   <span style={{ color: green, marginRight: 8, fontWeight: 700 }}>✓</span>{atlasText}
                 </div>
               </div>
@@ -596,7 +596,7 @@ export function LandingSoftware() {
             <span style={{ fontFamily: mono, fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: textMute, display: 'block', marginBottom: 16 }}>
               FAQ
             </span>
-            <h2 className="font-paradise" style={{ fontSize: 'clamp(32px,4vw,52px)', fontWeight: 700, lineHeight: 1.05, margin: 0 }}>
+            <h2 className="font-paradise lp-h2" style={{ fontSize: 'clamp(32px,4vw,52px)', fontWeight: 700, lineHeight: 1.05, margin: 0 }}>
               Perguntas que chegam direto.
             </h2>
           </div>
@@ -619,7 +619,7 @@ export function LandingSoftware() {
             <span style={{ fontFamily: mono, fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: green, display: 'block', marginBottom: 16 }}>
               Preço
             </span>
-            <h2 id="precos-title" className="font-paradise" style={{ fontSize: 'clamp(32px,4vw,52px)', fontWeight: 700, lineHeight: 1.05, margin: '0 0 18px' }}>
+            <h2 id="precos-title" className="font-paradise lp-h2" style={{ fontSize: 'clamp(32px,4vw,52px)', fontWeight: 700, lineHeight: 1.05, margin: '0 0 18px' }}>
               Escolha como quer começar.
             </h2>
             <p style={{ fontSize: 18, color: textDim, lineHeight: 1.55, fontFamily: sans, margin: 0 }}>
@@ -663,12 +663,12 @@ export function LandingSoftware() {
               </ul>
             </div>
             {/* Anual (featured) */}
-            <div className="ls-plan-annual" style={{
+            <div className="ls-plan-annual lp-plan-card-anual" style={{
               background: `linear-gradient(180deg, rgba(128,239,0,0.04), transparent 40%), ${bgCard}`,
               border: `2px solid ${green}`, borderRadius: 20, padding: 36, position: 'relative',
               boxShadow: `0 0 0 1px ${green}, 0 30px 80px rgba(128,239,0,0.08)`,
             }}>
-              <div className="lp-badge-chosen" style={{
+              <div className="lp-badge-chosen lp-badge-mais-escolhido" style={{
                 position: 'absolute', top: -12, right: 24,
                 background: green, color: '#000',
                 fontFamily: mono, fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase',
@@ -734,12 +734,12 @@ export function LandingSoftware() {
           background: 'radial-gradient(700px 500px at 50% 50%, rgba(128,239,0,0.08), transparent 60%)',
         }} />
         <div className="ls-wrap" style={{ maxWidth: 1240, margin: '0 auto', padding: '0 40px', position: 'relative', zIndex: 1 }}>
-          <h2 className="font-paradise lp-final-h2" style={{
+          <h2 className="font-paradise lp-final-h2 lp-final-headline" style={{
             fontSize: 'clamp(42px,6vw,86px)', fontWeight: 800,
             lineHeight: 0.95,
             margin: '0 auto 22px', maxWidth: 900,
           }}>
-            Lucro previsível{' '}<span className="lp-mobile-br"><br /></span>começa com{' '}<span className="lp-mobile-br"><br /></span>números <span style={{ color: green, fontStyle: 'normal' }}><span className="lp-claros" style={{ fontFamily: chantal, fontSize: '0.88em' }}>claros</span></span>.
+            Lucro previsível{' '}<span className="lp-mobile-br"><br /></span>começa com{' '}<span className="lp-mobile-br"><br /></span>números <span style={{ color: green, fontStyle: 'normal' }}><span className="lp-claros lp-final-claros" style={{ fontFamily: chantal, fontSize: '0.88em' }}>claros</span></span>.
           </h2>
           <p style={{ color: textDim, fontSize: 19, maxWidth: 560, margin: '0 auto 36px', lineHeight: 1.55, fontFamily: sans }}>
             Em 5 minutos você tem DRE, fluxo de caixa e diagnóstico do seu negócio. Sem planilha. Sem curso. Sem enrolação.
