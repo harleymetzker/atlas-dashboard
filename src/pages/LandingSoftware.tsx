@@ -51,9 +51,9 @@ const GLOBAL_CSS = `
   .ls-foot-link:hover { color: ${text}; }
   @media (max-width: 900px) {
     .ls-wrap { padding: 0 24px !important; }
-    .ls-hero { padding: 56px 0 80px !important; }
+    .ls-hero { padding: 56px 0 8px !important; }
     .ls-hero-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
-    .ls-hero-visual { min-height: 360px !important; order: -1 !important; }
+    .ls-hero-visual { min-height: 360px !important; order: -1 !important; align-items: flex-end !important; }
     .ls-hero-img { max-width: 340px !important; }
     .ls-problem-grid { grid-template-columns: 1fr !important; }
     .ls-step { grid-template-columns: 1fr !important; gap: 30px !important; padding: 40px 0 !important; }
@@ -185,7 +185,7 @@ export function LandingSoftware() {
       </div>
 
       {/* ── HERO ── */}
-      <header className="ls-hero" style={{ position: 'relative', padding: '80px 0 120px', overflow: 'hidden' }}>
+      <header className="ls-hero" style={{ position: 'relative', padding: '80px 0 8px', overflow: 'hidden' }}>
         {/* glow bg */}
         <div style={{
           position: 'absolute', inset: 0, pointerEvents: 'none',
@@ -229,13 +229,7 @@ export function LandingSoftware() {
             <div style={{ marginTop: 48 }} />
           </div>
           {/* Visual */}
-          <div className="ls-hero-visual" style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 520 }}>
-            <div style={{
-              position: 'absolute', width: 420, height: 420,
-              top: '50%', left: '50%', transform: 'translate(-50%,-50%)',
-              background: 'radial-gradient(circle, rgba(128,239,0,0.14), transparent 60%)',
-              zIndex: 1,
-            }} />
+          <div className="ls-hero-visual" style={{ position: 'relative', display: 'flex', alignItems: 'flex-end', justifyContent: 'center', minHeight: 460 }}>
             <div style={{ position: 'absolute', top: 20, left: 20, fontFamily: mono, fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: textMute, zIndex: 3 }}>
               BLACK SHEEP<br />FINANCIAL OS — v1.0
             </div>
@@ -244,9 +238,9 @@ export function LandingSoftware() {
             </div>
             <img
               className="ls-hero-img"
-              src="/atlas/atlas-hero.png"
-              alt="ATLAS — a ovelha carrega o mundo financeiro do seu negócio"
-              style={{ width: '100%', maxWidth: 560, position: 'relative', zIndex: 2, filter: 'drop-shadow(0 40px 80px rgba(128,239,0,0.12))' }}
+              src="/atlas-mascot.jpg"
+              alt="ATLAS — sistema financeiro Black Sheep"
+              style={{ width: '100%', maxWidth: 560, position: 'relative', zIndex: 2, filter: 'drop-shadow(0 40px 80px rgba(255,255,255,0.08))' }}
             />
           </div>
         </div>
