@@ -152,11 +152,14 @@ export function LandingMentoria() {
 
       {/* ── NAV ── */}
       <div style={{ background: C.green, width: '100%' }}>
-        <div className="lm-nav-inner" style={{ maxWidth: 1240, margin: '0 auto', padding: '15px 48px', display: 'flex', alignItems: 'center', gap: 16 }}>
-          <img src="/blacksheep-logo.png" alt="Black Sheep" style={{ height: 60, display: 'block', flexShrink: 0 }} />
-          <span style={{ fontFamily: sans, fontSize: 'clamp(20px,2.5vw,28px)', fontWeight: 900, letterSpacing: 4, color: '#000', whiteSpace: 'nowrap' as const }}>ATLAS</span>
-          <span style={{ width: 1, height: 32, background: 'rgba(0,0,0,0.3)', flexShrink: 0, margin: '0 4px' }} />
-          <span style={{ fontFamily: sans, fontSize: 'clamp(10px,1.2vw,13px)', fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase' as const, color: '#000', whiteSpace: 'nowrap' as const }}>BY BLACK SHEEP</span>
+        <div className="lp-header" style={{ maxWidth: 1240, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 16 }}>
+          <img src="/blacksheep-sheep.png" alt="Black Sheep" className="lp-nav-sheep" style={{ height: 'clamp(52px, 5.5vw, 64px)', width: 'auto', display: 'block', flexShrink: 0 }} />
+          <span style={{ fontFamily: sans, fontSize: 'clamp(24px, 2.5vw, 32px)', fontWeight: 800, letterSpacing: 2, color: '#000', whiteSpace: 'nowrap' as const }}>ATLAS</span>
+          <span style={{ width: 1, height: 20, background: 'rgba(0,0,0,0.25)', flexShrink: 0, margin: '0 4px' }} />
+          <span className="ls-byline" style={{ display: 'flex', alignItems: 'center', gap: 5, whiteSpace: 'nowrap' as const }}>
+            <span style={{ fontFamily: sans, fontSize: 14, fontWeight: 400, color: 'rgba(0,0,0,0.65)' }}>by </span>
+            <img src="/blacksheep-wordmark.png" alt="Black Sheep" style={{ height: 22, width: 'auto', display: 'block' }} />
+          </span>
         </div>
       </div>
 
@@ -179,7 +182,7 @@ export function LandingMentoria() {
               <div style={{ fontFamily: mono, fontSize: 10, color: C.textMute, letterSpacing: '0.2em', textTransform: 'uppercase', position: 'absolute', top: 8, left: 0 }}>BS / 001</div>
               <div style={{ fontFamily: mono, fontSize: 10, color: C.textMute, letterSpacing: '0.2em', textTransform: 'uppercase', position: 'absolute', top: 8, right: 0, textAlign: 'right' }}>GESTÃO · FINANÇAS<br />PROCESSOS · LUCRO</div>
               <div style={{ position: 'absolute', inset: '10% 5%', borderRadius: '50%', background: 'radial-gradient(closest-side, rgba(128,239,0,0.30), transparent 70%)', filter: 'blur(30px)' }} />
-              <img src="/lp/atlas-hero.png" alt="Mascote Atlas da Black Sheep" style={{ position: 'relative', width: '100%', height: 'auto', filter: 'drop-shadow(0 30px 60px rgba(128,239,0,0.25))' }} />
+              <img src="/atlas-mascot.jpg" alt="ATLAS — sistema financeiro Black Sheep" style={{ position: 'relative', width: '100%', height: 'auto', filter: 'drop-shadow(0 40px 80px rgba(255,255,255,0.08))' }} />
             </div>
           </div>
         </Page>
