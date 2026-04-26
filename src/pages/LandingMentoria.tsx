@@ -106,7 +106,7 @@ function SecHead({ kicker, kickerRed, title, sub, children }: {
       <div style={{ fontFamily: sans, fontSize: 12, letterSpacing: '0.18em', textTransform: 'uppercase', color: kickerRed ? C.red : C.green, marginBottom: 18 }}>
         {kicker}
       </div>
-      <h2 style={{ fontSize: 'clamp(32px,4vw,52px)', lineHeight: 1.05, letterSpacing: '-0.03em', fontWeight: 700, margin: '0 0 16px', fontFamily: sans }}>
+      <h2 className="font-paradise" style={{ fontSize: 'clamp(32px,4vw,52px)', lineHeight: 1.05, letterSpacing: '-0.03em', fontWeight: 700, margin: '0 0 16px' }}>
         {title}
       </h2>
       {sub && <p style={{ fontSize: 18, color: C.textDim, lineHeight: 1.5, maxWidth: 680, margin: '0 auto', fontFamily: sans }}>{sub}</p>}
@@ -170,7 +170,7 @@ export function LandingMentoria() {
           <div className="lm-hero-inner" style={{ position: 'relative', display: 'grid', gridTemplateColumns: '1.1fr 1fr', gap: 60, alignItems: 'center' }}>
             <div>
 
-              <h2 style={{ fontSize: 'clamp(36px,4.7vw,68px)', lineHeight: 1.05, letterSpacing: '-0.03em', fontWeight: 700, margin: '0 0 24px', fontFamily: sans }}>
+              <h2 className="font-paradise" style={{ fontSize: 'clamp(36px,4.7vw,68px)', lineHeight: 1.05, letterSpacing: '-0.03em', fontWeight: 700, margin: '0 0 24px' }}>
                 Sua empresa fatura bem. Mas você não faz ideia de quanto realmente sobra.
               </h2>
               <p style={{ fontSize: 19, lineHeight: 1.5, color: C.textDim, maxWidth: 560, margin: '0 0 32px', fontFamily: sans }}>
@@ -499,7 +499,7 @@ export function LandingMentoria() {
         <Page>
           <div style={{ textAlign: 'center', maxWidth: 820, margin: '0 auto' }}>
             <div style={{ fontFamily: sans, fontSize: 12, letterSpacing: '0.18em', textTransform: 'uppercase', color: C.green, marginBottom: 18 }}>§ 07 · A real</div>
-            <h2 style={{ fontSize: 'clamp(32px,4vw,52px)', lineHeight: 1.05, letterSpacing: '-0.03em', fontWeight: 700, margin: '0 0 24px', fontFamily: sans }}>
+            <h2 className="font-paradise" style={{ fontSize: 'clamp(32px,4vw,52px)', lineHeight: 1.05, letterSpacing: '-0.03em', fontWeight: 700, margin: '0 0 24px' }}>
               Sem controle financeiro, um mês ruim de tráfego derruba tudo.
             </h2>
             <p style={{ fontSize: 18, color: C.textDim, lineHeight: 1.55, maxWidth: 680, margin: '0 auto', fontFamily: sans }}>
@@ -617,7 +617,7 @@ export function LandingMentoria() {
       <section id="aplicar" style={{ position: 'relative', padding: '140px 0', textAlign: 'center', overflow: 'hidden' }}>
         <div style={{ content: '', position: 'absolute', inset: 0, background: 'radial-gradient(40% 60% at 50% 50%, rgba(128,239,0,0.15), transparent 70%)', pointerEvents: 'none' }} />
         <Page style={{ position: 'relative' }}>
-          <h2 style={{ position: 'relative', fontSize: 'clamp(44px,6vw,92px)', fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 1.02, margin: '0 auto 32px', maxWidth: '18ch', fontFamily: sans }}>
+          <h2 className="font-paradise" style={{ position: 'relative', fontSize: 'clamp(44px,6vw,92px)', fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 1.02, margin: '0 auto 32px', maxWidth: '18ch' }}>
             Chega de gerir no <em style={{ fontStyle: 'italic', color: C.green, fontWeight: 700 }}>achismo.</em>
           </h2>
           <p style={{ position: 'relative', fontSize: 19, color: C.textDim, maxWidth: 720, margin: '0 auto 32px', lineHeight: 1.5, fontFamily: sans }}>
