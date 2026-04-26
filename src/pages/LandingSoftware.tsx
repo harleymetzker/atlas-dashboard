@@ -739,7 +739,7 @@ export function LandingSoftware() {
             lineHeight: 0.95,
             margin: '0 auto 22px', maxWidth: 900,
           }}>
-            Lucro previsível{' '}<span className="lp-mobile-br"><br /></span>começa com números{' '}<span className="lp-mobile-br"><br /></span><span style={{ color: green, fontStyle: 'normal' }}><span className="lp-claros lp-final-claros" style={{ fontFamily: chantal, fontSize: '0.88em' }}>claros</span></span>.
+            Lucro previsível{' '}<span className="lp-mobile-br"><br /></span>começa com números{' '}<span className="lp-mobile-br"><br /></span><span style={{ color: green, fontStyle: 'normal' }}><span className="lp-claros lp-final-claros" style={{ fontFamily: chantal }}>claros</span></span>.
           </h2>
           <p style={{ color: textDim, fontSize: 19, maxWidth: 560, margin: '0 auto 36px', lineHeight: 1.55, fontFamily: sans }}>
             Em 5 minutos você tem DRE, fluxo de caixa e diagnóstico do seu negócio. Sem planilha. Sem curso. Sem enrolação.

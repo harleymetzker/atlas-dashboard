@@ -166,6 +166,9 @@
 /* ── Landing header ──────────────────────────────────────────────────────── */
 .lp-header { padding: 12px 48px; }
 
+/* ── Landing final claros (desktop) ─────────────────────────────────────── */
+.lp-final-claros { font-size: 0.88em; }
+
 /* ── Landing mobile br helper (oculto em desktop) ────────────────────────── */
 .lp-mobile-br { display: none; }
 
