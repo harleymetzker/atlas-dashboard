@@ -20,6 +20,7 @@ const radius   = 14
 
 const sans = "'Open Sans', -apple-system, system-ui, sans-serif"
 const mono = "'Geist Mono', ui-monospace, monospace"
+const chantal = "'Chantal', cursive"
 
 // ── CSS-in-JS global styles injected once ─────────────────────────────────────
 
@@ -208,19 +209,15 @@ export function LandingSoftware() {
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: green, boxShadow: `0 0 12px ${green}` }} />
               Gestão financeira <b style={{ marginLeft: 4 }}>sem planilha</b>
             </span>
-            <h1 style={{
-              fontFamily: sans, fontWeight: 700,
+            <h1 className="font-paradise" style={{
+              fontWeight: 700,
               fontSize: 'clamp(40px, 5.2vw, 72px)',
-              lineHeight: 1, letterSpacing: '-0.035em',
+              lineHeight: 1,
               margin: 0, color: text,
             }}>
-              Você{' '}
-              <span style={{ textDecoration: 'line-through', textDecorationColor: red, textDecorationThickness: 4, color: textMute, fontWeight: 500 }}>
-                não precisa
-              </span>
-              <br />aprender gestão<br />
+              Você não precisa<br />aprender gestão<br />
               financeira{' '}
-              <span style={{ color: green }}>do zero.</span>
+              <span style={{ fontFamily: chantal, color: green, fontSize: '0.7em', whiteSpace: 'nowrap' }}>do zero</span>.
             </h1>
             <p style={{ marginTop: 28, fontSize: 19, color: textDim, maxWidth: 520, lineHeight: 1.55, fontFamily: sans }}>
               Preencha seus <b style={{ color: text, fontWeight: 600 }}>gastos e receitas</b>. O ATLAS te devolve{' '}
@@ -277,7 +274,7 @@ export function LandingSoftware() {
             <span style={{ fontFamily: mono, fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: red, display: 'block', marginBottom: 16 }}>
               O problema
             </span>
-            <h2 style={{ fontSize: 'clamp(32px,4vw,52px)', fontWeight: 700, letterSpacing: '-0.03em', lineHeight: 1.05, margin: '0 0 18px', fontFamily: sans }}>
+            <h2 className="font-paradise" style={{ fontSize: 'clamp(32px,4vw,52px)', fontWeight: 700, lineHeight: 1.05, margin: '0 0 18px' }}>
               Você abriu o negócio pra vender, não pra virar contador.
             </h2>
             <p style={{ fontSize: 18, color: textDim, lineHeight: 1.55, fontFamily: sans, margin: 0 }}>
@@ -348,7 +345,7 @@ export function LandingSoftware() {
         />
         {/* Content */}
         <div className="ls-wrap" style={{ position: 'relative', zIndex: 10, maxWidth: 1240, margin: '0 auto', padding: '0 40px' }}>
-          <h2 style={{ fontSize: 'clamp(24px,3vw,32px)', fontWeight: 600, color: text, marginBottom: 24, letterSpacing: '-0.02em', fontFamily: sans }}>
+          <h2 className="font-paradise" style={{ fontSize: 'clamp(24px,3vw,32px)', fontWeight: 600, color: text, marginBottom: 24 }}>
             Pronto pra parar de gerir no achismo?
           </h2>
           <a
@@ -372,7 +369,7 @@ export function LandingSoftware() {
             <span style={{ fontFamily: mono, fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: green, display: 'block', marginBottom: 16 }}>
               Como funciona
             </span>
-            <h2 style={{ fontSize: 'clamp(32px,4vw,52px)', fontWeight: 700, letterSpacing: '-0.03em', lineHeight: 1.05, margin: '0 0 18px', fontFamily: sans }}>
+            <h2 className="font-paradise" style={{ fontSize: 'clamp(32px,4vw,52px)', fontWeight: 700, lineHeight: 1.05, margin: '0 0 18px' }}>
               Três passos. Zero planilha.
             </h2>
             <p style={{ fontSize: 18, color: textDim, lineHeight: 1.55, fontFamily: sans, margin: 0 }}>
@@ -470,7 +467,7 @@ export function LandingSoftware() {
             <span style={{ fontFamily: mono, fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: green, display: 'block', marginBottom: 16 }}>
               Diagnóstico IA — incluso
             </span>
-            <h2 style={{ fontSize: 'clamp(32px,4vw,52px)', fontWeight: 700, letterSpacing: '-0.03em', lineHeight: 1.05, margin: '18px 0 20px', fontFamily: sans }}>
+            <h2 className="font-paradise" style={{ fontSize: 'clamp(32px,4vw,52px)', fontWeight: 700, lineHeight: 1.05, margin: '18px 0 20px' }}>
               Um <span style={{ color: green }}>sócio financeiro</span> pra ler seus números.
             </h2>
             <p style={{ color: textDim, fontSize: 17, lineHeight: 1.6, margin: '0 0 16px', maxWidth: 500, fontFamily: sans }}>
@@ -551,8 +548,8 @@ export function LandingSoftware() {
             <span style={{ fontFamily: mono, fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: textMute, display: 'block', marginBottom: 16 }}>
               ATLAS vs. o que você usa hoje
             </span>
-            <h2 style={{ fontSize: 'clamp(32px,4vw,52px)', fontWeight: 700, letterSpacing: '-0.03em', lineHeight: 1.05, margin: 0, fontFamily: sans }}>
-              Uma coisa é planilha. Outra é gestão.
+            <h2 className="font-paradise" style={{ fontSize: 'clamp(32px,4vw,52px)', fontWeight: 700, lineHeight: 1.05, margin: 0 }}>
+              Uma coisa é planilha.<br />Outra é gestão.
             </h2>
           </div>
           <div style={{ maxWidth: 1000, margin: '0 auto', border: `1px solid ${borderSt}`, borderRadius: radius, overflow: 'hidden', background: bgCard }}>
@@ -598,7 +595,7 @@ export function LandingSoftware() {
             <span style={{ fontFamily: mono, fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: textMute, display: 'block', marginBottom: 16 }}>
               FAQ
             </span>
-            <h2 style={{ fontSize: 'clamp(32px,4vw,52px)', fontWeight: 700, letterSpacing: '-0.03em', lineHeight: 1.05, margin: 0, fontFamily: sans }}>
+            <h2 className="font-paradise" style={{ fontSize: 'clamp(32px,4vw,52px)', fontWeight: 700, lineHeight: 1.05, margin: 0 }}>
               Perguntas que chegam direto.
             </h2>
           </div>
@@ -621,7 +618,7 @@ export function LandingSoftware() {
             <span style={{ fontFamily: mono, fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: green, display: 'block', marginBottom: 16 }}>
               Preço
             </span>
-            <h2 id="precos-title" style={{ fontSize: 'clamp(32px,4vw,52px)', fontWeight: 700, letterSpacing: '-0.03em', lineHeight: 1.05, margin: '0 0 18px', fontFamily: sans }}>
+            <h2 id="precos-title" className="font-paradise" style={{ fontSize: 'clamp(32px,4vw,52px)', fontWeight: 700, lineHeight: 1.05, margin: '0 0 18px' }}>
               Escolha como quer começar.
             </h2>
             <p style={{ fontSize: 18, color: textDim, lineHeight: 1.55, fontFamily: sans, margin: 0 }}>
@@ -736,12 +733,12 @@ export function LandingSoftware() {
           background: 'radial-gradient(700px 500px at 50% 50%, rgba(128,239,0,0.08), transparent 60%)',
         }} />
         <div className="ls-wrap" style={{ maxWidth: 1240, margin: '0 auto', padding: '0 40px', position: 'relative', zIndex: 1 }}>
-          <h2 style={{
+          <h2 className="font-paradise" style={{
             fontSize: 'clamp(42px,6vw,86px)', fontWeight: 800,
-            letterSpacing: '-0.04em', lineHeight: 0.95,
-            margin: '0 auto 22px', maxWidth: 900, fontFamily: sans,
+            lineHeight: 0.95,
+            margin: '0 auto 22px', maxWidth: 900,
           }}>
-            Lucro previsível começa com <span style={{ color: green, fontStyle: 'normal' }}>números claros</span>.
+            Lucro previsível começa com <span style={{ color: green, fontStyle: 'normal' }}>números <span style={{ fontFamily: chantal, fontSize: '0.88em' }}>claros</span></span>.
           </h2>
           <p style={{ color: textDim, fontSize: 19, maxWidth: 560, margin: '0 auto 36px', lineHeight: 1.55, fontFamily: sans }}>
             Em 5 minutos você tem DRE, fluxo de caixa e diagnóstico do seu negócio. Sem planilha. Sem curso. Sem enrolação.
