@@ -163,14 +163,17 @@
   }
 }
 
+/* ── Landing header ──────────────────────────────────────────────────────── */
+.lp-header { padding: 12px 48px; }
+
 /* ── Landing mobile br helper (oculto em desktop) ────────────────────────── */
 .lp-mobile-br { display: none; }
 
 /* ── Landing responsive — mobile (max 768px) ─────────────────────────────── */
 @media (max-width: 768px) {
 
-  /* Header: padding vertical maior só em mobile */
-  .lp-header { padding-top: 18px !important; padding-bottom: 18px !important; }
+  /* Header: padding vertical maior em mobile */
+  .lp-header { padding-top: 18px; padding-bottom: 18px; padding-left: 24px; padding-right: 24px; }
 
   /* A1 – CTA overlay mais denso em mobile */
   .lp-cta-mid-overlay {
