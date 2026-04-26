@@ -33,7 +33,7 @@ export function Charts() {
     <div className="p-8 space-y-8">
       <div className="flex flex-wrap items-start justify-between gap-6">
         <div>
-          <h2 className="text-2xl font-bold text-white tracking-tight">Gráficos</h2>
+          <h2 style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 32, fontWeight: 800, color: '#fff', lineHeight: 1.1 }}>Gráficos</h2>
           <p className="text-sm text-white/50 mt-1">Análise visual dos dados financeiros</p>
         </div>
         <DateFilter startDate={startDate} endDate={endDate} onChange={(s, e) => { setStartDate(s); setEndDate(e) }} />

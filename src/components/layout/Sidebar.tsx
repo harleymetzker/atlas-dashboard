@@ -108,23 +108,25 @@ export function Sidebar() {
       <div style={{ padding: '20px 16px 16px', borderBottom: '1px solid #1e1e1e' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <div style={{
-            background: '#80EF00', borderRadius: 8, padding: 0,
+            background: '#80EF00', borderRadius: 8, padding: 4,
             width: 40, height: 40, flexShrink: 0,
             overflow: 'hidden',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
           }}>
             <img
-              src="/blacksheep-logo.png"
+              src="/blacksheep-sheep.png"
               alt="Black Sheep"
-              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+              style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }}
             />
           </div>
           <div style={{ minWidth: 0 }}>
             <div style={{
               fontFamily: "'Open Sans', sans-serif",
-              fontWeight: 700, fontSize: 14,
-              color: '#fff', lineHeight: 1.2,
+              fontWeight: 800, fontSize: 16,
+              color: '#fff', letterSpacing: 1,
+              lineHeight: 1.2,
             }}>
-              Black Sheep
+              ATLAS
             </div>
             <div style={{
               fontFamily: "'Geist Mono', monospace",
@@ -132,7 +134,7 @@ export function Sidebar() {
               letterSpacing: '0.08em', textTransform: 'uppercase',
               lineHeight: 1.4, marginTop: 1,
             }}>
-              Sistema Financeiro
+              by Black Sheep
             </div>
           </div>
         </div>

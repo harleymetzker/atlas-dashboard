@@ -203,7 +203,7 @@ export function Overview() {
       {/* ── Header ── */}
       <div className="flex flex-wrap items-start justify-between gap-6">
         <div>
-          <h2 className="text-2xl font-bold text-white tracking-tight">Visão Geral</h2>
+          <h2 style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 32, fontWeight: 800, color: '#fff', lineHeight: 1.1 }}>Visão Geral</h2>
           <p className="text-sm text-white/50 mt-1">Resumo financeiro do período selecionado</p>
         </div>
         <div className="flex items-end gap-2">
