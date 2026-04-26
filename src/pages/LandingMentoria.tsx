@@ -21,6 +21,7 @@ const C = {
 }
 const sans = "'Open Sans', system-ui, -apple-system, sans-serif"
 const mono = "'Geist Mono', ui-monospace, monospace"
+const chantal = "'Chantal', cursive"
 
 // ── Global CSS (injected once) ────────────────────────────────────────────────
 const GLOBAL_CSS = `
@@ -206,7 +207,7 @@ export function LandingMentoria() {
         <Page>
           <SecHead
             kicker="§ 01 · O diagnóstico"
-            title={<>O padrão é sempre o mesmo — <em style={{ fontStyle: 'normal', color: C.green }}>e você não é exceção.</em></>}
+            title={<>O padrão é sempre o mesmo — e você não é <em style={{ fontStyle: 'normal', color: C.green, fontFamily: chantal, fontSize: '0.9em', lineHeight: '1' }}>exceção.</em></>}
             sub="O modelo de negócio do digital é simples: aumenta faturamento, fica feliz, repete. Ninguém olha pra margem. Ninguém sabe quanto sobra. E quando o caixa aperta, a solução é sempre a mesma — vender mais. Até o dia que vender mais não resolve. Porque nunca resolveu."
           >
             {/* Crença limitante */}
@@ -254,7 +255,7 @@ export function LandingMentoria() {
         <Page>
           <SecHead
             kicker="§ 02 · Cases reais"
-            title={<>Duas empresas. Mesmo problema. <em style={{ fontStyle: 'normal', color: C.green }}>Dinheiro que já existia — só não aparecia.</em></>}
+            title={<>Duas empresas. Mesmo problema. Dinheiro que já existia — <em style={{ fontStyle: 'normal', color: C.green, fontFamily: chantal, fontSize: '0.9em', lineHeight: '1' }}>só não aparecia.</em></>}
           />
           <p style={{ fontSize: 18, color: C.textDim, textAlign: 'center', maxWidth: 680, margin: '0 auto 40px', lineHeight: 1.55, fontFamily: sans }}>
             Esses são dois das 100+ outras empresas que passaram pela Black Sheep. O padrão é o mesmo — e provavelmente é o seu também.
@@ -462,7 +463,7 @@ export function LandingMentoria() {
       {/* ── FILTRO §05 ── */}
       <section id="filtro" className="lm-section" style={{ padding: '100px 0' }}>
         <Page>
-          <SecHead kicker="§ 06 · Filtro" title={<>O ATLAS <em style={{ fontStyle: 'normal', color: C.green }}>não é pra todo mundo.</em></>} />
+          <SecHead kicker="§ 06 · Filtro" title={<>O ATLAS <em style={{ fontStyle: 'normal', color: C.green, fontFamily: chantal, fontSize: '0.9em', lineHeight: '1' }}>não é</em> pra todo mundo.</>} />
           <div className="lm-filter-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginTop: 40 }}>
             <div style={{ background: `linear-gradient(180deg,rgba(128,239,0,0.04),transparent)`, border: `1px solid ${C.greenDark}`, borderRadius: C.radiusLg, padding: 32 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', paddingBottom: 14, marginBottom: 20, borderBottom: `1px solid ${C.border}` }}>
@@ -532,7 +533,7 @@ export function LandingMentoria() {
       {/* ── INVESTIMENTO §07 ── */}
       <section id="investimento" className="lm-section" style={{ padding: '100px 0', background: C.bgRaised }}>
         <Page>
-          <SecHead kicker="§ 09 · Investimento" title={<>Um ticket. <em style={{ fontStyle: 'normal', color: C.green }}>Tudo dentro.</em></>} />
+          <SecHead kicker="§ 09 · Investimento" title={<>Um ticket. Tudo <em style={{ fontStyle: 'normal', color: C.green, fontFamily: chantal, fontSize: '0.9em', lineHeight: '1' }}>dentro.</em></>} />
           <div className="lm-invest lm-invest-wrap" style={{ marginTop: 48, border: `1px solid ${C.greenDark}`, background: `radial-gradient(60% 80% at 80% 50%, rgba(128,239,0,0.10), transparent 70%), ${C.bgCard}`, borderRadius: C.radiusLg, padding: 56, display: 'grid', gridTemplateColumns: '1.1fr 1fr', gap: 48, alignItems: 'center' }}>
             <div>
               <div style={{ fontFamily: mono, fontSize: 12, letterSpacing: '0.2em', textTransform: 'uppercase', color: C.green, marginBottom: 12 }}>Programa ATLAS · 6 meses</div>
@@ -618,7 +619,7 @@ export function LandingMentoria() {
         <div style={{ content: '', position: 'absolute', inset: 0, background: 'radial-gradient(40% 60% at 50% 50%, rgba(128,239,0,0.15), transparent 70%)', pointerEvents: 'none' }} />
         <Page style={{ position: 'relative' }}>
           <h2 className="font-paradise" style={{ position: 'relative', fontSize: 'clamp(44px,6vw,92px)', fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 1.02, margin: '0 auto 32px', maxWidth: '18ch' }}>
-            Chega de gerir no <em style={{ fontStyle: 'italic', color: C.green, fontWeight: 700 }}>achismo.</em>
+            Chega de gerir no <em style={{ fontStyle: 'normal', color: C.green, fontFamily: chantal, fontSize: '0.9em', lineHeight: '1' }}>achismo.</em>
           </h2>
           <p style={{ position: 'relative', fontSize: 19, color: C.textDim, maxWidth: 720, margin: '0 auto 32px', lineHeight: 1.5, fontFamily: sans }}>
             Se você fatura bem e ainda não sabe sua margem real — você está perdendo dinheiro agora. Esse é o programa.
