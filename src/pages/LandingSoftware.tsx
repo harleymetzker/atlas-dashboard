@@ -173,7 +173,7 @@ export function LandingSoftware() {
 
       {/* ── NAV ── */}
       <div style={{ background: green, width: '100%' }}>
-        <div className="ls-wrap" style={{ maxWidth: 1240, margin: '0 auto', padding: '18px 48px', display: 'flex', alignItems: 'center', gap: 16 }}>
+        <div className="ls-wrap lp-header" style={{ maxWidth: 1240, margin: '0 auto', padding: '12px 48px', display: 'flex', alignItems: 'center', gap: 16 }}>
           <img src="/blacksheep-sheep.png" alt="Black Sheep" className="lp-nav-sheep" style={{ height: 'clamp(52px, 5.5vw, 64px)', width: 'auto', display: 'block', flexShrink: 0 }} />
           <span style={{ fontFamily: sans, fontSize: 'clamp(24px, 2.5vw, 32px)', fontWeight: 800, letterSpacing: 2, color: '#000', whiteSpace: 'nowrap' as const }}>ATLAS</span>
           <span style={{ width: 1, height: 20, background: 'rgba(0,0,0,0.25)', flexShrink: 0, margin: '0 4px' }} />
