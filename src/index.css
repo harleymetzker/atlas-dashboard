@@ -174,8 +174,8 @@
     background: radial-gradient(ellipse 90% 70% at center, rgba(0,0,0,1) 0%, rgba(0,0,0,0.95) 40%, rgba(0,0,0,0.7) 70%, rgba(0,0,0,0) 100%) !important;
   }
 
-  /* A2 – "claros" Chantal no headline final: tamanho ajustado */
-  .lp-final-claros { font-size: 0.85em !important; }
+  /* A2 – "claros" Chantal no headline final: mesmo tamanho do título */
+  .lp-final-claros { font-size: 1em !important; line-height: 1.0 !important; display: inline-block !important; transform: translateY(0.05em) !important; }
 
   /* A3 – badge "MAIS ESCOLHIDO" dentro do card, não cortando */
   .lp-badge-mais-escolhido { top: 12px !important; right: 16px !important; transform: none !important; }
@@ -204,7 +204,7 @@
   .font-paradise.lp-h2 { font-size: clamp(34px, 9vw, 44px) !important; line-height: 1.1 !important; letter-spacing: 0.01em !important; }
 
   /* A10 – headline final específico */
-  .lp-final-headline { font-size: clamp(40px, 10vw, 52px) !important; line-height: 1.05 !important; }
+  .lp-final-headline { font-size: clamp(48px, 12vw, 64px) !important; line-height: 1.0 !important; letter-spacing: 0.01em !important; }
 
   /* Anteriores mantidos */
   .ls-hero-visual { max-height: 60vh !important; min-height: 200px !important; }
