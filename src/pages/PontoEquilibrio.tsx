@@ -86,7 +86,7 @@ export function PontoEquilibrio() {
   const pe       = margem > 0 ? totalFix / (margem / 100) : 0
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-black text-white overflow-x-hidden">
       <div className="max-w-3xl mx-auto px-4 py-12">
 
         {/* Logo */}
@@ -149,8 +149,9 @@ export function PontoEquilibrio() {
 
           {/* Simulação */}
           {pe > 0 && (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
+            <div className="relative">
+              <div className="overflow-x-auto">
+              <table className="w-full text-sm" style={{ minWidth: 640 }}>
                 <thead>
                   <tr className="text-xs text-white/50 uppercase tracking-widest">
                     <th className="text-left pb-4">Cenário</th>
@@ -179,6 +180,8 @@ export function PontoEquilibrio() {
                   })}
                 </tbody>
               </table>
+              </div>
+              <div aria-hidden className="md:hidden pointer-events-none absolute inset-y-0 right-0 w-6" style={{ background: 'linear-gradient(to left, #000, transparent)' }} />
             </div>
           )}
         </section>

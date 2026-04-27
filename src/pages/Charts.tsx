@@ -30,7 +30,7 @@ export function Charts() {
   const projected      = calcProjected90Days(allEntries)
 
   return (
-    <div className="p-8 space-y-8">
+    <div className="p-4 md:p-8 space-y-8 overflow-x-hidden">
       <div className="flex flex-wrap items-start justify-between gap-6">
         <div>
           <h2 style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 32, fontWeight: 800, color: '#fff', lineHeight: 1.1 }}>Gráficos</h2>

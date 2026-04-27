@@ -88,7 +88,7 @@ function AnalysisResult({ content }: { content: AnalysisContent }) {
       </div>
 
       {/* Pontos críticos e positivos */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {[
           { label: 'Pontos Críticos',  items: content.pontos_criticos,  icon: AlertCircle,  color: '#EF4444' },
           { label: 'Pontos Positivos', items: content.pontos_positivos, icon: CheckCircle2, color: '#80EF00' },
@@ -335,14 +335,14 @@ export function Diagnostico() {
   const years = Array.from({ length: 5 }, (_, i) => today.getFullYear() - 2 + i)
 
   if (loadingProfile) return (
-    <div className="p-8 flex items-center justify-center min-h-[400px]">
+    <div className="p-4 md:p-8 flex items-center justify-center min-h-[400px]">
       <div className="w-5 h-5 border-2 border-white/35 border-t-white rounded-full animate-spin" />
     </div>
   )
 
   if (!companyProfile && !showProfileForm) {
     return (
-      <div className="p-8 flex items-center justify-center min-h-[500px]">
+      <div className="p-4 md:p-8 flex items-center justify-center min-h-[500px]">
         <div className="max-w-md w-full">
           <div className="mb-10">
             <h2 className="text-2xl font-bold text-white tracking-tight">Antes de começar</h2>
@@ -371,7 +371,7 @@ export function Diagnostico() {
     const isValid = profileForm.nome_empresa && profileForm.setor && profileForm.modelo_negocio && profileForm.tempo_operacao && profileForm.ticket_medio
 
     return (
-      <div className="p-8">
+      <div className="p-4 md:p-8">
         <div className="max-w-md">
           <div className="mb-10">
             <h2 className="text-2xl font-bold text-white tracking-tight">Perfil da empresa</h2>
@@ -435,7 +435,7 @@ export function Diagnostico() {
   }
 
   return (
-    <div className="p-8 space-y-8">
+    <div className="p-4 md:p-8 space-y-8 overflow-x-hidden">
       {/* Header */}
       <div className="flex flex-wrap items-start justify-between gap-6">
         <div>
@@ -475,7 +475,7 @@ export function Diagnostico() {
 
       {/* Summary cards */}
       {!loadingEntries && (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
           {[
             { label: 'Faturamento Bruto', value: formatCurrency(dre.faturamentoBruto), color: '#fff' },
             { label: 'Lucro Líquido',     value: formatCurrency(dre.lucro),            color: dre.lucro >= 0 ? '#80EF00' : '#EF4444' },
@@ -492,12 +492,15 @@ export function Diagnostico() {
       )}
 
       {/* Generate block */}
-      <div style={{ background: '#111', border: '1px solid #1e1e1e', borderRadius: 8, padding: 24, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 24, flexWrap: 'wrap' }}>
-        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16, flex: 1, minWidth: 0 }}>
+      <div
+        className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 md:gap-6"
+        style={{ background: '#111', border: '1px solid #1e1e1e', borderRadius: 8, padding: 24 }}
+      >
+        <div className="flex items-start gap-4 flex-1 min-w-0">
           <div style={{ width: 40, height: 40, borderRadius: 8, background: 'rgba(103,16,162,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
             <BrainCircuit size={20} style={{ color: '#6710A2' }} />
           </div>
-          <div>
+          <div className="min-w-0">
             <p style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 6 }}>Diagnóstico Financeiro</p>
             <p style={{ fontSize: 14, color: '#A6A8AB', lineHeight: 1.5, marginBottom: 8 }}>
               Análise completa da sua DRE e fluxo de caixa. Interpretada como um sócio falaria.
@@ -511,12 +514,13 @@ export function Diagnostico() {
         <button
           onClick={handleGenerate}
           disabled={generating || loadingEntries || !hasCredits}
+          className="w-full md:w-auto"
           style={{
             background: '#6710A2', color: '#fff', borderRadius: 8,
             fontWeight: 600, fontSize: 14, padding: '12px 24px',
             border: 'none', cursor: hasCredits && !generating ? 'pointer' : 'not-allowed',
             opacity: (!hasCredits || generating) ? 0.4 : 1,
-            display: 'flex', alignItems: 'center', gap: 8, whiteSpace: 'nowrap', flexShrink: 0,
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, whiteSpace: 'nowrap', flexShrink: 0,
             transition: 'opacity 0.15s',
           }}
           onMouseEnter={e => { if (hasCredits && !generating) e.currentTarget.style.opacity = '0.85' }}
@@ -561,13 +565,13 @@ export function Diagnostico() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             {history.map(item => (
               <div key={item.id} style={{ background: '#111', border: '1px solid #1e1e1e', borderRadius: 8, padding: 20 }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div className="flex items-center gap-2.5 min-w-0 flex-1">
                     <span style={{ background: 'rgba(128,239,0,0.15)', color: '#80EF00', fontSize: 10, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.5, padding: '3px 7px', borderRadius: 4, flexShrink: 0 }}>
                       Encerrada
                     </span>
-                    <div style={{ minWidth: 0 }}>
-                      <p style={{ fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 2 }}>O sócio chato que lê seus números</p>
+                    <div className="min-w-0">
+                      <p className="truncate" style={{ fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 2 }}>O sócio chato que lê seus números</p>
                       <p style={{ fontFamily: "'Geist Mono', monospace", fontSize: 12, color: '#555' }}>
                         {item.period} · {format(new Date(item.created_at), "dd/MM/yyyy 'às' HH:mm")}
                       </p>
