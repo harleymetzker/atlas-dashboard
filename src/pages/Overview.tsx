@@ -36,8 +36,8 @@ function BigMetricCard({
 }: { label: string; value: string; sub?: string; positive?: boolean; negative?: boolean }) {
   const color = positive ? 'text-brand-green' : negative ? 'text-red-400' : 'text-white'
   return (
-    <div className="bg-[#111] border border-[#1e1e1e] rounded-2xl p-6">
-      <p className="text-xs text-white/60 uppercase tracking-widest mb-3 whitespace-nowrap overflow-hidden text-ellipsis">{label}</p>
+    <div className="bg-[#111] border border-[#1e1e1e] rounded-2xl p-4 md:p-6">
+      <p className="text-xs text-white/60 uppercase tracking-widest mb-3 leading-tight">{label}</p>
       <p className={`text-2xl font-bold tabular-nums tracking-tight leading-tight ${color}`}>{value}</p>
       {sub && <p className="text-xs text-white/70 mt-1.5 leading-snug">{sub}</p>}
     </div>
@@ -198,7 +198,7 @@ export function Overview() {
   const fmtK = (v: number) => `R$${(v / 1000).toFixed(0)}k`
 
   return (
-    <div className="p-8 space-y-6">
+    <div className="p-4 md:p-8 space-y-6">
 
       {/* ── Header ── */}
       <div className="flex flex-wrap items-start justify-between gap-6">

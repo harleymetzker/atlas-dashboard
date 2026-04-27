@@ -174,7 +174,7 @@ export function DRE() {
     : `${runway.toFixed(1)} meses`
 
   return (
-    <div className="p-8 space-y-8">
+    <div className="p-4 md:p-8 space-y-8">
       {/* ── Header ── */}
       <div className="flex flex-wrap items-start justify-between gap-6">
         <div>
@@ -213,10 +213,10 @@ export function DRE() {
         <div className="flex items-center justify-center h-64 text-white/35">Carregando...</div>
       ) : (
         <>
-        <div className="flex gap-6 items-start">
+        <div className="flex flex-col md:flex-row gap-6 items-start">
 
           {/* ── Coluna esquerda: tabela DRE (60%) — sticky para acompanhar scroll da coluna direita ── */}
-          <div className="flex-[3] min-w-0 self-start">
+          <div className="w-full md:flex-[3] md:min-w-0 self-start">
             <Card>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8, padding: '0 10px' }}>
                 <span style={{ fontFamily: "'Geist Mono', monospace", fontSize: 11, textTransform: 'uppercase', letterSpacing: 1, color: '#666' }}>Descrição</span>
@@ -254,7 +254,7 @@ export function DRE() {
           </div>
 
           {/* ── Coluna direita: indicadores (40%) ── */}
-          <div className="flex-[2] min-w-0 space-y-4">
+          <div className="w-full md:flex-[2] md:min-w-0 space-y-4">
 
             {/* 6 cards */}
             <div className="grid grid-cols-2 gap-3">

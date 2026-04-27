@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './context/AuthContext'
-import { Sidebar } from './components/layout/Sidebar'
+import { AppShell } from './components/layout/AppShell'
 import { Login } from './pages/Login'
 import { Cadastro } from './pages/Cadastro'
 import { CadastroEnviado } from './pages/CadastroEnviado'
@@ -45,38 +45,32 @@ function AppRoutes() {
   // blacksheep vê apenas o painel admin
   if (isSuperAdmin) {
     return (
-      <div className="flex min-h-screen bg-black">
-        <Sidebar />
-        <main className="flex-1 overflow-y-auto">
-          <Routes>
-            <Route path="/admin" element={<Admin />} />
-            <Route path="*" element={<Navigate to="/admin" replace />} />
-          </Routes>
-        </main>
-      </div>
+      <AppShell>
+        <Routes>
+          <Route path="/admin" element={<Admin />} />
+          <Route path="*" element={<Navigate to="/admin" replace />} />
+        </Routes>
+      </AppShell>
     )
   }
 
   return (
-    <div className="flex min-h-screen bg-black">
-      <Sidebar />
-      <main className="flex-1 overflow-y-auto">
-        <Routes>
-          <Route path="/dashboard" element={<Overview />} />
-          <Route path="/dre" element={<DRE />} />
-          <Route path="/cashflow" element={<CashFlow />} />
-          <Route path="/charts" element={<Charts />} />
-          <Route path="/entries" element={<Entries />} />
-          <Route path="/diagnostico" element={<Diagnostico />} />
-          <Route path="/ferramentas/precificacao-produto" element={<PrecificacaoProduto />} />
-          <Route path="/ferramentas/precificacao-servico" element={<PrecificacaoServico />} />
-          <Route path="/ferramentas/ponto-equilibrio" element={<PontoEquilibrioDash />} />
-          <Route path="/ferramentas/simulador-cenarios" element={<SimuladorCenarios />} />
-          {isAdmin && <Route path="/admin" element={<Admin />} />}
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
-        </Routes>
-      </main>
-    </div>
+    <AppShell>
+      <Routes>
+        <Route path="/dashboard" element={<Overview />} />
+        <Route path="/dre" element={<DRE />} />
+        <Route path="/cashflow" element={<CashFlow />} />
+        <Route path="/charts" element={<Charts />} />
+        <Route path="/entries" element={<Entries />} />
+        <Route path="/diagnostico" element={<Diagnostico />} />
+        <Route path="/ferramentas/precificacao-produto" element={<PrecificacaoProduto />} />
+        <Route path="/ferramentas/precificacao-servico" element={<PrecificacaoServico />} />
+        <Route path="/ferramentas/ponto-equilibrio" element={<PontoEquilibrioDash />} />
+        <Route path="/ferramentas/simulador-cenarios" element={<SimuladorCenarios />} />
+        {isAdmin && <Route path="/admin" element={<Admin />} />}
+        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+      </Routes>
+    </AppShell>
   )
 }
 
