@@ -432,7 +432,7 @@ export function Entries() {
   }
 
   return (
-    <div className="p-8 space-y-6">
+    <div className="p-4 md:p-8 space-y-6 overflow-x-hidden">
       {/* ── Title + buttons ── */}
       <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16 }}>
         <div>
@@ -469,45 +469,49 @@ export function Entries() {
               const vencido = entry.payment_date! <= todayStr
               const isEditingDate = editingDateId === entry.id
               return (
-                <div key={entry.id} style={{
-                  display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap',
-                  padding: '10px 14px', borderRadius: 8,
-                  background: vencido ? 'rgba(234,179,8,0.07)' : 'rgba(255,255,255,0.03)',
-                  border: `1px solid ${vencido ? 'rgba(234,179,8,0.3)' : '#1e1e1e'}`,
-                }}>
+                <div
+                  key={entry.id}
+                  className="flex flex-col md:flex-row md:items-center md:flex-wrap gap-2 md:gap-3"
+                  style={{
+                    padding: '10px 14px', borderRadius: 8,
+                    background: vencido ? 'rgba(234,179,8,0.07)' : 'rgba(255,255,255,0.03)',
+                    border: `1px solid ${vencido ? 'rgba(234,179,8,0.3)' : '#1e1e1e'}`,
+                  }}
+                >
                   {/* Info */}
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <span style={{ fontSize: 13, color: '#fff', fontFamily: "'Open Sans', sans-serif" }}>
+                  <div className="flex-1 min-w-0 w-full md:w-auto overflow-hidden">
+                    <span className="block truncate" style={{ fontSize: 13, color: '#fff', fontFamily: "'Open Sans', sans-serif" }}>
                       {entry.description || entry.category}
                     </span>
-                    <span style={{ fontSize: 11, color: '#666', marginLeft: 8, fontFamily: "'Geist Mono', monospace" }}>
+                    <span className="block truncate" style={{ fontSize: 11, color: '#666', fontFamily: "'Geist Mono', monospace" }}>
                       {entry.category}
                     </span>
                   </div>
-                  {/* Valor */}
-                  <span style={{ fontFamily: "'Geist Mono', monospace", fontSize: 13, fontWeight: 600, color: entry.type === 'revenue' ? '#80EF00' : '#EF4444', whiteSpace: 'nowrap' }}>
-                    {entry.type !== 'revenue' ? '-' : ''}{formatCurrency(entry.amount)}
-                  </span>
-                  {/* Data prevista */}
-                  {isEditingDate ? (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                      <input
-                        type="date"
-                        value={editingDateValue}
-                        onChange={e => setEditingDateValue(e.target.value)}
-                        style={{ background: '#111', border: '1px solid #333', color: '#fff', padding: '4px 8px', borderRadius: 4, fontSize: 12, fontFamily: "'Geist Mono', monospace" }}
-                      />
-                      <button onClick={() => handleAlterarData(entry)} style={{ padding: '4px 10px', background: '#fff', color: '#000', border: 'none', borderRadius: 4, fontSize: 12, fontWeight: 700, cursor: 'pointer' }}>Salvar</button>
-                      <button onClick={() => setEditingDateId(null)} style={{ padding: '4px 10px', background: 'transparent', color: '#666', border: '1px solid #333', borderRadius: 4, fontSize: 12, cursor: 'pointer' }}>✕</button>
-                    </div>
-                  ) : (
-                    <span style={{ fontFamily: "'Geist Mono', monospace", fontSize: 12, color: vencido ? '#eab308' : '#666', whiteSpace: 'nowrap' }}>
-                      {vencido ? '⚠ ' : ''}{entry.payment_date}
+                  {/* Valor + Data */}
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <span style={{ fontFamily: "'Geist Mono', monospace", fontSize: 13, fontWeight: 600, color: entry.type === 'revenue' ? '#80EF00' : '#EF4444', whiteSpace: 'nowrap' }}>
+                      {entry.type !== 'revenue' ? '-' : ''}{formatCurrency(entry.amount)}
                     </span>
-                  )}
+                    {isEditingDate ? (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+                        <input
+                          type="date"
+                          value={editingDateValue}
+                          onChange={e => setEditingDateValue(e.target.value)}
+                          style={{ background: '#111', border: '1px solid #333', color: '#fff', padding: '4px 8px', borderRadius: 4, fontSize: 12, fontFamily: "'Geist Mono', monospace" }}
+                        />
+                        <button onClick={() => handleAlterarData(entry)} style={{ padding: '4px 10px', background: '#fff', color: '#000', border: 'none', borderRadius: 4, fontSize: 12, fontWeight: 700, cursor: 'pointer' }}>Salvar</button>
+                        <button onClick={() => setEditingDateId(null)} style={{ padding: '4px 10px', background: 'transparent', color: '#666', border: '1px solid #333', borderRadius: 4, fontSize: 12, cursor: 'pointer' }}>✕</button>
+                      </div>
+                    ) : (
+                      <span style={{ fontFamily: "'Geist Mono', monospace", fontSize: 12, color: vencido ? '#eab308' : '#666', whiteSpace: 'nowrap' }}>
+                        {vencido ? '⚠ ' : ''}{entry.payment_date}
+                      </span>
+                    )}
+                  </div>
                   {/* Ações */}
                   {!isEditingDate && (
-                    <div style={{ display: 'flex', gap: 6 }}>
+                    <div className="flex gap-1.5 flex-wrap">
                       <button
                         onClick={() => handleConfirmar(entry)}
                         style={{ padding: '5px 12px', background: 'rgba(128,239,0,0.15)', border: '1px solid rgba(128,239,0,0.3)', color: '#80EF00', borderRadius: 6, fontSize: 12, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}
@@ -602,8 +606,9 @@ export function Entries() {
         ) : filteredEntries.length === 0 ? (
           <div className="text-center py-12 text-white/35">Nenhum lançamento no período.</div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+          <div className="relative">
+            <div className="overflow-x-auto">
+            <table className="w-full text-sm" style={{ minWidth: 720 }}>
               <thead>
                 <tr style={{ fontFamily: "'Geist Mono', monospace", fontSize: 11, textTransform: 'uppercase', letterSpacing: 1, color: '#666', borderBottom: '1px solid #333' }}>
                   <th className="text-left py-3 font-medium">Competência</th>
@@ -672,6 +677,8 @@ export function Entries() {
                 ))}
               </tbody>
             </table>
+            </div>
+            <div aria-hidden className="md:hidden pointer-events-none absolute inset-y-0 right-0 w-6" style={{ background: 'linear-gradient(to left, #111, transparent)' }} />
           </div>
         )}
       </Card>

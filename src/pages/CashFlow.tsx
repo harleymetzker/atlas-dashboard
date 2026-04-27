@@ -48,7 +48,7 @@ export function CashFlow() {
   let runningBalance = 0
 
   return (
-    <div className="p-8 space-y-8">
+    <div className="p-4 md:p-8 space-y-8 overflow-x-hidden">
       <div className="flex flex-wrap items-start justify-between gap-6">
         <div>
           <h2 style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 32, fontWeight: 800, color: '#fff', lineHeight: 1.1 }}>Fluxo de Caixa</h2>
@@ -58,11 +58,11 @@ export function CashFlow() {
       </div>
 
       {/* Saldo inicial por mês */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-        <span style={{ fontFamily: "'Geist Mono', monospace", fontSize: 11, textTransform: 'uppercase', letterSpacing: 1, color: '#666', whiteSpace: 'nowrap' }}>
+      <div className="flex flex-wrap items-center gap-3">
+        <span style={{ fontFamily: "'Geist Mono', monospace", fontSize: 11, textTransform: 'uppercase', letterSpacing: 1, color: '#666' }}>
           Saldo inicial de {format(new Date(yearMonth + '-02'), 'MMMM/yyyy', { locale: ptBR })}:
         </span>
-        <div style={{ width: 192 }}>
+        <div className="w-full sm:w-48">
           <CurrencyInput
             value={openingBalance === 0 ? '' : String(openingBalance)}
             onChange={v => handleBalanceChange(parseFloat(v) || 0)}
@@ -75,7 +75,7 @@ export function CashFlow() {
       ) : (
         <>
           {/* Indicadores */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             <StatCard label="Saldo Inicial" value={formatCurrency(openingBalance)} />
             <StatCard label="(+) Entradas" value={formatCurrency(totalEntradas)} positive />
             <StatCard label="(-) Saídas" value={formatCurrency(totalSaidas)} sub="Despesas + Retiradas" negative />
@@ -101,8 +101,9 @@ export function CashFlow() {
             {cashFlowEntries.length === 0 ? (
               <p className="text-white/35 text-sm py-8 text-center">Nenhuma movimentação no período.</p>
             ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
+              <div className="relative">
+                <div className="overflow-x-auto">
+                <table className="w-full text-sm" style={{ minWidth: 520 }}>
                   <thead>
                     <tr style={{ fontFamily: "'Geist Mono', monospace", fontSize: 11, textTransform: 'uppercase', letterSpacing: 1, color: '#666', borderBottom: '1px solid #333' }}>
                       <th className="text-left py-3 font-medium">Data Pagamento</th>
@@ -128,6 +129,8 @@ export function CashFlow() {
                     ))}
                   </tbody>
                 </table>
+                </div>
+                <div aria-hidden className="md:hidden pointer-events-none absolute inset-y-0 right-0 w-6" style={{ background: 'linear-gradient(to left, #111, transparent)' }} />
               </div>
             )}
           </Card>
@@ -149,8 +152,9 @@ export function CashFlow() {
                 Nenhum lançamento futuro cadastrado. Lance receitas ou despesas com data de pagamento futura para ver a projeção.
               </p>
             ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
+              <div className="relative">
+                <div className="overflow-x-auto">
+                <table className="w-full text-sm" style={{ minWidth: 640 }}>
                   <thead>
                     <tr className="text-xs text-white/60 uppercase tracking-widest">
                       <th className="text-left pb-4">Mês</th>
@@ -217,6 +221,8 @@ export function CashFlow() {
                     })}
                   </tbody>
                 </table>
+                </div>
+                <div aria-hidden className="md:hidden pointer-events-none absolute inset-y-0 right-0 w-6" style={{ background: 'linear-gradient(to left, #111, transparent)' }} />
               </div>
             )}
           </Card>
