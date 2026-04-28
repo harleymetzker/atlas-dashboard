@@ -3,7 +3,7 @@ import { NavLink, useLocation } from 'react-router-dom'
 import type { NavLinkRenderProps } from 'react-router-dom'
 import {
   Home, FileText, DollarSign, BarChart3, List, Zap,
-  Wrench, Users, LogOut, ChevronDown,
+  Wrench, Users, LogOut, ChevronDown, Settings,
   Tag, Clock, Target, GitCompare,
 } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
@@ -196,6 +196,11 @@ export function Sidebar() {
                   ))}
                 </div>
               )}
+            </div>
+
+            {/* Configurações */}
+            <div style={{ marginTop: 4 }}>
+              <NavItem to="/configuracoes" icon={Settings} label="Configurações" />
             </div>
 
             {/* Admin */}

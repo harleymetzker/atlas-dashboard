@@ -14,6 +14,7 @@ import { CashFlow } from './pages/CashFlow'
 import { Charts } from './pages/Charts'
 import { Entries } from './pages/Entries'
 import { Diagnostico } from './pages/Diagnostico'
+import { Configuracoes } from './pages/Configuracoes'
 import { Admin } from './pages/Admin'
 import { PontoEquilibrio } from './pages/PontoEquilibrio'
 import { Landing } from './pages/Landing'
@@ -66,6 +67,7 @@ function AppRoutes() {
         <Route path="/charts" element={<Charts />} />
         <Route path="/entries" element={<Entries />} />
         <Route path="/diagnostico" element={<Diagnostico />} />
+        <Route path="/configuracoes" element={<Configuracoes />} />
         <Route path="/ferramentas/precificacao-produto" element={<PrecificacaoProduto />} />
         <Route path="/ferramentas/precificacao-servico" element={<PrecificacaoServico />} />
         <Route path="/ferramentas/ponto-equilibrio" element={<PontoEquilibrioDash />} />
