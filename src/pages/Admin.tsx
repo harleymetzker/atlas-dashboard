@@ -19,6 +19,7 @@ interface Profile {
   status: 'pending' | 'active' | 'blocked'
   account_type: 'mentee' | 'subscriber'
   mentoria_type: string | null
+  mentoria_end_date: string | null
   setor: string | null
   faturamento_medio: string | null
   num_funcionarios: string | null
@@ -31,6 +32,22 @@ interface Profile {
   onboarding_completed: boolean
   created_at: string
   updated_at: string
+}
+
+function defaultMentoriaEndDate(): string {
+  const d = new Date()
+  d.setFullYear(d.getFullYear() + 1)
+  const yyyy = d.getFullYear()
+  const mm = String(d.getMonth() + 1).padStart(2, '0')
+  const dd = String(d.getDate()).padStart(2, '0')
+  return `${yyyy}-${mm}-${dd}`
+}
+
+function formatBrDate(iso: string | null): string {
+  if (!iso) return '—'
+  const [yyyy, mm, dd] = iso.slice(0, 10).split('-')
+  if (!yyyy || !mm || !dd) return '—'
+  return `${dd}/${mm}/${yyyy}`
 }
 
 type Tab = 'resumo' | 'mafia_black_sheep' | 'mentoria_atlas' | 'outras_mentorias' | 'assinante' | 'sem_categoria'
@@ -113,9 +130,62 @@ function EditMentoriaModal({ profile, onSave, onClose }: {
   )
 }
 
+function ApprovalModal({ profile, onConfirm, onClose }: {
+  profile: Profile
+  onConfirm: (userId: string, mentoriaEndDate: string) => Promise<void>
+  onClose: () => void
+}) {
+  const [endDate, setEndDate] = useState(defaultMentoriaEndDate())
+  const [saving, setSaving] = useState(false)
+
+  async function handleConfirm() {
+    if (!endDate) return
+    setSaving(true)
+    await onConfirm(profile.user_id, endDate)
+    setSaving(false)
+    onClose()
+  }
+
+  return (
+    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50, padding: 16 }}>
+      <div style={{ background: '#111', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 20, padding: 32, width: '100%', maxWidth: 380 }}>
+        <h3 style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 4 }}>Aprovar Aluno</h3>
+        <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', marginBottom: 24 }}>{profile.nome ? `${profile.nome} · ` : ''}{profile.email}</p>
+
+        <label style={{ display: 'block', fontSize: 11, color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 8 }}>
+          Data de fim da mentoria
+        </label>
+        <input
+          type="date"
+          required
+          value={endDate}
+          onChange={e => setEndDate(e.target.value)}
+          style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 10, padding: '10px 14px', fontSize: 13, color: '#fff', outline: 'none', marginBottom: 24, colorScheme: 'dark' }}
+        />
+
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button
+            onClick={onClose}
+            style={{ flex: 1, padding: '10px 0', borderRadius: 10, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.5)', fontSize: 13, cursor: 'pointer' }}
+          >
+            Cancelar
+          </button>
+          <button
+            onClick={handleConfirm}
+            disabled={!endDate || saving}
+            style={{ flex: 1, padding: '10px 0', borderRadius: 10, background: endDate ? GREEN : 'rgba(255,255,255,0.1)', border: 'none', color: '#000', fontSize: 13, fontWeight: 700, cursor: endDate && !saving ? 'pointer' : 'not-allowed' }}
+          >
+            {saving ? 'Aprovando...' : 'Aprovar'}
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function UserRow({ profile, onApprove, onBlock, onDelete, onEdit }: {
   profile: Profile
-  onApprove: (userId: string) => void
+  onApprove: (profile: Profile) => void
   onBlock: (userId: string) => void
   onDelete: (userId: string, email: string) => void
   onEdit?: (profile: Profile) => void
@@ -134,6 +204,9 @@ function UserRow({ profile, onApprove, onBlock, onDelete, onEdit }: {
             {profile.faturamento_medio && <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>{profile.faturamento_medio}</span>}
             {profile.num_funcionarios && <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>{profile.num_funcionarios} func.</span>}
             {profile.tempo_empresa && <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>{profile.tempo_empresa}</span>}
+            <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>
+              Fim mentoria: {formatBrDate(profile.mentoria_end_date)}
+            </span>
             <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)' }}>
               {format(new Date(profile.created_at), "dd/MM/yyyy")}
             </span>
@@ -151,7 +224,7 @@ function UserRow({ profile, onApprove, onBlock, onDelete, onEdit }: {
           )}
           {profile.status !== 'active' && (
             <button
-              onClick={() => onApprove(profile.user_id)}
+              onClick={() => onApprove(profile)}
               title="Aprovar"
               style={{ padding: '6px 12px', borderRadius: 8, background: `${GREEN}15`, border: `1px solid ${GREEN}30`, color: GREEN, fontSize: 12, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}
             >
@@ -182,7 +255,7 @@ function UserRow({ profile, onApprove, onBlock, onDelete, onEdit }: {
 
 function MentoriaTab({ profiles, onApprove, onBlock, onDelete, onEdit }: {
   profiles: Profile[]
-  onApprove: (userId: string) => void
+  onApprove: (profile: Profile) => void
   onBlock: (userId: string) => void
   onDelete: (userId: string, email: string) => void
   onEdit?: (profile: Profile) => void
@@ -225,6 +298,7 @@ export function Admin() {
   const [loading, setLoading] = useState(true)
   const [tab, setTab] = useState<Tab>('resumo')
   const [editingProfile, setEditingProfile] = useState<Profile | null>(null)
+  const [approvingProfile, setApprovingProfile] = useState<Profile | null>(null)
 
   async function fetchProfiles() {
     setLoading(true)
@@ -238,11 +312,18 @@ export function Admin() {
 
   useEffect(() => { fetchProfiles() }, [])
 
-  async function handleApprove(userId: string) {
+  async function handleApprove(userId: string, mentoriaEndDate: string) {
     await supabase.from('profiles')
-      .update({ status: 'active', updated_at: new Date().toISOString() })
+      .update({
+        status: 'active',
+        mentoria_end_date: mentoriaEndDate,
+        updated_at: new Date().toISOString(),
+      })
       .eq('user_id', userId)
-    setProfiles(prev => prev.map(p => p.user_id === userId ? { ...p, status: 'active' } : p))
+    setProfiles(prev => prev.map(p => p.user_id === userId
+      ? { ...p, status: 'active', mentoria_end_date: mentoriaEndDate }
+      : p
+    ))
 
     const profile = profiles.find(p => p.user_id === userId)
     if (profile) {
@@ -438,7 +519,7 @@ export function Admin() {
           {tab !== 'resumo' && (
             <MentoriaTab
               profiles={profilesByMentoria(tab)}
-              onApprove={handleApprove}
+              onApprove={setApprovingProfile}
               onBlock={handleBlock}
               onDelete={handleDelete}
               onEdit={tab === 'sem_categoria' ? setEditingProfile : undefined}
@@ -451,6 +532,15 @@ export function Admin() {
               profile={editingProfile}
               onSave={handleEditMentoria}
               onClose={() => setEditingProfile(null)}
+            />
+          )}
+
+          {/* Modal aprovar aluno */}
+          {approvingProfile && (
+            <ApprovalModal
+              profile={approvingProfile}
+              onConfirm={handleApprove}
+              onClose={() => setApprovingProfile(null)}
             />
           )}
         </>
