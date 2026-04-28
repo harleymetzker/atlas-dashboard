@@ -198,11 +198,6 @@ export function Sidebar() {
               )}
             </div>
 
-            {/* Configurações */}
-            <div style={{ marginTop: 4 }}>
-              <NavItem to="/configuracoes" icon={Settings} label="Configurações" />
-            </div>
-
             {/* Admin */}
             {isAdmin && (
               <div style={{ marginTop: 4 }}>
@@ -214,7 +209,7 @@ export function Sidebar() {
       </nav>
 
       {/* ── Footer ── */}
-      <div style={{ padding: '10px 8px 14px', borderTop: '1px solid #1e1e1e' }}>
+      <div style={{ padding: '10px 8px 14px', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
         <div style={{ padding: '4px 10px 8px' }}>
           <p style={{
             fontSize: 11, color: '#666',
@@ -225,6 +220,11 @@ export function Sidebar() {
             {user?.email}
           </p>
         </div>
+        {!isSuperAdmin && (
+          <div style={{ marginBottom: 2 }}>
+            <NavItem to="/configuracoes" icon={Settings} label="Configurações" />
+          </div>
+        )}
         <button
           onClick={signOut}
           style={{
