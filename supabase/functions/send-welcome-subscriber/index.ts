@@ -78,7 +78,6 @@ serve(async (req) => {
       </p>
       <p style="font-size: 13px; color: #888; margin: 0 0 32px 0; line-height: 1.5;">O link acima dá acesso direto. Você define sua senha no primeiro acesso.</p>
       <div style="border-top: 1px solid #eee; padding-top: 24px;">
-        <p style="font-size: 14px; color: #666; margin: 0 0 4px 0;">Bem-vindo ao rebanho dos que pensam diferente.</p>
         <p style="font-size: 14px; color: #000; font-weight: 800; margin: 0;">Time Black Sheep</p>
       </div>
     </div>
