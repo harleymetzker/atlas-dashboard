@@ -60,7 +60,15 @@ serve(async (req) => {
         subject: "Sua assinatura ATLAS está ativa.",
         html: `
   <div style="font-family: Arial, Helvetica, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; padding: 0;">
-    <img src="https://atlasconsultoria.app/email-header.png" alt="ATLAS by Black Sheep" style="display: block; width: 100%; max-width: 600px; height: auto; border: 0; outline: none; text-decoration: none;" />
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background: #80EF00; padding: 28px 32px;">
+      <tr>
+        <td align="center" style="vertical-align: middle;">
+          <span style="font-family: 'Arial Black', Arial, sans-serif; font-size: 28px; font-weight: 900; letter-spacing: 6px; color: #000;">ATLAS</span>
+          <span style="display: inline-block; width: 1px; height: 20px; background: rgba(0,0,0,0.25); margin: 0 16px; vertical-align: middle;"></span>
+          <span style="font-family: Arial, Helvetica, sans-serif; font-size: 11px; font-weight: 400; letter-spacing: 2px; color: rgba(0,0,0,0.55); text-transform: uppercase;">by Black Sheep</span>
+        </td>
+      </tr>
+    </table>
     <div style="padding: 40px 32px;">
       <h1 style="font-size: 20px; color: #000; margin: 0 0 24px 0; font-weight: 800;">Sua assinatura ATLAS está ativa.</h1>
       <p style="font-size: 15px; color: #444; margin: 0 0 20px 0; line-height: 1.6;">Pagamento confirmado. ${planoLabel} ativado.</p>
