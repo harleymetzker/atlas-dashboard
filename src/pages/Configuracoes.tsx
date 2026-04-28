@@ -69,6 +69,161 @@ const emptyForm: ProfileData = {
   tempo_empresa: '',
 }
 
+interface SubscriptionInfo {
+  account_type: 'mentee' | 'subscriber' | null
+  subscription_plan: 'monthly' | 'annual' | null
+  subscription_status: string | null
+  subscription_current_period_end: string | null
+  mentoria_type: string | null
+  mentoria_end_date: string | null
+}
+
+const MENTORIA_LABEL: Record<string, string> = {
+  mafia_black_sheep: 'MAFIA Black Sheep',
+  mentoria_atlas: 'Mentoria ATLAS',
+  outras_mentorias: 'Outras Mentorias',
+  assinante: 'Assinante',
+}
+
+function formatBrDate(iso: string | null): string {
+  if (!iso) return '—'
+  const d = new Date(iso)
+  if (isNaN(d.getTime())) {
+    const [yyyy, mm, dd] = iso.slice(0, 10).split('-')
+    if (!yyyy || !mm || !dd) return '—'
+    return `${dd}/${mm}/${yyyy}`
+  }
+  const dd = String(d.getDate()).padStart(2, '0')
+  const mm = String(d.getMonth() + 1).padStart(2, '0')
+  const yyyy = d.getFullYear()
+  return `${dd}/${mm}/${yyyy}`
+}
+
+async function authFetch(path: string, body?: unknown) {
+  const { data: { session } } = await supabase.auth.getSession()
+  const token = session?.access_token ?? ''
+  return fetch(path, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: body ? JSON.stringify(body) : undefined,
+  })
+}
+
+function ChangePlanModal({ currentPlan, periodEnd, onConfirm, onClose }: {
+  currentPlan: 'monthly' | 'annual'
+  periodEnd: string | null
+  onConfirm: (newPlan: 'monthly' | 'annual') => Promise<{ ok: boolean; error?: string }>
+  onClose: () => void
+}) {
+  const newPlan: 'monthly' | 'annual' = currentPlan === 'monthly' ? 'annual' : 'monthly'
+  const [error, setError] = useState('')
+  const [saving, setSaving] = useState(false)
+
+  const planCard = (
+    plan: 'monthly' | 'annual',
+    highlighted: boolean,
+  ) => {
+    const title = plan === 'monthly' ? 'Mensal' : 'Anual'
+    const price = plan === 'monthly' ? 'R$ 99/mês' : 'R$ 599/ano'
+    const sub = plan === 'annual' ? 'R$ 49,92/mês · economize ~50%' : null
+    return (
+      <div
+        key={plan}
+        style={{
+          flex: 1,
+          padding: 16,
+          borderRadius: 12,
+          background: highlighted ? `${GREEN}10` : 'rgba(255,255,255,0.03)',
+          border: `1px solid ${highlighted ? `${GREEN}40` : 'rgba(255,255,255,0.1)'}`,
+          minWidth: 0,
+        }}
+      >
+        <p style={{ ...labelStyle, marginBottom: 6, color: highlighted ? GREEN : 'rgba(255,255,255,0.5)' }}>{title}</p>
+        <p style={{ fontSize: 16, fontWeight: 700, color: '#fff', margin: 0 }}>{price}</p>
+        {sub && <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', marginTop: 4 }}>{sub}</p>}
+      </div>
+    )
+  }
+
+  async function handleConfirm() {
+    setError('')
+    setSaving(true)
+    const res = await onConfirm(newPlan)
+    setSaving(false)
+    if (!res.ok) setError(res.error || 'Erro ao trocar plano.')
+  }
+
+  return (
+    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50, padding: 16 }}>
+      <div style={{ background: '#111', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 20, padding: 32, width: '100%', maxWidth: 480 }}>
+        <h3 style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 4 }}>Trocar plano</h3>
+        <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', marginBottom: 24 }}>Você está mudando do plano {currentPlan === 'monthly' ? 'mensal' : 'anual'} para o {newPlan === 'monthly' ? 'mensal' : 'anual'}.</p>
+
+        <div style={{ display: 'flex', gap: 12, marginBottom: 20, flexWrap: 'wrap' }}>
+          {planCard(currentPlan, false)}
+          {planCard(newPlan, true)}
+        </div>
+
+        <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.7)', lineHeight: 1.5, marginBottom: 24 }}>
+          A mudança acontece no fim do período atual ({formatBrDate(periodEnd)}). Você não será cobrado agora.
+        </p>
+
+        {error && <p style={{ fontSize: 12, color: '#f87171', marginBottom: 16 }}>{error}</p>}
+
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button onClick={onClose} disabled={saving} style={{ flex: 1, padding: '10px 0', borderRadius: 10, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.5)', fontSize: 13, cursor: saving ? 'not-allowed' : 'pointer' }}>Cancelar</button>
+          <button onClick={handleConfirm} disabled={saving} style={{ flex: 1, padding: '10px 0', borderRadius: 10, background: GREEN, border: 'none', color: '#000', fontSize: 13, fontWeight: 700, cursor: saving ? 'not-allowed' : 'pointer', opacity: saving ? 0.7 : 1 }}>
+            {saving ? 'Confirmando...' : 'Confirmar troca'}
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function CancelSubscriptionModal({ periodEnd, onConfirm, onClose }: {
+  periodEnd: string | null
+  onConfirm: () => Promise<{ ok: boolean; error?: string }>
+  onClose: () => void
+}) {
+  const [error, setError] = useState('')
+  const [saving, setSaving] = useState(false)
+
+  async function handleConfirm() {
+    setError('')
+    setSaving(true)
+    const res = await onConfirm()
+    setSaving(false)
+    if (!res.ok) setError(res.error || 'Erro ao cancelar.')
+  }
+
+  return (
+    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50, padding: 16 }}>
+      <div style={{ background: '#111', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 20, padding: 32, width: '100%', maxWidth: 460 }}>
+        <h3 style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 12 }}>Cancelar assinatura</h3>
+        <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.8)', lineHeight: 1.5, marginBottom: 12 }}>
+          Tem certeza? Você manterá acesso até <strong style={{ color: '#fff' }}>{formatBrDate(periodEnd)}</strong> (fim do período pago).
+        </p>
+        <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', lineHeight: 1.5, marginBottom: 24 }}>
+          Seus dados ficam guardados se você decidir voltar.
+        </p>
+
+        {error && <p style={{ fontSize: 12, color: '#f87171', marginBottom: 16 }}>{error}</p>}
+
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button onClick={onClose} disabled={saving} style={{ flex: 1, padding: '10px 0', borderRadius: 10, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.5)', fontSize: 13, cursor: saving ? 'not-allowed' : 'pointer' }}>Voltar</button>
+          <button onClick={handleConfirm} disabled={saving} style={{ flex: 1, padding: '10px 0', borderRadius: 10, background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.4)', color: '#ef4444', fontSize: 13, fontWeight: 700, cursor: saving ? 'not-allowed' : 'pointer', opacity: saving ? 0.7 : 1 }}>
+            {saving ? 'Cancelando...' : 'Cancelar assinatura'}
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function ChangePasswordModal({ email, onClose }: { email: string; onClose: () => void }) {
   const [atual, setAtual] = useState('')
   const [nova, setNova] = useState('')
@@ -204,19 +359,54 @@ function ChangeEmailModal({ emailAtual, onClose }: { emailAtual: string; onClose
 }
 
 export function Configuracoes() {
-  const { user, signOut } = useAuth()
+  const { user, signOut, refreshProfile } = useAuth()
   const userId = user?.id ?? null
   const email = user?.email ?? ''
 
   const [loading, setLoading] = useState(true)
   const [form, setForm] = useState<ProfileData>(emptyForm)
+  const [subInfo, setSubInfo] = useState<SubscriptionInfo | null>(null)
   const [saving, setSaving] = useState(false)
   const [feedback, setFeedback] = useState<{ kind: 'success' | 'error'; msg: string } | null>(null)
   const [showPwModal, setShowPwModal] = useState(false)
   const [showEmailModal, setShowEmailModal] = useState(false)
+  const [showPlanModal, setShowPlanModal] = useState(false)
+  const [showCancelModal, setShowCancelModal] = useState(false)
+  const [portalLoading, setPortalLoading] = useState(false)
 
   function set(field: keyof ProfileData, value: string) {
     setForm(f => ({ ...f, [field]: value }))
+  }
+
+  async function fetchProfile() {
+    if (!userId) return
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('nome, empresa, setor, faturamento_medio, num_funcionarios, tempo_empresa, account_type, subscription_plan, subscription_status, subscription_current_period_end, mentoria_type, mentoria_end_date')
+      .eq('user_id', userId)
+      .single()
+    if (error) {
+      console.error('[Configuracoes] Failed to load profile:', error)
+      return
+    }
+    if (data) {
+      setForm({
+        nome: data.nome ?? '',
+        empresa: data.empresa ?? '',
+        setor: data.setor ?? '',
+        faturamento_medio: data.faturamento_medio ?? '',
+        num_funcionarios: data.num_funcionarios ?? '',
+        tempo_empresa: data.tempo_empresa ?? '',
+      })
+      setSubInfo({
+        account_type: (data.account_type as SubscriptionInfo['account_type']) ?? null,
+        subscription_plan: (data.subscription_plan as SubscriptionInfo['subscription_plan']) ?? null,
+        subscription_status: data.subscription_status ?? null,
+        subscription_current_period_end: data.subscription_current_period_end ?? null,
+        mentoria_type: data.mentoria_type ?? null,
+        mentoria_end_date: data.mentoria_end_date ?? null,
+      })
+    }
   }
 
   useEffect(() => {
@@ -224,27 +414,11 @@ export function Configuracoes() {
     let cancelled = false
     ;(async () => {
       setLoading(true)
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('nome, empresa, setor, faturamento_medio, num_funcionarios, tempo_empresa')
-        .eq('user_id', userId)
-        .single()
-      if (cancelled) return
-      if (error) {
-        console.error('[Configuracoes] Failed to load profile:', error)
-      } else if (data) {
-        setForm({
-          nome: data.nome ?? '',
-          empresa: data.empresa ?? '',
-          setor: data.setor ?? '',
-          faturamento_medio: data.faturamento_medio ?? '',
-          num_funcionarios: data.num_funcionarios ?? '',
-          tempo_empresa: data.tempo_empresa ?? '',
-        })
-      }
-      setLoading(false)
+      await fetchProfile()
+      if (!cancelled) setLoading(false)
     })()
     return () => { cancelled = true }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId])
 
   function showFeedback(kind: 'success' | 'error', msg: string) {
@@ -273,6 +447,55 @@ export function Configuracoes() {
     } else {
       showFeedback('success', 'Dados atualizados.')
     }
+  }
+
+  async function handlePortal() {
+    setPortalLoading(true)
+    try {
+      const res = await authFetch('/api/portal-session')
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok || !data.url) {
+        showFeedback('error', data.error || 'Não foi possível abrir o portal de pagamento.')
+      } else {
+        window.open(data.url, '_blank', 'noopener,noreferrer')
+      }
+    } catch (err) {
+      showFeedback('error', (err as Error).message)
+    } finally {
+      setPortalLoading(false)
+    }
+  }
+
+  async function handleChangePlan(newPlan: 'monthly' | 'annual'): Promise<{ ok: boolean; error?: string }> {
+    const res = await authFetch('/api/change-plan', { newPlan })
+    const data = await res.json().catch(() => ({}))
+    if (!res.ok || !data.changed) {
+      return { ok: false, error: data.error || 'Erro ao trocar plano.' }
+    }
+    setShowPlanModal(false)
+    const periodEndIso = data.effective_at
+      ? new Date(data.effective_at * 1000).toISOString()
+      : subInfo?.subscription_current_period_end ?? null
+    showFeedback('success', `Plano alterado. Mudança efetiva em ${formatBrDate(periodEndIso)}.`)
+    await fetchProfile()
+    await refreshProfile()
+    return { ok: true }
+  }
+
+  async function handleCancelSub(): Promise<{ ok: boolean; error?: string }> {
+    const res = await authFetch('/api/cancel-subscription')
+    const data = await res.json().catch(() => ({}))
+    if (!res.ok || !data.canceled_at_period_end) {
+      return { ok: false, error: data.error || 'Erro ao cancelar.' }
+    }
+    setShowCancelModal(false)
+    const periodEndIso = data.current_period_end
+      ? new Date(data.current_period_end * 1000).toISOString()
+      : subInfo?.subscription_current_period_end ?? null
+    showFeedback('success', `Assinatura cancelada. Acesso até ${formatBrDate(periodEndIso)}.`)
+    await fetchProfile()
+    await refreshProfile()
+    return { ok: true }
   }
 
   return (
@@ -393,6 +616,110 @@ export function Configuracoes() {
             </button>
           </div>
 
+          {/* ── Seção 3 — Assinatura ── */}
+          {subInfo?.account_type === 'subscriber' && (
+            <div style={sectionStyle}>
+              <p style={{ fontSize: 16, color: '#fff', fontWeight: 700, marginBottom: 4 }}>Assinatura</p>
+              <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', marginBottom: 28 }}>Gerencie seu plano e pagamento.</p>
+
+              <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 14, padding: 20, marginBottom: 20 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 20 }}>
+                  <div>
+                    <p style={{ ...labelStyle, marginBottom: 6 }}>Plano atual</p>
+                    {subInfo.subscription_plan === 'annual' ? (
+                      <>
+                        <p style={{ fontSize: 16, fontWeight: 700, color: '#fff', margin: 0 }}>Anual · R$ 599/ano</p>
+                        <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', marginTop: 4 }}>R$ 49,92/mês</p>
+                      </>
+                    ) : subInfo.subscription_plan === 'monthly' ? (
+                      <p style={{ fontSize: 16, fontWeight: 700, color: '#fff', margin: 0 }}>Mensal · R$ 99/mês</p>
+                    ) : (
+                      <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.5)', margin: 0 }}>—</p>
+                    )}
+                  </div>
+                  <div>
+                    <p style={{ ...labelStyle, marginBottom: 6 }}>Próxima cobrança</p>
+                    <p style={{ fontSize: 16, fontWeight: 700, color: '#fff', margin: 0 }}>
+                      {formatBrDate(subInfo.subscription_current_period_end)}
+                    </p>
+                  </div>
+                  <div>
+                    <p style={{ ...labelStyle, marginBottom: 6 }}>Status</p>
+                    {subInfo.subscription_status === 'past_due' ? (
+                      <span style={{ display: 'inline-block', padding: '4px 10px', borderRadius: 20, background: 'rgba(234,179,8,0.15)', color: '#eab308', fontSize: 12, fontWeight: 600 }}>Pagamento pendente</span>
+                    ) : subInfo.subscription_status === 'canceled' ? (
+                      <span style={{ display: 'inline-block', padding: '4px 10px', borderRadius: 20, background: 'rgba(239,68,68,0.15)', color: '#ef4444', fontSize: 12, fontWeight: 600 }}>Cancelada</span>
+                    ) : (
+                      <span style={{ display: 'inline-block', padding: '4px 10px', borderRadius: 20, background: `${GREEN}20`, color: GREEN, fontSize: 12, fontWeight: 600 }}>Ativo</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                {subInfo.subscription_status === 'active' && subInfo.subscription_plan && (
+                  <button
+                    onClick={() => setShowPlanModal(true)}
+                    style={{ padding: '10px 20px', borderRadius: 10, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', color: '#fff', fontSize: 13, cursor: 'pointer' }}
+                  >
+                    Trocar plano
+                  </button>
+                )}
+                <button
+                  onClick={handlePortal}
+                  disabled={portalLoading}
+                  style={{ padding: '10px 20px', borderRadius: 10, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', color: '#fff', fontSize: 13, cursor: portalLoading ? 'not-allowed' : 'pointer', opacity: portalLoading ? 0.7 : 1 }}
+                >
+                  {portalLoading ? 'Abrindo...' : 'Atualizar cartão / Ver faturas'}
+                </button>
+                {subInfo.subscription_status === 'active' && (
+                  <button
+                    onClick={() => setShowCancelModal(true)}
+                    style={{ padding: '10px 20px', borderRadius: 10, background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)', color: '#ef4444', fontSize: 13, cursor: 'pointer' }}
+                  >
+                    Cancelar assinatura
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
+
+          {subInfo?.account_type === 'mentee' && (
+            <div style={sectionStyle}>
+              <p style={{ fontSize: 16, color: '#fff', fontWeight: 700, marginBottom: 4 }}>Assinatura</p>
+              <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', marginBottom: 28 }}>Status da sua mentoria e como continuar com o ATLAS.</p>
+
+              <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 14, padding: 20, marginBottom: 20 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 20 }}>
+                  <div>
+                    <p style={{ ...labelStyle, marginBottom: 6 }}>Sua mentoria</p>
+                    <p style={{ fontSize: 16, fontWeight: 700, color: '#fff', margin: 0 }}>
+                      {subInfo.mentoria_type ? (MENTORIA_LABEL[subInfo.mentoria_type] ?? subInfo.mentoria_type) : '—'}
+                    </p>
+                  </div>
+                  <div>
+                    <p style={{ ...labelStyle, marginBottom: 6 }}>Ativa até</p>
+                    <p style={{ fontSize: 16, fontWeight: 700, color: '#fff', margin: 0 }}>
+                      {subInfo.mentoria_end_date ? formatBrDate(subInfo.mentoria_end_date) : 'Não definido'}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ background: `${GREEN}08`, border: `1px solid ${GREEN}30`, borderRadius: 14, padding: 20 }}>
+                <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.85)', lineHeight: 1.5, marginBottom: 16 }}>
+                  Quando sua mentoria terminar, continue com ATLAS por <strong style={{ color: '#fff' }}>R$ 99/mês</strong> ou <strong style={{ color: '#fff' }}>R$ 599/ano (~50% off)</strong>.
+                </p>
+                <button
+                  onClick={() => { window.location.href = '/#precos' }}
+                  style={{ background: GREEN, border: 'none', color: '#000', padding: '12px 24px', borderRadius: 12, fontSize: 13, fontWeight: 700, cursor: 'pointer' }}
+                >
+                  Quero virar assinante
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* ── Sair ── */}
           <div style={sectionStyle}>
             <p style={{ fontSize: 16, color: '#fff', fontWeight: 700, marginBottom: 4 }}>Sair</p>
@@ -417,6 +744,21 @@ export function Configuracoes() {
 
       {showPwModal && <ChangePasswordModal email={email} onClose={() => setShowPwModal(false)} />}
       {showEmailModal && <ChangeEmailModal emailAtual={email} onClose={() => setShowEmailModal(false)} />}
+      {showPlanModal && subInfo?.subscription_plan && (
+        <ChangePlanModal
+          currentPlan={subInfo.subscription_plan}
+          periodEnd={subInfo.subscription_current_period_end}
+          onConfirm={handleChangePlan}
+          onClose={() => setShowPlanModal(false)}
+        />
+      )}
+      {showCancelModal && (
+        <CancelSubscriptionModal
+          periodEnd={subInfo?.subscription_current_period_end ?? null}
+          onConfirm={handleCancelSub}
+          onClose={() => setShowCancelModal(false)}
+        />
+      )}
     </div>
   )
 }

@@ -15,6 +15,24 @@
   force = true
 
 [[redirects]]
+  from = "/api/portal-session"
+  to = "/.netlify/functions/create-portal-session"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/cancel-subscription"
+  to = "/.netlify/functions/cancel-subscription"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/change-plan"
+  to = "/.netlify/functions/change-subscription-plan"
+  status = 200
+  force = true
+
+[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
