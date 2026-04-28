@@ -4,6 +4,7 @@ import { AppShell } from './components/layout/AppShell'
 import { Login } from './pages/Login'
 import { Cadastro } from './pages/Cadastro'
 import { CadastroEnviado } from './pages/CadastroEnviado'
+import { BemVindo } from './pages/BemVindo'
 import { AcessoPendente } from './pages/AcessoPendente'
 import { AcessoBloqueado } from './pages/AcessoBloqueado'
 import { Overview } from './pages/Overview'
@@ -85,6 +86,7 @@ export default function App() {
         <Route path="/assinatura-confirmada" element={<AssinaturaConfirmada />} />
         <Route path="/cadastro" element={<Cadastro />} />
         <Route path="/cadastro-enviado" element={<CadastroEnviado />} />
+        <Route path="/bem-vindo" element={<BemVindo />} />
         <Route path="*" element={
           <AuthProvider>
             <AppRoutes />
