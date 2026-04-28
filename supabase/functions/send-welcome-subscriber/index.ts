@@ -59,17 +59,14 @@ serve(async (req) => {
         to: [email],
         subject: "Sua assinatura ATLAS está ativa.",
         html: `
-  <div style="font-family: Arial, Helvetica, sans-serif; max-width: 520px; margin: 0 auto; background: #ffffff; padding: 0;">
-    <div style="background: #00EF61; padding: 24px 32px;">
-      <span style="font-size: 22px; font-weight: 900; letter-spacing: 5px; color: #000;">ATLAS</span>
-      <span style="font-size: 11px; color: rgba(0,0,0,0.5); margin-left: 10px; letter-spacing: 2px;">by Black Sheep</span>
-    </div>
+  <div style="font-family: Arial, Helvetica, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; padding: 0;">
+    <img src="https://atlasconsultoria.app/email-header.png" alt="ATLAS by Black Sheep" style="display: block; width: 100%; max-width: 600px; height: auto; border: 0; outline: none; text-decoration: none;" />
     <div style="padding: 40px 32px;">
       <h1 style="font-size: 20px; color: #000; margin: 0 0 24px 0; font-weight: 800;">Sua assinatura ATLAS está ativa.</h1>
       <p style="font-size: 15px; color: #444; margin: 0 0 20px 0; line-height: 1.6;">Pagamento confirmado. ${planoLabel} ativado.</p>
       <p style="font-size: 15px; color: #444; margin: 0 0 28px 0; line-height: 1.6;">Pra começar a usar agora, é só clicar no botão abaixo:</p>
       <p style="margin: 0 0 24px 0;">
-        <a href="${actionLink}" style="display: inline-block; background: #00EF61; color: #000; padding: 16px 32px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; text-decoration: none; font-size: 14px;">Acessar Minha Conta</a>
+        <a href="${actionLink}" style="display: inline-block; background: #80EF00; color: #000; padding: 16px 32px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; text-decoration: none; font-size: 14px;">Acessar Minha Conta</a>
       </p>
       <p style="font-size: 13px; color: #888; margin: 0 0 32px 0; line-height: 1.5;">O link acima dá acesso direto. Você define sua senha no primeiro acesso.</p>
       <div style="border-top: 1px solid #eee; padding-top: 24px;">
