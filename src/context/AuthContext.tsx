@@ -1,9 +1,9 @@
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
 import type { Session, User } from '@supabase/supabase-js'
 import { supabase, ADMIN_EMAIL, SUPER_ADMIN_EMAIL } from '../lib/supabase'
 
-type ProfileStatus = 'pending' | 'active' | 'blocked' | null
+type ProfileStatus = 'pending' | 'active' | 'blocked' | 'canceled' | 'past_due' | null
 
 interface AuthContextType {
   session: Session | null
@@ -14,11 +14,35 @@ interface AuthContextType {
   profileStatus: ProfileStatus
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>
   signOut: () => Promise<void>
+  refreshProfile: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType | null>(null)
 
 const ADMIN_EMAILS = ['harley@hmtz.com.br', 'blacksheep@hmtz.com.br', ADMIN_EMAIL].filter(Boolean)
+
+const REFRESH_INTERVAL_MS = 2 * 60 * 1000
+
+// Resolve o status do profile pra uma sessão. Erros viram 'blocked' (fail-closed).
+// Sem session → null. Admin → 'active'. Sem profile (legacy) → 'active'.
+async function loadProfileStatus(currentSession: Session | null): Promise<ProfileStatus> {
+  if (!currentSession?.user) return null
+  const email = currentSession.user.email ?? ''
+  if (ADMIN_EMAILS.includes(email)) return 'active'
+
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('status')
+    .eq('user_id', currentSession.user.id)
+    .maybeSingle()
+
+  if (error) {
+    console.error('[AuthContext] Failed to fetch profile:', error)
+    return 'blocked'
+  }
+  if (!data) return 'active' // legacy user sem perfil
+  return (data.status as ProfileStatus) ?? 'active'
+}
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null)
@@ -37,30 +61,40 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => subscription.unsubscribe()
   }, [])
 
-  // Load profile status whenever session changes
+  // Carrega o profile quando a sessão muda + re-check periódico a cada 2 min
+  // enquanto houver sessão ativa (e usuário não-admin, que não tem profile).
   useEffect(() => {
     if (sessionLoading) return
-    if (!session?.user) {
-      setProfileStatus(null)
-      return
+
+    let cancelled = false
+
+    const apply = async () => {
+      setProfileLoading(true)
+      const status = await loadProfileStatus(session)
+      if (cancelled) return
+      setProfileStatus(status)
+      setProfileLoading(false)
     }
+
+    apply()
+
+    if (!session?.user) return
     const email = session.user.email ?? ''
-    if (ADMIN_EMAILS.includes(email)) {
-      setProfileStatus('active')
-      return
+    if (ADMIN_EMAILS.includes(email)) return
+
+    const intervalId = setInterval(apply, REFRESH_INTERVAL_MS)
+    return () => {
+      cancelled = true
+      clearInterval(intervalId)
     }
-    setProfileLoading(true)
-    supabase
-      .from('profiles')
-      .select('status')
-      .eq('user_id', session.user.id)
-      .maybeSingle()
-      .then(({ data }) => {
-        // No profile = legacy user = treat as active
-        setProfileStatus((data?.status as ProfileStatus) ?? 'active')
-        setProfileLoading(false)
-      })
   }, [session, sessionLoading])
+
+  const refreshProfile = useCallback(async () => {
+    setProfileLoading(true)
+    const status = await loadProfileStatus(session)
+    setProfileStatus(status)
+    setProfileLoading(false)
+  }, [session])
 
   const loading = sessionLoading || profileLoading
   const user = session?.user ?? null
@@ -77,7 +111,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ session, user, isAdmin, isSuperAdmin, loading, profileStatus, signIn, signOut }}>
+    <AuthContext.Provider value={{ session, user, isAdmin, isSuperAdmin, loading, profileStatus, signIn, signOut, refreshProfile }}>
       {children}
     </AuthContext.Provider>
   )
