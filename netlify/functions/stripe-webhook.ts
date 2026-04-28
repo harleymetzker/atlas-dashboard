@@ -19,6 +19,34 @@ function planFromPriceId(priceId: string | null | undefined): 'monthly' | 'annua
   return null
 }
 
+// Dispara email de boas-vindas via Edge Function. Falhas são logadas mas não interrompem o webhook.
+async function sendWelcomeEmail(email: string, plano: 'monthly' | 'annual' | null) {
+  const url = process.env.VITE_SUPABASE_URL
+  const anonKey = process.env.SUPABASE_ANON_KEY
+  if (!url || !anonKey) {
+    console.error('[stripe-webhook] Missing VITE_SUPABASE_URL or SUPABASE_ANON_KEY for welcome email')
+    return
+  }
+  try {
+    const res = await fetch(`${url}/functions/v1/send-welcome-subscriber`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${anonKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, plano }),
+    })
+    if (!res.ok) {
+      const body = await res.text().catch(() => '')
+      console.error('[stripe-webhook] Failed to send welcome email:', { email, status: res.status, body })
+      return
+    }
+    console.log('[stripe-webhook] Welcome email dispatched for', email, 'plan:', plano)
+  } catch (err) {
+    console.error('[stripe-webhook] Failed to send welcome email:', { email, error: (err as Error).message })
+  }
+}
+
 async function findAuthUserByEmail(email: string) {
   const target = email.toLowerCase()
   const perPage = 1000
@@ -119,6 +147,7 @@ export const handler: Handler = async (event) => {
             console.error('[stripe-webhook] Profile insert failed:', insertErr)
           } else {
             console.log('[stripe-webhook] Subscriber created:', { userId: created.user.id, email })
+            await sendWelcomeEmail(email, plan)
           }
         } else {
           const { error: updErr } = await supabase
