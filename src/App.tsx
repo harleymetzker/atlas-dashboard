@@ -7,6 +7,7 @@ import { CadastroEnviado } from './pages/CadastroEnviado'
 import { BemVindo } from './pages/BemVindo'
 import { AcessoPendente } from './pages/AcessoPendente'
 import { AcessoBloqueado } from './pages/AcessoBloqueado'
+import { AssinaturaCancelada } from './pages/AssinaturaCancelada'
 import { Overview } from './pages/Overview'
 import { DRE } from './pages/DRE'
 import { CashFlow } from './pages/CashFlow'
@@ -41,6 +42,7 @@ function AppRoutes() {
   if (!session) return <Login />
 
   if (profileStatus === 'pending') return <AcessoPendente />
+  if (profileStatus === 'canceled') return <AssinaturaCancelada />
   if (profileStatus === 'blocked') return <AcessoBloqueado />
 
   // blacksheep vê apenas o painel admin
