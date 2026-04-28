@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { supabase } from '../lib/supabase'
 
@@ -184,6 +185,90 @@ function ChangePlanModal({ currentPlan, periodEnd, onConfirm, onClose }: {
   )
 }
 
+function DeleteAccountModal({ onConfirm, onClose }: {
+  onConfirm: () => Promise<{ ok: boolean; error?: string }>
+  onClose: () => void
+}) {
+  const [confirmation, setConfirmation] = useState('')
+  const [error, setError] = useState('')
+  const [deleting, setDeleting] = useState(false)
+  const enabled = confirmation === 'EXCLUIR'
+
+  async function handleDelete() {
+    if (!enabled) return
+    setError('')
+    setDeleting(true)
+    const res = await onConfirm()
+    if (!res.ok) {
+      setError(res.error || 'Falha ao excluir conta. Tente novamente ou contate o suporte.')
+      setDeleting(false)
+    }
+    // Em sucesso, o componente pai navega — não precisa setDeleting(false).
+  }
+
+  return (
+    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50, padding: 16 }}>
+      <div style={{ background: '#111', border: '1px solid rgba(239,68,68,0.3)', borderRadius: 20, padding: 32, width: '100%', maxWidth: 480 }}>
+        <h3 style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 12 }}>Excluir minha conta</h3>
+        <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.85)', lineHeight: 1.5, marginBottom: 12 }}>
+          Você está prestes a apagar <strong style={{ color: '#fff' }}>PERMANENTEMENTE</strong>:
+        </p>
+        <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 16px 0', display: 'flex', flexDirection: 'column', gap: 6 }}>
+          {[
+            'Sua assinatura (cancelamento imediato no Stripe, sem reembolso)',
+            'Todos os lançamentos do DRE e fluxo de caixa',
+            'Todos os diagnósticos IA gerados',
+            'Precificações de produtos e serviços',
+            'Sua conta de acesso',
+          ].map((item, i) => (
+            <li key={i} style={{ display: 'flex', gap: 10, fontSize: 13, color: 'rgba(255,255,255,0.75)', lineHeight: 1.5 }}>
+              <span style={{ color: '#ef4444', flexShrink: 0 }}>•</span>
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+        <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', marginBottom: 20, fontStyle: 'italic' }}>
+          Esta ação não pode ser desfeita.
+        </p>
+
+        <label style={{ ...labelStyle }}>Pra confirmar, digite EXCLUIR no campo abaixo:</label>
+        <input
+          type="text"
+          value={confirmation}
+          onChange={e => setConfirmation(e.target.value)}
+          placeholder="Digite EXCLUIR"
+          style={{ ...inputStyle, marginBottom: 16, letterSpacing: 2 }}
+          autoComplete="off"
+        />
+
+        {error && <p style={{ fontSize: 12, color: '#f87171', marginBottom: 16 }}>{error}</p>}
+
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button onClick={onClose} disabled={deleting} style={{ flex: 1, padding: '10px 0', borderRadius: 10, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.5)', fontSize: 13, cursor: deleting ? 'not-allowed' : 'pointer' }}>Cancelar</button>
+          <button
+            onClick={handleDelete}
+            disabled={!enabled || deleting}
+            style={{
+              flex: 1,
+              padding: '10px 0',
+              borderRadius: 10,
+              background: enabled ? '#ef4444' : 'rgba(239,68,68,0.15)',
+              border: 'none',
+              color: enabled ? '#fff' : 'rgba(239,68,68,0.5)',
+              fontSize: 13,
+              fontWeight: 700,
+              cursor: enabled && !deleting ? 'pointer' : 'not-allowed',
+              opacity: deleting ? 0.7 : 1,
+            }}
+          >
+            {deleting ? 'Excluindo...' : 'Excluir minha conta permanentemente'}
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function CancelSubscriptionModal({ periodEnd, onConfirm, onClose }: {
   periodEnd: string | null
   onConfirm: () => Promise<{ ok: boolean; error?: string }>
@@ -360,6 +445,7 @@ function ChangeEmailModal({ emailAtual, onClose }: { emailAtual: string; onClose
 
 export function Configuracoes() {
   const { user, signOut, refreshProfile } = useAuth()
+  const navigate = useNavigate()
   const userId = user?.id ?? null
   const email = user?.email ?? ''
 
@@ -372,6 +458,7 @@ export function Configuracoes() {
   const [showEmailModal, setShowEmailModal] = useState(false)
   const [showPlanModal, setShowPlanModal] = useState(false)
   const [showCancelModal, setShowCancelModal] = useState(false)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [portalLoading, setPortalLoading] = useState(false)
 
   function set(field: keyof ProfileData, value: string) {
@@ -480,6 +567,33 @@ export function Configuracoes() {
     await fetchProfile()
     await refreshProfile()
     return { ok: true }
+  }
+
+  async function handleDeleteAccount(): Promise<{ ok: boolean; error?: string }> {
+    const { data: { session } } = await supabase.auth.getSession()
+    const token = session?.access_token
+    if (!token) return { ok: false, error: 'Sessão expirou. Faça login novamente.' }
+
+    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+    try {
+      const res = await fetch(`${supabaseUrl}/functions/v1/delete-my-account`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok || !data.success) {
+        return { ok: false, error: data.error || `Erro ${res.status}` }
+      }
+      // Sucesso — limpa sessão local e redireciona
+      await supabase.auth.signOut()
+      navigate('/login?msg=' + encodeURIComponent('Conta excluída.'))
+      return { ok: true }
+    } catch (err) {
+      return { ok: false, error: (err as Error).message }
+    }
   }
 
   async function handleCancelSub(): Promise<{ ok: boolean; error?: string }> {
@@ -742,8 +856,52 @@ export function Configuracoes() {
         </>
       )}
 
+      {/* ── Seção 4 — Zona de perigo (só assinantes) ── */}
+      {!loading && subInfo?.account_type === 'subscriber' && (
+        <div
+          style={{
+            background: '#0a0a0a',
+            border: '1px solid rgba(239,68,68,0.2)',
+            borderRadius: 20,
+            padding: 32,
+            marginTop: 32,
+          }}
+        >
+          <p style={{ fontSize: 16, color: '#f87171', fontWeight: 700, marginBottom: 4 }}>Zona de perigo</p>
+          <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', marginBottom: 24 }}>Ações irreversíveis. Tenha certeza antes de continuar.</p>
+
+          <div style={{ background: 'rgba(239,68,68,0.05)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 14, padding: 20 }}>
+            <p style={{ ...labelStyle, color: '#f87171', marginBottom: 8 }}>Excluir minha conta</p>
+            <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.7)', lineHeight: 1.55, marginBottom: 16 }}>
+              Apaga permanentemente: assinatura, lançamentos financeiros, DRE, fluxo de caixa, diagnósticos, configurações. Esta ação <strong style={{ color: '#fff' }}>NÃO</strong> pode ser desfeita.
+            </p>
+            <button
+              onClick={() => setShowDeleteModal(true)}
+              style={{
+                background: '#ef4444',
+                border: 'none',
+                color: '#fff',
+                padding: '12px 24px',
+                borderRadius: 12,
+                fontSize: 13,
+                fontWeight: 700,
+                cursor: 'pointer',
+              }}
+            >
+              Excluir minha conta permanentemente
+            </button>
+          </div>
+        </div>
+      )}
+
       {showPwModal && <ChangePasswordModal email={email} onClose={() => setShowPwModal(false)} />}
       {showEmailModal && <ChangeEmailModal emailAtual={email} onClose={() => setShowEmailModal(false)} />}
+      {showDeleteModal && (
+        <DeleteAccountModal
+          onConfirm={handleDeleteAccount}
+          onClose={() => setShowDeleteModal(false)}
+        />
+      )}
       {showPlanModal && subInfo?.subscription_plan && (
         <ChangePlanModal
           currentPlan={subInfo.subscription_plan}
