@@ -183,13 +183,70 @@ function ApprovalModal({ profile, onConfirm, onClose }: {
   )
 }
 
-function UserRow({ profile, onApprove, onBlock, onDelete, onEdit }: {
+function EditEndDateModal({ profile, onSave, onClose }: {
+  profile: Profile
+  onSave: (userId: string, mentoriaEndDate: string) => Promise<void>
+  onClose: () => void
+}) {
+  const [endDate, setEndDate] = useState(
+    profile.mentoria_end_date?.slice(0, 10) || defaultMentoriaEndDate()
+  )
+  const [saving, setSaving] = useState(false)
+
+  async function handleSave() {
+    if (!endDate) return
+    setSaving(true)
+    await onSave(profile.user_id, endDate)
+    setSaving(false)
+    onClose()
+  }
+
+  return (
+    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50, padding: 16 }}>
+      <div style={{ background: '#111', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 20, padding: 32, width: '100%', maxWidth: 380 }}>
+        <h3 style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 4 }}>Editar data de fim</h3>
+        <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', marginBottom: 24 }}>{profile.nome ? `${profile.nome} · ` : ''}{profile.email}</p>
+
+        <label style={{ display: 'block', fontSize: 11, color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 8 }}>
+          Data de fim da mentoria
+        </label>
+        <input
+          type="date"
+          required
+          value={endDate}
+          onChange={e => setEndDate(e.target.value)}
+          style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 10, padding: '10px 14px', fontSize: 13, color: '#fff', outline: 'none', marginBottom: 24, colorScheme: 'dark' }}
+        />
+
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button
+            onClick={onClose}
+            style={{ flex: 1, padding: '10px 0', borderRadius: 10, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.5)', fontSize: 13, cursor: 'pointer' }}
+          >
+            Cancelar
+          </button>
+          <button
+            onClick={handleSave}
+            disabled={!endDate || saving}
+            style={{ flex: 1, padding: '10px 0', borderRadius: 10, background: endDate ? GREEN : 'rgba(255,255,255,0.1)', border: 'none', color: '#000', fontSize: 13, fontWeight: 700, cursor: endDate && !saving ? 'pointer' : 'not-allowed' }}
+          >
+            {saving ? 'Salvando...' : 'Salvar'}
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function UserRow({ profile, onApprove, onBlock, onDelete, onEdit, onEditEndDate }: {
   profile: Profile
   onApprove: (profile: Profile) => void
   onBlock: (userId: string) => void
   onDelete: (userId: string, email: string) => void
   onEdit?: (profile: Profile) => void
+  onEditEndDate?: (profile: Profile) => void
 }) {
+  const canEditEndDate = profile.account_type === 'mentee' && profile.status === 'active' && !!onEditEndDate
   return (
     <div style={{ padding: '16px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
@@ -204,9 +261,19 @@ function UserRow({ profile, onApprove, onBlock, onDelete, onEdit }: {
             {profile.faturamento_medio && <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>{profile.faturamento_medio}</span>}
             {profile.num_funcionarios && <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>{profile.num_funcionarios} func.</span>}
             {profile.tempo_empresa && <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>{profile.tempo_empresa}</span>}
-            <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>
-              Fim mentoria: {formatBrDate(profile.mentoria_end_date)}
-            </span>
+            {canEditEndDate ? (
+              <button
+                onClick={() => onEditEndDate!(profile)}
+                title="Editar data de fim"
+                style={{ background: 'transparent', border: 'none', padding: 0, margin: 0, cursor: 'pointer', fontSize: 11, color: 'rgba(255,255,255,0.55)', fontFamily: 'inherit', textDecoration: 'underline dotted', textUnderlineOffset: 3 }}
+              >
+                Fim mentoria: {formatBrDate(profile.mentoria_end_date)}
+              </button>
+            ) : (
+              <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>
+                Fim mentoria: {formatBrDate(profile.mentoria_end_date)}
+              </span>
+            )}
             <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)' }}>
               {format(new Date(profile.created_at), "dd/MM/yyyy")}
             </span>
@@ -253,12 +320,13 @@ function UserRow({ profile, onApprove, onBlock, onDelete, onEdit }: {
   )
 }
 
-function MentoriaTab({ profiles, onApprove, onBlock, onDelete, onEdit }: {
+function MentoriaTab({ profiles, onApprove, onBlock, onDelete, onEdit, onEditEndDate }: {
   profiles: Profile[]
   onApprove: (profile: Profile) => void
   onBlock: (userId: string) => void
   onDelete: (userId: string, email: string) => void
   onEdit?: (profile: Profile) => void
+  onEditEndDate?: (profile: Profile) => void
 }) {
   const pending = profiles.filter(p => p.status === 'pending')
   const rest    = profiles.filter(p => p.status !== 'pending')
@@ -278,14 +346,14 @@ function MentoriaTab({ profiles, onApprove, onBlock, onDelete, onEdit }: {
             </span>
           </div>
           {pending.map(p => (
-            <UserRow key={p.user_id} profile={p} onApprove={onApprove} onBlock={onBlock} onDelete={onDelete} onEdit={onEdit} />
+            <UserRow key={p.user_id} profile={p} onApprove={onApprove} onBlock={onBlock} onDelete={onDelete} onEdit={onEdit} onEditEndDate={onEditEndDate} />
           ))}
         </div>
       )}
       {rest.length > 0 && (
         <Card>
           {rest.map(p => (
-            <UserRow key={p.user_id} profile={p} onApprove={onApprove} onBlock={onBlock} onDelete={onDelete} onEdit={onEdit} />
+            <UserRow key={p.user_id} profile={p} onApprove={onApprove} onBlock={onBlock} onDelete={onDelete} onEdit={onEdit} onEditEndDate={onEditEndDate} />
           ))}
         </Card>
       )}
@@ -299,6 +367,7 @@ export function Admin() {
   const [tab, setTab] = useState<Tab>('resumo')
   const [editingProfile, setEditingProfile] = useState<Profile | null>(null)
   const [approvingProfile, setApprovingProfile] = useState<Profile | null>(null)
+  const [editingEndDateProfile, setEditingEndDateProfile] = useState<Profile | null>(null)
 
   async function fetchProfiles() {
     setLoading(true)
@@ -349,6 +418,16 @@ export function Admin() {
       .update({ mentoria_type: mentoria, updated_at: new Date().toISOString() })
       .eq('user_id', userId)
     setProfiles(prev => prev.map(p => p.user_id === userId ? { ...p, mentoria_type: mentoria } : p))
+  }
+
+  async function handleEditEndDate(userId: string, mentoriaEndDate: string) {
+    await supabase.from('profiles')
+      .update({ mentoria_end_date: mentoriaEndDate, updated_at: new Date().toISOString() })
+      .eq('user_id', userId)
+    setProfiles(prev => prev.map(p => p.user_id === userId
+      ? { ...p, mentoria_end_date: mentoriaEndDate }
+      : p
+    ))
   }
 
   async function handleDelete(userId: string, email: string) {
@@ -523,6 +602,7 @@ export function Admin() {
               onBlock={handleBlock}
               onDelete={handleDelete}
               onEdit={tab === 'sem_categoria' ? setEditingProfile : undefined}
+              onEditEndDate={setEditingEndDateProfile}
             />
           )}
 
@@ -541,6 +621,15 @@ export function Admin() {
               profile={approvingProfile}
               onConfirm={handleApprove}
               onClose={() => setApprovingProfile(null)}
+            />
+          )}
+
+          {/* Modal editar data de fim da mentoria */}
+          {editingEndDateProfile && (
+            <EditEndDateModal
+              profile={editingEndDateProfile}
+              onSave={handleEditEndDate}
+              onClose={() => setEditingEndDateProfile(null)}
             />
           )}
         </>
