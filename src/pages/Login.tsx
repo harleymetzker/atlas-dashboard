@@ -33,7 +33,7 @@ export function Login() {
           gap: 16,
           marginBottom: 24,
         }}>
-          <img src="/blacksheep-logo.jpg" alt="Black Sheep" style={{ width: 100, height: 100, objectFit: 'contain' }} />
+          <img src="/logoBS.png" alt="Black Sheep" style={{ width: 100, height: 100, objectFit: 'contain' }} />
           <div style={{ width: 1, height: 32, background: 'rgba(0,0,0,0.2)' }} />
           <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             <span style={{ fontFamily: "'Arial Black', Arial, sans-serif", fontSize: 28, fontWeight: 900, letterSpacing: 6, color: '#000', lineHeight: 1 }}>
