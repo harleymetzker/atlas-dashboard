@@ -26,6 +26,8 @@ interface ImportCategorizacaoProps {
   initialRows?: ImportRow[]
   /** Notifica o pai a cada mudança no estado interno (pra persistência debounced). */
   onChange?: (rows: ImportRow[]) => void
+  /** Salva imediatamente o estado atual e fecha o modal (sem confirm). */
+  onSaveAndClose?: () => void
 }
 
 const TYPE_OPTIONS: { value: EntryType; label: string }[] = [
@@ -132,7 +134,7 @@ function CategorySelect({
   )
 }
 
-export function ImportCategorizacao({ rows, onImport, onClose, initialRows, onChange }: ImportCategorizacaoProps) {
+export function ImportCategorizacao({ rows, onImport, onClose, initialRows, onChange, onSaveAndClose }: ImportCategorizacaoProps) {
   const [importRows, setImportRows] = useState<ImportRow[]>(
     () => initialRows ?? rows.map(rawToImportRow)
   )
@@ -379,6 +381,14 @@ export function ImportCategorizacao({ rows, onImport, onClose, initialRows, onCh
           >
             Cancelar
           </button>
+          {onSaveAndClose && (
+            <button
+              onClick={onSaveAndClose}
+              className="px-5 py-2 rounded-xl text-sm text-white/80 hover:text-white hover:bg-white/10 transition-all border border-white/15"
+            >
+              Salvar progresso
+            </button>
+          )}
           <button
             onClick={handleImport}
             disabled={importing || selectedCount === 0}

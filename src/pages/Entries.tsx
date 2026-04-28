@@ -128,7 +128,9 @@ export function Entries() {
   const [savedProgress, setSavedProgress] = useState<SavedImportProgress | null>(null)
   const [resumedRows, setResumedRows] = useState<ImportRow[] | null>(null)
   const [currentFileName, setCurrentFileName] = useState<string | null>(null)
+  const [progressFeedback, setProgressFeedback] = useState<string | null>(null)
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const lastRowsRef = useRef<ImportRow[] | null>(null)
 
   // Carrega progresso salvo no mount (quando userId disponível)
   useEffect(() => {
@@ -139,6 +141,7 @@ export function Entries() {
   // Save handler debounced (800ms) — chamado pelo ImportCategorizacao via onChange
   const handleImportRowsChange = useCallback((rows: ImportRow[]) => {
     if (!userId) return
+    lastRowsRef.current = rows
     if (saveTimerRef.current) clearTimeout(saveTimerRef.current)
     saveTimerRef.current = setTimeout(() => {
       if (rows.length === 0 || !importRows) {
@@ -159,17 +162,37 @@ export function Entries() {
 
   function handleDiscardSavedImport() {
     if (!userId) return
-    if (!confirm('Tem certeza? O progresso será perdido.')) return
+    if (!confirm('Tem certeza? O progresso será perdido permanentemente.')) return
     clearImportProgress(userId)
     setSavedProgress(null)
   }
 
   function handleCategorizacaoClose() {
-    if (userId && importRows && importRows.length > 0) {
-      const discard = confirm('Descartar progresso?')
-      if (discard) clearImportProgress(userId)
-    }
+    // Fecha sem mexer no localStorage — auto-save já preservou o que faz sentido.
     if (saveTimerRef.current) clearTimeout(saveTimerRef.current)
+    setImportRows(null)
+    setResumedRows(null)
+    setCurrentFileName(null)
+  }
+
+  // Forçar salvamento síncrono e fechar (botão "Salvar progresso").
+  function handleSaveAndClose() {
+    if (saveTimerRef.current) clearTimeout(saveTimerRef.current)
+    if (userId && importRows && lastRowsRef.current && lastRowsRef.current.length > 0) {
+      saveImportProgress(
+        userId,
+        currentFileName ?? 'Extrato em andamento',
+        importRows,
+        lastRowsRef.current,
+      )
+      setSavedProgress({
+        fileName: currentFileName ?? 'Extrato em andamento',
+        rawRows: importRows,
+        rows: lastRowsRef.current,
+      })
+      setProgressFeedback('Progresso salvo. Continue quando quiser.')
+      setTimeout(() => setProgressFeedback(null), 3500)
+    }
     setImportRows(null)
     setResumedRows(null)
     setCurrentFileName(null)
@@ -516,8 +539,22 @@ export function Entries() {
         </div>
       </div>
 
+      {/* ── Toast de progresso salvo ── */}
+      {progressFeedback && (
+        <div style={{
+          background: 'rgba(128,239,0,0.12)',
+          border: '1px solid rgba(128,239,0,0.35)',
+          borderRadius: 12,
+          padding: '12px 16px',
+          color: '#80EF00',
+          fontSize: 13,
+        }}>
+          {progressFeedback}
+        </div>
+      )}
+
       {/* ── Banner: importação em andamento ── */}
-      {savedProgress && !importUploadOpen && !importRows && !reviewItems && !importResult && (
+      {savedProgress && (
         <div style={{
           background: 'rgba(128,239,0,0.08)',
           border: '1px solid rgba(128,239,0,0.3)',
@@ -530,18 +567,20 @@ export function Entries() {
           flexWrap: 'wrap',
         }}>
           <span style={{ fontSize: 13, color: '#fff' }}>
-            Você tem uma importação em andamento
+            Conciliação em andamento — {savedProgress.rows?.length
+              ? `${savedProgress.rows.length} transaç${savedProgress.rows.length === 1 ? 'ão' : 'ões'} pendente${savedProgress.rows.length === 1 ? '' : 's'}`
+              : 'finalize quando quiser'}
           </span>
           <div style={{ display: 'flex', gap: 8 }}>
             <button
               onClick={handleResumeImport}
               style={{ padding: '6px 14px', borderRadius: 8, background: '#80EF00', border: 'none', color: '#000', fontSize: 12, fontWeight: 700, cursor: 'pointer' }}
             >
-              Continuar
+              Continuar conciliação
             </button>
             <button
               onClick={handleDiscardSavedImport}
-              style={{ padding: '6px 14px', borderRadius: 8, background: 'transparent', border: '1px solid rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.6)', fontSize: 12, cursor: 'pointer' }}
+              style={{ padding: '6px 14px', borderRadius: 8, background: 'transparent', border: '1px solid rgba(239,68,68,0.3)', color: '#f87171', fontSize: 12, cursor: 'pointer' }}
             >
               Descartar
             </button>
@@ -807,6 +846,7 @@ export function Entries() {
           onClose={handleCategorizacaoClose}
           initialRows={resumedRows ?? undefined}
           onChange={handleImportRowsChange}
+          onSaveAndClose={handleSaveAndClose}
         />
       )}
 
