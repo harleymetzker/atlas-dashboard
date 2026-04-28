@@ -19,6 +19,22 @@ function planFromPriceId(priceId: string | null | undefined): 'monthly' | 'annua
   return null
 }
 
+// Stripe API 2026-03-25.dahlia movou current_period_end pra dentro de items.data[i].
+// Fallback pra current_period_end no objeto raiz garante compatibilidade com APIs antigas.
+function getPeriodEnd(subscription: Stripe.Subscription): string | null {
+  const item = subscription.items?.data?.[0] as any
+  const ts = item?.current_period_end ?? (subscription as any).current_period_end
+  if (typeof ts !== 'number' || !Number.isFinite(ts)) return null
+  return new Date(ts * 1000).toISOString()
+}
+
+function mapStatusFromStripe(s: Stripe.Subscription.Status): string | null {
+  if (s === 'active' || s === 'trialing') return 'active'
+  if (s === 'past_due' || s === 'unpaid') return 'past_due'
+  if (s === 'canceled' || s === 'incomplete_expired') return 'canceled'
+  return null
+}
+
 // Dispara email de boas-vindas via Edge Function. Falhas são logadas mas não interrompem o webhook.
 async function sendWelcomeEmail(email: string, plano: 'monthly' | 'annual' | null) {
   const url = process.env.VITE_SUPABASE_URL
@@ -114,7 +130,7 @@ export const handler: Handler = async (event) => {
         const subscription = await stripe.subscriptions.retrieve(subscriptionId)
         const priceId = subscription.items.data[0]?.price.id
         const plan = planFromPriceId(priceId)
-        const periodEnd = new Date(subscription.current_period_end * 1000).toISOString()
+        const periodEnd = getPeriodEnd(subscription)
 
         console.log('[stripe-webhook] Processing checkout.session.completed:', {
           email, customerId, subscriptionId, plan, periodEnd,
@@ -131,7 +147,8 @@ export const handler: Handler = async (event) => {
             console.error('[stripe-webhook] Failed to create auth user:', createErr)
             break
           }
-          const { error: insertErr } = await supabase.from('profiles').insert({
+
+          const insertPayload: Record<string, unknown> = {
             user_id: created.user.id,
             email,
             account_type: 'subscriber',
@@ -140,32 +157,42 @@ export const handler: Handler = async (event) => {
             stripe_subscription_id: subscriptionId,
             subscription_status: 'active',
             subscription_plan: plan,
-            subscription_current_period_end: periodEnd,
             onboarding_completed: false,
-          })
+          }
+          if (periodEnd) insertPayload.subscription_current_period_end = periodEnd
+
+          const { data: insertData, error: insertErr } = await supabase
+            .from('profiles')
+            .insert(insertPayload)
+            .select('user_id, status, subscription_status')
+
           if (insertErr) {
             console.error('[stripe-webhook] Profile insert failed:', insertErr)
           } else {
-            console.log('[stripe-webhook] Subscriber created:', { userId: created.user.id, email })
+            console.log('[stripe-webhook] checkout.session.completed insert rows:', insertData?.length, insertData)
             await sendWelcomeEmail(email, plan)
           }
         } else {
-          const { error: updErr } = await supabase
+          const updatePayload: Record<string, unknown> = {
+            account_type: 'subscriber',
+            status: 'active',
+            stripe_customer_id: customerId,
+            stripe_subscription_id: subscriptionId,
+            subscription_status: 'active',
+            subscription_plan: plan,
+          }
+          if (periodEnd) updatePayload.subscription_current_period_end = periodEnd
+
+          const { data: updData, error: updErr } = await supabase
             .from('profiles')
-            .update({
-              account_type: 'subscriber',
-              status: 'active',
-              stripe_customer_id: customerId,
-              stripe_subscription_id: subscriptionId,
-              subscription_status: 'active',
-              subscription_plan: plan,
-              subscription_current_period_end: periodEnd,
-            })
+            .update(updatePayload)
             .eq('user_id', existing.id)
+            .select('user_id, status, subscription_status')
+
           if (updErr) {
             console.error('[stripe-webhook] Profile update (re-subscription) failed:', updErr)
           } else {
-            console.log('[stripe-webhook] Existing user re-subscribed:', { userId: existing.id, email })
+            console.log('[stripe-webhook] checkout.session.completed update rows:', updData?.length, updData)
           }
         }
         break
@@ -175,23 +202,32 @@ export const handler: Handler = async (event) => {
         const subscription = stripeEvent.data.object as Stripe.Subscription
         const priceId = subscription.items.data[0]?.price.id
         const plan = planFromPriceId(priceId)
-        const periodEnd = new Date(subscription.current_period_end * 1000).toISOString()
+        const periodEnd = getPeriodEnd(subscription)
+        const newStatus = mapStatusFromStripe(subscription.status)
 
         console.log('[stripe-webhook] Processing customer.subscription.updated:', {
           subscriptionId: subscription.id,
-          status: subscription.status,
-          plan, periodEnd,
+          stripeStatus: subscription.status,
+          mappedStatus: newStatus,
+          plan,
+          periodEnd,
         })
 
-        const { error } = await supabase
+        const update: Record<string, unknown> = {
+          subscription_status: subscription.status,
+          subscription_plan: plan,
+        }
+        if (periodEnd) update.subscription_current_period_end = periodEnd
+        if (newStatus) update.status = newStatus
+
+        const { data, error } = await supabase
           .from('profiles')
-          .update({
-            subscription_status: subscription.status,
-            subscription_plan: plan,
-            subscription_current_period_end: periodEnd,
-          })
+          .update(update)
           .eq('stripe_subscription_id', subscription.id)
+          .select('user_id, status, subscription_status')
+
         if (error) console.error('[stripe-webhook] subscription.updated update failed:', error)
+        else console.log('[stripe-webhook] subscription.updated rows:', data?.length, data)
         break
       }
 
@@ -201,11 +237,14 @@ export const handler: Handler = async (event) => {
           subscriptionId: subscription.id,
         })
 
-        const { error } = await supabase
+        const { data, error } = await supabase
           .from('profiles')
-          .update({ subscription_status: 'canceled' })
+          .update({ subscription_status: 'canceled', status: 'canceled' })
           .eq('stripe_subscription_id', subscription.id)
+          .select('user_id, status, subscription_status')
+
         if (error) console.error('[stripe-webhook] subscription.deleted update failed:', error)
+        else console.log('[stripe-webhook] subscription.deleted rows:', data?.length, data)
         break
       }
 
@@ -220,11 +259,14 @@ export const handler: Handler = async (event) => {
         }
         console.log('[stripe-webhook] Processing invoice.payment_failed:', { customerId })
 
-        const { error } = await supabase
+        const { data, error } = await supabase
           .from('profiles')
-          .update({ subscription_status: 'past_due' })
+          .update({ subscription_status: 'past_due', status: 'past_due' })
           .eq('stripe_customer_id', customerId)
+          .select('user_id, status, subscription_status')
+
         if (error) console.error('[stripe-webhook] invoice.payment_failed update failed:', error)
+        else console.log('[stripe-webhook] invoice.payment_failed rows:', data?.length, data)
         break
       }
 
@@ -239,11 +281,14 @@ export const handler: Handler = async (event) => {
         }
         console.log('[stripe-webhook] Processing invoice.payment_succeeded:', { customerId })
 
-        const { error } = await supabase
+        const { data, error } = await supabase
           .from('profiles')
-          .update({ subscription_status: 'active' })
+          .update({ subscription_status: 'active', status: 'active' })
           .eq('stripe_customer_id', customerId)
+          .select('user_id, status, subscription_status')
+
         if (error) console.error('[stripe-webhook] invoice.payment_succeeded update failed:', error)
+        else console.log('[stripe-webhook] invoice.payment_succeeded rows:', data?.length, data)
         break
       }
 
