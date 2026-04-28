@@ -15,12 +15,20 @@ interface Profile {
   user_id: string
   email: string
   nome: string | null
+  empresa: string | null
   status: 'pending' | 'active' | 'blocked'
+  account_type: 'mentee' | 'subscriber'
   mentoria_type: string | null
   setor: string | null
   faturamento_medio: string | null
   num_funcionarios: string | null
   tempo_empresa: string | null
+  stripe_customer_id: string | null
+  stripe_subscription_id: string | null
+  subscription_status: string | null
+  subscription_plan: 'monthly' | 'annual' | null
+  subscription_current_period_end: string | null
+  onboarding_completed: boolean
   created_at: string
   updated_at: string
 }
