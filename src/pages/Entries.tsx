@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { format, startOfMonth, startOfMonth as som, endOfMonth, parseISO } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { Trash2, Pencil, Search } from 'lucide-react'
 import { useEntries } from '../hooks/useEntries'
+import { useAuth } from '../context/AuthContext'
 import type { Entry, EntryType } from '../types'
 import { REVENUE_CATEGORIES, EXPENSE_CATEGORY_GROUPS, ANTECIPACAO_CATEGORY } from '../types'
 import { formatCurrency } from '../lib/calculations'
@@ -17,6 +18,12 @@ import { ImportUploadModal } from '../components/import/ImportUploadModal'
 import { ImportCategorizacao } from '../components/import/ImportCategorizacao'
 import type { ImportRow } from '../components/import/ImportCategorizacao'
 import type { RawRow } from '../lib/parseExtrato'
+import {
+  saveImportProgress,
+  loadImportProgress,
+  clearImportProgress,
+  type SavedImportProgress,
+} from '../lib/importPersistence'
 
 type ImportAction = 'conciliado' | 'ignorado' | 'novo'
 interface ImportResultItem {
@@ -99,6 +106,8 @@ const defaultForm = {
 
 export function Entries() {
   const today = new Date()
+  const { user } = useAuth()
+  const userId = user?.id ?? null
   const [startDate, setStartDate] = useState(format(startOfMonth(today), 'yyyy-MM-dd'))
   const [endDate, setEndDate] = useState(format(today, 'yyyy-MM-dd'))
   const [typeFilter, setTypeFilter] = useState<EntryType | ''>('')
@@ -116,6 +125,55 @@ export function Entries() {
   const [importResult, setImportResult] = useState<ImportResultItem[] | null>(null)
   const [showImportDetails, setShowImportDetails] = useState(false)
   const [reviewItems, setReviewItems] = useState<ReviewItem[] | null>(null)
+  const [savedProgress, setSavedProgress] = useState<SavedImportProgress | null>(null)
+  const [resumedRows, setResumedRows] = useState<ImportRow[] | null>(null)
+  const [currentFileName, setCurrentFileName] = useState<string | null>(null)
+  const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  // Carrega progresso salvo no mount (quando userId disponível)
+  useEffect(() => {
+    if (!userId) return
+    setSavedProgress(loadImportProgress(userId))
+  }, [userId])
+
+  // Save handler debounced (800ms) — chamado pelo ImportCategorizacao via onChange
+  const handleImportRowsChange = useCallback((rows: ImportRow[]) => {
+    if (!userId) return
+    if (saveTimerRef.current) clearTimeout(saveTimerRef.current)
+    saveTimerRef.current = setTimeout(() => {
+      if (rows.length === 0 || !importRows) {
+        clearImportProgress(userId)
+      } else {
+        saveImportProgress(userId, currentFileName ?? 'Extrato em andamento', importRows, rows)
+      }
+    }, 800)
+  }, [userId, importRows, currentFileName])
+
+  function handleResumeImport() {
+    if (!savedProgress) return
+    setImportRows(savedProgress.rawRows)
+    setResumedRows(savedProgress.rows)
+    setCurrentFileName(savedProgress.fileName)
+    setSavedProgress(null)
+  }
+
+  function handleDiscardSavedImport() {
+    if (!userId) return
+    if (!confirm('Tem certeza? O progresso será perdido.')) return
+    clearImportProgress(userId)
+    setSavedProgress(null)
+  }
+
+  function handleCategorizacaoClose() {
+    if (userId && importRows && importRows.length > 0) {
+      const discard = confirm('Descartar progresso?')
+      if (discard) clearImportProgress(userId)
+    }
+    if (saveTimerRef.current) clearTimeout(saveTimerRef.current)
+    setImportRows(null)
+    setResumedRows(null)
+    setCurrentFileName(null)
+  }
 
   const { entries: agendados, updateEntry: updateAgendado, deleteEntry: deleteAgendado, refetch: refetchAgendados } = useEntries({ dateField: 'payment_date' })
   const in30Days = format(new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), 'yyyy-MM-dd')
@@ -370,6 +428,9 @@ export function Entries() {
       }
     }
 
+    if (userId) clearImportProgress(userId)
+    setSavedProgress(null)
+    setCurrentFileName(null)
     setReviewItems(null)
     refetchAgendados()
     setImportResult(results)
@@ -454,6 +515,39 @@ export function Entries() {
           </button>
         </div>
       </div>
+
+      {/* ── Banner: importação em andamento ── */}
+      {savedProgress && !importUploadOpen && !importRows && !reviewItems && !importResult && (
+        <div style={{
+          background: 'rgba(128,239,0,0.08)',
+          border: '1px solid rgba(128,239,0,0.3)',
+          borderRadius: 12,
+          padding: '12px 16px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: 12,
+          flexWrap: 'wrap',
+        }}>
+          <span style={{ fontSize: 13, color: '#fff' }}>
+            Você tem uma importação em andamento
+          </span>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <button
+              onClick={handleResumeImport}
+              style={{ padding: '6px 14px', borderRadius: 8, background: '#80EF00', border: 'none', color: '#000', fontSize: 12, fontWeight: 700, cursor: 'pointer' }}
+            >
+              Continuar
+            </button>
+            <button
+              onClick={handleDiscardSavedImport}
+              style={{ padding: '6px 14px', borderRadius: 8, background: 'transparent', border: '1px solid rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.6)', fontSize: 12, cursor: 'pointer' }}
+            >
+              Descartar
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* ── Aguardando Confirmação ── */}
       {scheduledEntries.length > 0 && (
@@ -710,7 +804,9 @@ export function Entries() {
         <ImportCategorizacao
           rows={importRows}
           onImport={handleImportRows}
-          onClose={() => setImportRows(null)}
+          onClose={handleCategorizacaoClose}
+          initialRows={resumedRows ?? undefined}
+          onChange={handleImportRowsChange}
         />
       )}
 

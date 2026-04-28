@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { X, Check, ChevronDown } from 'lucide-react'
 import { format } from 'date-fns'
 import type { RawRow } from '../../lib/parseExtrato'
@@ -22,6 +22,10 @@ interface ImportCategorizacaoProps {
   rows: RawRow[]
   onImport: (rows: ImportRow[]) => Promise<void>
   onClose: () => void
+  /** Quando presente, sobrescreve a inicialização padrão (recuperação de progresso salvo). */
+  initialRows?: ImportRow[]
+  /** Notifica o pai a cada mudança no estado interno (pra persistência debounced). */
+  onChange?: (rows: ImportRow[]) => void
 }
 
 const TYPE_OPTIONS: { value: EntryType; label: string }[] = [
@@ -128,10 +132,16 @@ function CategorySelect({
   )
 }
 
-export function ImportCategorizacao({ rows, onImport, onClose }: ImportCategorizacaoProps) {
-  const [importRows, setImportRows] = useState<ImportRow[]>(() => rows.map(rawToImportRow))
+export function ImportCategorizacao({ rows, onImport, onClose, initialRows, onChange }: ImportCategorizacaoProps) {
+  const [importRows, setImportRows] = useState<ImportRow[]>(
+    () => initialRows ?? rows.map(rawToImportRow)
+  )
   const [importing, setImporting] = useState(false)
   const [error, setError] = useState('')
+
+  useEffect(() => {
+    onChange?.(importRows)
+  }, [importRows, onChange])
 
   const selectedCount = importRows.filter(r => r.include).length
 
